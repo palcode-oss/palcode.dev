@@ -6,6 +6,8 @@ import * as EmailValidator from 'email-validator';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase';
 import 'firebase/auth';
+import 'firebase/firestore';
+import { Perms, User } from '../helpers/types';
 
 enum Page {
     SignUp,
@@ -71,7 +73,7 @@ export default function SignInModal(
                 closeModal();
             })
             .catch(() => {
-                enqueueSnackbar('Something went wrong while signing you in. Please try again.', {
+                enqueueSnackbar('Something went wrong while signing you in. Please check your details and try again.', {
                     variant: 'error',
                 });
 
@@ -102,41 +104,54 @@ export default function SignInModal(
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .then((user) => {
-                user
-                    .user
-                    ?.updateProfile({
-                        displayName,
-                    })
-                    .then(() => {
-                        firebase
-                            .auth()
-                            .signInWithEmailAndPassword(email, password)
-                            .then(() => {
-                                enqueueSnackbar('Success! You\'re now signed in with your new account.', {
-                                    variant: 'success',
-                                });
+                const userObj = user.user;
+                if (userObj) {
+                    userObj
+                        .updateProfile({
+                            displayName,
+                        })
+                        .then(() => {
+                            firebase
+                                .auth()
+                                .signInWithEmailAndPassword(email, password)
+                                .then(() => {
+                                    firebase
+                                        .firestore()
+                                        .collection('users')
+                                        .doc(userObj.uid)
+                                        .set({
+                                            email,
+                                            displayName,
+                                            perms: Perms.Student,
+                                        } as User)
+                                        .then(() => {
+                                            enqueueSnackbar('Success! You\'re now signed in with your new account.', {
+                                                variant: 'success',
+                                            });
 
-                                setLoading(false);
-                                closeModal();
-                            })
-                            .catch(() => {
-                                enqueueSnackbar('Your new account was created successfully - log in to get started!', {
-                                    variant: 'success',
-                                });
+                                            setLoading(false);
+                                            closeModal();
+                                        });
+                                })
+                                .catch(() => {
+                                    enqueueSnackbar('Your new account was created successfully - log in to get started!', {
+                                        variant: 'success',
+                                    });
 
-                                setLoading(false);
-                                setPage(Page.SignIn);
-                                setPassword('');
-                            })
-                    })
-                    .catch(() => {
-                        enqueueSnackbar('Something went wrong while setting up your account. Try again later.', {
-                            variant: 'error',
+                                    setLoading(false);
+                                    setPage(Page.SignIn);
+                                    setPassword('');
+                                })
+                        })
+                        .catch(() => {
+                            enqueueSnackbar('Something went wrong while setting up your account. Try again later.', {
+                                variant: 'error',
+                            });
+
+                            setLoading(false);
+                            setPassword('');
                         });
-
-                        setLoading(false);
-                        setPassword('');
-                    });
+                }
             })
             .catch((err) => {
                 if (err.code === 'auth/email-already-in-use') {
@@ -194,6 +209,7 @@ export default function SignInModal(
                                         id='display-name-input'
                                         onChange={handleDisplayNameChange}
                                         value={displayName}
+                                        disabled={loading}
                                     />
                                 </label>
                             )
@@ -206,6 +222,7 @@ export default function SignInModal(
                                 id='email-input'
                                 onChange={handleEmailChange}
                                 value={email}
+                                disabled={loading}
                             />
                         </label>
 
@@ -216,12 +233,14 @@ export default function SignInModal(
                                 id='email-input'
                                 onChange={handlePasswordChange}
                                 value={password}
+                                disabled={loading}
                             />
                         </label>
 
                         <button
                             type='button'
                             onClick={page === Page.SignIn ? handleSignIn : handleSignUp}
+                            disabled={loading}
                         >
                             {
                                 loading
@@ -240,6 +259,7 @@ export default function SignInModal(
                     <button
                         className='sign-in-up-toggle'
                         onClick={changePage}
+                        disabled={loading}
                     >
                         {
                             page === Page.SignIn
