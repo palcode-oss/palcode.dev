@@ -1,15 +1,44 @@
-import React, { ReactElement } from "react";
-import { useAuth } from "../helpers/auth";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons/faHome";
-import { faCog } from "@fortawesome/free-solid-svg-icons/faCog";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
-import { faSignInAlt } from "@fortawesome/free-solid-svg-icons/faSignInAlt";
-import { Shimmer } from "react-shimmer";
+import React, { ReactElement, useCallback, useState } from 'react';
+import { useAuth } from '../helpers/auth';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
+import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons/faSignInAlt';
+import { Shimmer } from 'react-shimmer';
+import firebase from 'firebase';
+import 'firebase/auth';
+import { useSnackbar } from 'notistack';
+import SignInModal from './SignInModal';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus';
 
 export default function Navbar(): ReactElement {
     const [authUser, authLoading] = useAuth();
+    const {enqueueSnackbar} = useSnackbar();
+
+    const signOut = useCallback(() => {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                enqueueSnackbar('You\'re now signed out.', {
+                    variant: 'info',
+                });
+            });
+    }, []);
+
+    const [showSignInModal, setShowSignInModal] = useState(false);
+    const signIn = useCallback(() => {
+        setShowSignInModal(true);
+        setShowSignUpModal(false);
+    }, []);
+
+    const [showSignUpModal, setShowSignUpModal] = useState(false);
+    const signUp = useCallback(() => {
+        setShowSignUpModal(true);
+        setShowSignInModal(false);
+    }, []);
 
     return (
         <div className='navbar'>
@@ -37,7 +66,10 @@ export default function Navbar(): ReactElement {
                                 <FontAwesomeIcon icon={faCog}/>
                                 &nbsp;Settings
                             </Link>
-                            <button className='option sign-out'>
+                            <button
+                                className='option sign-out'
+                                onClick={signOut}
+                            >
                                 <FontAwesomeIcon icon={faSignOutAlt}/>
                                 &nbsp;Sign out
                             </button>
@@ -47,10 +79,23 @@ export default function Navbar(): ReactElement {
 
                 {
                     !authLoading && !authUser && (
-                        <button className='option'>
-                            <FontAwesomeIcon icon={faSignInAlt}/>
-                            &nbsp;Sign in
-                        </button>
+                        <>
+                            <button
+                                className='option'
+                                onClick={signIn}
+                            >
+                                <FontAwesomeIcon icon={faSignInAlt}/>
+                                &nbsp;Sign in
+                            </button>
+
+                            <button
+                                className='option'
+                                onClick={signUp}
+                            >
+                                <FontAwesomeIcon icon={faUserPlus}/>
+                                &nbsp;Sign up
+                            </button>
+                        </>
                     )
                 }
 
@@ -66,6 +111,23 @@ export default function Navbar(): ReactElement {
                     )
                 }
             </div>
+
+            {
+                showSignInModal && (
+                    <SignInModal
+                        closeModal={() => setShowSignInModal(false)}
+                    />
+                )
+            }
+
+            {
+                showSignUpModal && (
+                    <SignInModal
+                        forceSignUp
+                        closeModal={() => setShowSignUpModal(false)}
+                    />
+                )
+            }
         </div>
-    )
+    );
 }
