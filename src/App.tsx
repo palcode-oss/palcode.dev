@@ -1,5 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
+import { useAuth } from './helpers/auth';
 
 firebase.initializeApp({
   apiKey: "AIzaSyDvtCpVfSv_WyqODPmPlrYvGqCmlZZlbk8",
@@ -12,9 +13,27 @@ firebase.initializeApp({
 });
 
 function App() {
-  return (
-    <div className="App">
+  const [authUser, authLoading] = useAuth();
 
+  return (
+    <div>
+      {authLoading && (
+          <p>
+            loading...
+          </p>
+      )}
+
+      {!authUser && !authLoading && (
+          <p>
+            sign in
+          </p>
+      )}
+
+      {authUser && (
+          <p>
+            signed in
+          </p>
+      )}
     </div>
   );
 }
