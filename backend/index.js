@@ -4,6 +4,9 @@ const api = require("./api/index");
 const socket = require("./socket/run");
 const path = require("path");
 const fs = require("fs");
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
 
 app.use("/api", api);
 
