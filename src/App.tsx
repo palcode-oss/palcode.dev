@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from 'firebase';
-import { useAuth } from './helpers/auth';
 import Navigation from "./Navigation";
+import { SnackbarProvider } from "notistack";
 
 firebase.initializeApp({
     apiKey: "AIzaSyDvtCpVfSv_WyqODPmPlrYvGqCmlZZlbk8",
@@ -15,7 +15,9 @@ firebase.initializeApp({
 
 function App() {
     return (
-        <Navigation />
+        <SnackbarProvider maxSnack={1}>
+            <Navigation/>
+        </SnackbarProvider>
     );
 }
 
