@@ -230,7 +230,7 @@ export default function SignInModal(
                             Password
                             <input
                                 type='password'
-                                id='email-input'
+                                id='password-input'
                                 onChange={handlePasswordChange}
                                 value={password}
                                 disabled={loading}
