@@ -5,6 +5,7 @@ import { Shimmer } from 'react-shimmer';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import { Classroom } from './helpers/types';
+import { useClassroom } from './ManageClassroom';
 
 interface Params {
     classroomId: string;
@@ -13,18 +14,7 @@ interface Params {
 export default function CodePage(): ReactElement {
     const { classroomId } = useParams<Params>();
 
-    const [code, setCode] = useState<string | null>(null);
-    useEffect(() => {
-        firebase
-            .firestore()
-            .collection('classrooms')
-            .doc(classroomId)
-            .get()
-            .then(doc => {
-                const data = doc.data() as Classroom;
-                setCode(data.code);
-            });
-    }, [classroomId]);
+    const code = useClassroom(classroomId)?.code;
 
     return (
         <div className='code-page'>
