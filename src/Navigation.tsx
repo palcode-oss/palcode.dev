@@ -6,6 +6,7 @@ import NewTask from "./NewTask";
 import Task from "./Task";
 import Navbar from "./ui/Navbar";
 import Settings from "./Settings";
+import CodePage from './CodePage';
 
 const history = createBrowserHistory();
 
@@ -15,17 +16,20 @@ export default function Navigation(): ReactElement {
             <Navbar />
 
             <Switch>
-                <Route path='/'>
-                    <Dashboard />
-                </Route>
                 <Route path='/user/settings'>
                     <Settings />
+                </Route>
+                <Route path='/classroom/:classroomId/view_code'>
+                    <CodePage />
                 </Route>
                 <Route path='/task/new'>
                     <NewTask />
                 </Route>
                 <Route path='/task/:taskId'>
                     <Task />
+                </Route>
+                <Route path='/'>
+                    <Dashboard />
                 </Route>
             </Switch>
         </Router>

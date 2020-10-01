@@ -123,6 +123,7 @@ export default function SignInModal(
                                             email,
                                             displayName,
                                             perms: Perms.Student,
+                                            uid: userObj.uid,
                                         } as User)
                                         .then(() => {
                                             enqueueSnackbar('Success! You\'re now signed in with your new account.', {
