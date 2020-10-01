@@ -1,14 +1,21 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import { Task, TaskStatus, TaskType, User } from '../helpers/types';
 import firebase from 'firebase';
+import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
 import { useClassroom } from '../ManageClassroom';
+import DropdownMenu from './DropdownMenu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
+import { useSnackbar } from 'notistack';
 
 interface Props {
     studentId: string;
     classroomId: string;
+    setClassroomUpdater: (updater: number) => void;
 }
 
 export function useStudent(studentId: string) {
@@ -32,6 +39,7 @@ export default function StudentRow(
     {
         studentId,
         classroomId,
+        setClassroomUpdater,
     }: Props,
 ): ReactElement {
     const student = useStudent(studentId);
@@ -44,6 +52,32 @@ export default function StudentRow(
             return task.createdBy === studentId && task.type === TaskType.Submission
         });
     }, [studentId, classroom]);
+
+    const {enqueueSnackbar} = useSnackbar();
+    const deleteStudent = useCallback(() => {
+        if (classroom) {
+            firebase
+                .firestore()
+                .collection('classrooms')
+                .doc(classroomId)
+                .update(
+                    {
+                        members: classroom.members.filter(e => e !== studentId)
+                    } as Partial<User>
+                )
+                .then(() => {
+                    enqueueSnackbar('Student removed successfully!', {
+                        variant: 'success',
+                    });
+                    setClassroomUpdater(Math.random());
+                })
+                .catch(() => {
+                    enqueueSnackbar('Something went wrong while attempting to delete that student. Try again.', {
+                        variant: 'error',
+                    });
+                });
+        }
+    }, [classroom, studentId]);
 
     return (
         <TableRow>
@@ -62,7 +96,7 @@ export default function StudentRow(
             </TableCell>
             {
                 [TaskStatus.Unsubmitted, TaskStatus.Submitted, TaskStatus.HasFeedback].map(status => (
-                    <TableCell align='right'>
+                    <TableCell align='right' key={status}>
                         {
                             userTasks
                                 ? (
@@ -78,6 +112,14 @@ export default function StudentRow(
                     </TableCell>
                 ))
             }
+            <TableCell align='center'>
+                <DropdownMenu>
+                    <MenuItem onClick={deleteStudent}>
+                        <FontAwesomeIcon icon={faTrashAlt}/>
+                        &nbsp;Remove student
+                    </MenuItem>
+                </DropdownMenu>
+            </TableCell>
         </TableRow>
     );
 }

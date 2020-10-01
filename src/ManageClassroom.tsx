@@ -7,11 +7,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import { useParams } from 'react-router-dom';
 import firebase from 'firebase';
+import 'firebase/firestore';
 import { Classroom } from './helpers/types';
 import Loader from 'react-loader-spinner';
 import StudentRow from './ui/StudentRow';
 
-export function useClassroom(classroomId: string): Classroom | null {
+export function useClassroom(classroomId: string, classroomUpdater?: any): Classroom | null {
     const [classroom, setClassroom] = useState<Classroom | null>(null);
     useEffect(() => {
         firebase
@@ -23,7 +24,7 @@ export function useClassroom(classroomId: string): Classroom | null {
                 const data = doc.data() as Classroom;
                 setClassroom(data);
             });
-    }, [classroomId]);
+    }, [classroomId, classroomUpdater]);
 
     return classroom;
 }
@@ -34,7 +35,9 @@ interface Params {
 
 export default function ManageClassroom(): ReactElement {
     const {classroomId} = useParams<Params>();
-    const classroomData = useClassroom(classroomId);
+
+    const [classroomUpdater, setClassroomUpdater] = useState(0);
+    const classroomData = useClassroom(classroomId, classroomUpdater);
 
     return (
         <div className='manage-classroom'>
@@ -57,6 +60,7 @@ export default function ManageClassroom(): ReactElement {
                                         <StudentRow
                                             studentId={studentId}
                                             classroomId={classroomId}
+                                            setClassroomUpdater={setClassroomUpdater}
                                             key={studentId}
                                         />
                                     ))

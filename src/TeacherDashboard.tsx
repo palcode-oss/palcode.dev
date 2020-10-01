@@ -18,6 +18,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import moment from 'moment';
+import DropdownMenu from './ui/DropdownMenu';
 
 interface Props {
     user: User
@@ -53,18 +54,8 @@ export default function TeacherDashboard(
         loadClassroomData();
     }, [classroomDataUpdater]);
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const openMenu = useCallback((e: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(e.currentTarget);
-    }, []);
-
-    const handleClose = useCallback(() => {
-        setAnchorEl(null);
-    }, []);
-
     const {enqueueSnackbar} = useSnackbar();
     const handleDelete = useCallback((classroomId: string) => {
-        handleClose();
         firebase
             .firestore()
             .collection('classrooms')
@@ -77,7 +68,7 @@ export default function TeacherDashboard(
                 setClassroomDataUpdater(Math.random());
             })
             .catch(() => {
-                enqueueSnackbar('Something went wrong while attempting to delete classroom. Try again.', {
+                enqueueSnackbar('Something went wrong while attempting to delete that classroom. Try again.', {
                     variant: 'error',
                 });
             });
@@ -115,28 +106,7 @@ export default function TeacherDashboard(
                                                     }
                                                 </TableCell>
                                                 <TableCell align='center'>
-                                                    <button
-                                                        className='more-dropdown'
-                                                        onClick={openMenu}
-                                                    >
-                                                        <FontAwesomeIcon icon={faEllipsisV}/>
-                                                    </button>
-
-                                                    <Menu
-                                                        id='table-menu'
-                                                        anchorEl={anchorEl}
-                                                        anchorOrigin={{
-                                                            vertical: 'bottom',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        keepMounted
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        open={!!anchorEl}
-                                                        onClose={handleClose}
-                                                    >
+                                                    <DropdownMenu>
                                                         <Link to={`/classroom/${classroom.id}/view_code`}>
                                                             <MenuItem>
                                                                 <FontAwesomeIcon icon={faKeyboard}/>
@@ -153,7 +123,7 @@ export default function TeacherDashboard(
                                                             <FontAwesomeIcon icon={faTrashAlt}/>
                                                             &nbsp;Delete
                                                         </MenuItem>
-                                                    </Menu>
+                                                    </DropdownMenu>
                                                 </TableCell>
                                             </TableRow>
                                         ))
