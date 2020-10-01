@@ -11,7 +11,7 @@ interface Params {
 }
 
 export default function CodePage(): ReactElement {
-    const { classroomId } = useParams() as Params;
+    const { classroomId } = useParams<Params>();
 
     const [code, setCode] = useState<string | null>(null);
     useEffect(() => {

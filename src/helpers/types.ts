@@ -13,8 +13,24 @@ export interface User {
     uid: string;
 }
 
-export interface Task {
+export enum TaskStatus {
+    Unsubmitted,
+    Submitted,
+    HasFeedback,
+}
 
+export enum TaskType {
+    Template,
+    Submission,
+}
+
+export interface Task {
+    name: string;
+    created: firebase.firestore.Timestamp;
+    createdBy: string;
+    status?: TaskStatus;
+    type: TaskType;
+    id: string;
 }
 
 export interface Classroom {
