@@ -1,8 +1,12 @@
 const express = require("express");
 const app = express();
 const api = require("./api/index");
+const socket = require("./socket/run");
 const path = require("path");
 const fs = require("fs");
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
 
 app.use("/api", api);
 
@@ -25,6 +29,10 @@ app.get('/*', (req, res) => {
     res.sendFile(path.resolve('build/index.html'));
 });
 
-app.listen(8080, () => {
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+socket(io);
+
+server.listen(8080, () => {
     console.log("Ready on port 8080!");
 });
