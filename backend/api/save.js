@@ -17,7 +17,7 @@ router.post('/save', (req, res) => {
     const projectExists = fs.existsSync(projectPath);
     if (!projectExists) {
         fs.mkdirSync(projectPath);
-        
+
         const containsIndexPy = files.some(file => file.name === "index.py");
         if (!containsIndexPy) {
             res.sendStatus(400);
@@ -39,6 +39,26 @@ router.post('/save', (req, res) => {
         );
     });
 
+    res.sendStatus(200);
+});
+
+router.post('/delete-file', (req, res) => {
+    const projectId = req.body.projectId;
+    const fileName = req.body.fileName;
+
+    if (!projectId || !fileName) {
+        res.sendStatus(400);
+        return;
+    }
+
+    const filePath = path.resolve(storageRoot + '/' + projectId + '/' + fileName);
+    const fileExists = fs.existsSync(filePath);
+    if (!fileExists) {
+        res.sendStatus(404);
+        return;
+    }
+
+    fs.unlinkSync(filePath);
     res.sendStatus(200);
 });
 

@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import 'firebase/auth';
+import 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { User } from './types';
 

@@ -6,7 +6,7 @@ import StudentDashboard from './StudentDashboard';
 import TeacherDashboard from './TeacherDashboard';
 
 export default function Dashboard(): ReactElement {
-    const [user, loading, userDoc] = useAuth();
+    const [, loading, userDoc] = useAuth();
 
     if (loading || !userDoc) {
         return (
