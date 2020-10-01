@@ -5,8 +5,13 @@ const socket = require("./socket/run");
 const path = require("path");
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 app.use(bodyParser.json());
+
+if (process.env.NODE_ENV !== 'production') {
+    app.use(cors());
+}
 
 app.use("/api", api);
 

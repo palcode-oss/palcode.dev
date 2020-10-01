@@ -20,7 +20,11 @@ router.get('/get-file-list', (req, res) => {
         return;
     }
 
-    res.json(fileList);
+    const filteredFiles = fileList.filter(file => {
+        return file !== '__pycache__' && !file.startsWith('.');
+    });
+
+    res.json(filteredFiles);
 });
 
 router.get('/get-file', (req, res) => {
