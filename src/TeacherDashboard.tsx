@@ -17,6 +17,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import TimeAgo from 'timeago-react/lib/timeago-react';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 interface Props {
     user: User
@@ -38,6 +39,7 @@ export default function TeacherDashboard(
     const [classroomData, setClassroomData] = useState<ClassroomData[]>([]);
     const [classroomDataLoading, setClassroomDataLoading] = useState(true);
 
+    const [classroomDataUpdater, setClassroomDataUpdater] = useState(0);
     useEffect(() => {
         async function loadClassroomData() {
             const data = await firebase
@@ -64,7 +66,7 @@ export default function TeacherDashboard(
         }
 
         loadClassroomData();
-    }, []);
+    }, [classroomDataUpdater]);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openMenu = useCallback((e: React.MouseEvent<HTMLElement>) => {
@@ -73,6 +75,27 @@ export default function TeacherDashboard(
 
     const handleClose = useCallback(() => {
         setAnchorEl(null);
+    }, []);
+
+    const {enqueueSnackbar} = useSnackbar();
+    const handleDelete = useCallback((classroomId: string) => {
+        handleClose();
+        firebase
+            .firestore()
+            .collection('classrooms')
+            .doc(classroomId)
+            .delete()
+            .then(() => {
+                enqueueSnackbar('Classroom deleted successfully!', {
+                    variant: 'success',
+                });
+                setClassroomDataUpdater(Math.random());
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong while attempting to delete classroom. Try again.', {
+                    variant: 'error',
+                });
+            });
     }, []);
 
     return (
@@ -136,11 +159,13 @@ export default function TeacherDashboard(
                                                                 &nbsp;View code page
                                                             </MenuItem>
                                                         </Link>
-                                                        <MenuItem onClick={handleClose}>
-                                                            <FontAwesomeIcon icon={faEdit}/>
-                                                            &nbsp;Manage classroom
-                                                        </MenuItem>
-                                                        <MenuItem onClick={handleClose}>
+                                                        <Link to={`/classroom/${classroom.id}/manage`}>
+                                                            <MenuItem>
+                                                                <FontAwesomeIcon icon={faEdit}/>
+                                                                &nbsp;Manage classroom
+                                                            </MenuItem>
+                                                        </Link>
+                                                        <MenuItem onClick={() => handleDelete(classroom.id)}>
                                                             <FontAwesomeIcon icon={faTrashAlt}/>
                                                             &nbsp;Delete
                                                         </MenuItem>

@@ -39,6 +39,15 @@ export default function CodePage(): ReactElement {
                     )
                 }
             </div>
+            <div className='instructions'>
+                <p>
+                    Visit&nbsp;
+                    <strong>
+                        TODO: add URL
+                    </strong>
+                    &nbsp;and enter this code to add yourself to this classroom. You'll need to sign up or sign in first.
+                </p>
+            </div>
         </div>
     )
 }
