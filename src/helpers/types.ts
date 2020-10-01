@@ -28,6 +28,7 @@ export interface TaskProps {
     name: string;
     created: firebase.firestore.Timestamp;
     createdBy: string;
+    status: TaskStatus;
     type: TaskType;
     id: string;
 }

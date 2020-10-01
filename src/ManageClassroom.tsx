@@ -45,8 +45,9 @@ export default function ManageClassroom(): ReactElement {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Student name</TableCell>
-                                    <TableCell align='right'>Tasks viewed</TableCell>
+                                    <TableCell align='right'>Tasks unsubmitted</TableCell>
                                     <TableCell align='right'>Tasks completed</TableCell>
+                                    <TableCell align='right'>Tasks returned</TableCell>
                                     <TableCell align='center'>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -55,6 +56,7 @@ export default function ManageClassroom(): ReactElement {
                                     classroomData.members.map(studentId => (
                                         <StudentRow
                                             studentId={studentId}
+                                            classroomId={classroomId}
                                             key={studentId}
                                         />
                                     ))
