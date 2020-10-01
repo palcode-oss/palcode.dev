@@ -1,3 +1,5 @@
+import firebase from 'firebase';
+
 export enum Perms {
     Student,
     Teacher,
@@ -16,10 +18,11 @@ export interface Task {
 }
 
 export interface Classroom {
-    created: number;
+    created: firebase.firestore.Timestamp;
     name: string;
     members: string[];
     owner: string;
     tasks: Task[];
     code: string;
+    id: string;
 }

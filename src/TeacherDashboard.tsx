@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import { Classroom, Task, User } from './helpers/types';
+import { Classroom, User } from './helpers/types';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -15,19 +15,11 @@ import Menu from '@material-ui/core/Menu';
 import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
 import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
-import TimeAgo from 'timeago-react/lib/timeago-react';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 interface Props {
     user: User
-}
-
-interface ClassroomData {
-    id: string;
-    created: number;
-    members: string[];
-    name: string;
-    tasks: Task[];
 }
 
 export default function TeacherDashboard(
@@ -35,7 +27,7 @@ export default function TeacherDashboard(
         user,
     }: Props,
 ): ReactElement {
-    const [classroomData, setClassroomData] = useState<ClassroomData[]>([]);
+    const [classroomData, setClassroomData] = useState<Classroom[]>([]);
     const [classroomDataLoading, setClassroomDataLoading] = useState(true);
 
     useEffect(() => {
@@ -48,17 +40,10 @@ export default function TeacherDashboard(
                 .then(data => data.docs);
 
             setClassroomData(
-                data.map((doc) => {
-                    const {created, members, name, tasks} = doc.data() as Classroom;
-
-                    return {
-                        name,
-                        members,
-                        created,
-                        tasks,
-                        id: doc.id,
-                    };
-                }),
+                data.map((doc) => ({
+                    ...doc.data() as Classroom,
+                    id: doc.id,
+                })),
             );
             setClassroomDataLoading(false);
         }
@@ -102,10 +87,9 @@ export default function TeacherDashboard(
                                                 <TableCell align='right'>{classroom.members.length}</TableCell>
                                                 <TableCell align='right'>{classroom.tasks.length}</TableCell>
                                                 <TableCell align='right'>
-                                                    <TimeAgo
-                                                        datetime={classroom.created}
-                                                        locale='en_GB'
-                                                    />
+                                                    {
+                                                        moment(classroom.created.toDate()).fromNow()
+                                                    }
                                                 </TableCell>
                                                 <TableCell align='center'>
                                                     <button
