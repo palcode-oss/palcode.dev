@@ -16,7 +16,9 @@ import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
 import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import moment from 'moment';
+import DropdownMenu from './ui/DropdownMenu';
 
 interface Props {
     user: User
@@ -30,6 +32,7 @@ export default function TeacherDashboard(
     const [classroomData, setClassroomData] = useState<Classroom[]>([]);
     const [classroomDataLoading, setClassroomDataLoading] = useState(true);
 
+    const [classroomDataUpdater, setClassroomDataUpdater] = useState(0);
     useEffect(() => {
         async function loadClassroomData() {
             const data = await firebase
@@ -49,15 +52,26 @@ export default function TeacherDashboard(
         }
 
         loadClassroomData();
-    }, []);
+    }, [classroomDataUpdater]);
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const openMenu = useCallback((e: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(e.currentTarget);
-    }, []);
-
-    const handleClose = useCallback(() => {
-        setAnchorEl(null);
+    const {enqueueSnackbar} = useSnackbar();
+    const handleDelete = useCallback((classroomId: string) => {
+        firebase
+            .firestore()
+            .collection('classrooms')
+            .doc(classroomId)
+            .delete()
+            .then(() => {
+                enqueueSnackbar('Classroom deleted successfully!', {
+                    variant: 'success',
+                });
+                setClassroomDataUpdater(Math.random());
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong while attempting to delete that classroom. Try again.', {
+                    variant: 'error',
+                });
+            });
     }, []);
 
     return (
@@ -92,43 +106,24 @@ export default function TeacherDashboard(
                                                     }
                                                 </TableCell>
                                                 <TableCell align='center'>
-                                                    <button
-                                                        className='more-dropdown'
-                                                        onClick={openMenu}
-                                                    >
-                                                        <FontAwesomeIcon icon={faEllipsisV}/>
-                                                    </button>
-
-                                                    <Menu
-                                                        id='table-menu'
-                                                        anchorEl={anchorEl}
-                                                        anchorOrigin={{
-                                                            vertical: 'bottom',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        keepMounted
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        open={!!anchorEl}
-                                                        onClose={handleClose}
-                                                    >
+                                                    <DropdownMenu>
                                                         <Link to={`/classroom/${classroom.id}/view_code`}>
                                                             <MenuItem>
                                                                 <FontAwesomeIcon icon={faKeyboard}/>
                                                                 &nbsp;View code page
                                                             </MenuItem>
                                                         </Link>
-                                                        <MenuItem onClick={handleClose}>
-                                                            <FontAwesomeIcon icon={faEdit}/>
-                                                            &nbsp;Manage classroom
-                                                        </MenuItem>
-                                                        <MenuItem onClick={handleClose}>
+                                                        <Link to={`/classroom/${classroom.id}/manage`}>
+                                                            <MenuItem>
+                                                                <FontAwesomeIcon icon={faEdit}/>
+                                                                &nbsp;Manage classroom
+                                                            </MenuItem>
+                                                        </Link>
+                                                        <MenuItem onClick={() => handleDelete(classroom.id)}>
                                                             <FontAwesomeIcon icon={faTrashAlt}/>
                                                             &nbsp;Delete
                                                         </MenuItem>
-                                                    </Menu>
+                                                    </DropdownMenu>
                                                 </TableCell>
                                             </TableRow>
                                         ))

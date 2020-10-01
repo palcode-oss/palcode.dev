@@ -24,14 +24,25 @@ export enum TaskType {
     Submission,
 }
 
-export interface Task {
+export interface TaskProps {
     name: string;
     created: firebase.firestore.Timestamp;
     createdBy: string;
-    status?: TaskStatus;
+    status: TaskStatus;
     type: TaskType;
     id: string;
 }
+
+export interface TemplateTask extends TaskProps{
+    taskType: TaskType.Template;
+}
+
+export interface SubmissionTask extends TaskProps{
+    taskType: TaskType.Submission;
+    parentTask: string;
+}
+
+export type Task = TemplateTask | SubmissionTask | TaskProps;
 
 export interface Classroom {
     created: firebase.firestore.Timestamp;
