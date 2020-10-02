@@ -1,4 +1,4 @@
-import MonacoEditor from 'react-monaco-editor/lib/editor';
+import MonacoEditor from 'react-monaco-editor';
 import React from 'react';
 import { useFileContent } from '../helpers/taskContent';
 
