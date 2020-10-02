@@ -31,3 +31,8 @@ jobs:
         env: 
           REACT_APP_API: https://palchat.dev/api
           REACT_APP_SOCKET: https://palchat.dev
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: react-build
+          path: build
