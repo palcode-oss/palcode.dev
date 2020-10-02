@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback } from 'react';
-import { Classroom, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
+import { Classroom, TaskStatus, TaskType } from '../helpers/types';
 import { TableCell } from '@material-ui/core';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,6 +13,7 @@ import useTask from '../helpers/taskData';
 import { Shimmer } from 'react-shimmer';
 import { faGraduationCap } from '@fortawesome/free-solid-svg-icons/faGraduationCap';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 interface Props {
     taskId: string;
@@ -40,9 +41,9 @@ export default function TaskRow(
             .update(
                 {
                     tasks: classroom.tasks.filter(
-                        t => t.id !== taskId && t.parentTask !== taskId
-                    )
-                } as Partial<Classroom>
+                        t => t.id !== taskId && t.parentTask !== taskId,
+                    ),
+                } as Partial<Classroom>,
             )
             .then(() => {
                 enqueueSnackbar('Task & submissions removed successfully!', {
@@ -90,6 +91,19 @@ export default function TaskRow(
                     </TableCell>
                 ))
             }
+            <TableCell align='right'>
+                {
+                    task ?
+                        moment(task.created.toDate()).fromNow()
+                        : (
+                            <Shimmer
+                                height={12}
+                                width={120}
+                                className='shimmer'
+                            />
+                        )
+                }
+            </TableCell>
             <TableCell align='center'>
                 <DropdownMenu>
                     {/*TODO: add link in below to grade stuff*/}

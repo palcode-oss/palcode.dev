@@ -8,6 +8,7 @@ import Navbar from "./ui/Navbar";
 import Settings from "./Settings";
 import CodePage from './CodePage';
 import ManageClassroom from './ManageClassroom';
+import ViewClassroom from './ViewClassroom';
 
 const history = createBrowserHistory();
 
@@ -25,6 +26,9 @@ export default function Navigation(): ReactElement {
                 </Route>
                 <Route path='/classroom/:classroomId/manage'>
                     <ManageClassroom />
+                </Route>
+                <Route path='/classroom/:classroomId/view'>
+                    <ViewClassroom />
                 </Route>
                 <Route path='/task/new'>
                     <NewTask />

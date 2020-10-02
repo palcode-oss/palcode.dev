@@ -58,6 +58,11 @@ export default function ManageClassroom(): ReactElement {
             {
                 classroomData ? (
                     <>
+                        <h1>
+                            {
+                                classroomData.name
+                            }
+                        </h1>
                         <TableContainer>
                             <Toolbar>
                                 <Typography
