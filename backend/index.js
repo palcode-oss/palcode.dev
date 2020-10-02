@@ -38,6 +38,6 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 socket(io);
 
-server.listen(8080, () => {
-    console.log("Ready on port 8080!");
+server.listen(process.env.PAL_PORT, () => {
+    console.log("Ready on port " + process.env.PAL_PORT);
 });
