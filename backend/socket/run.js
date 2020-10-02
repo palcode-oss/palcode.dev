@@ -1,14 +1,12 @@
 const fs = require("fs");
 const path = require("path");
+const {getPythonTag, getStorageRoot} = require("../helpers");
 const Docker = require("dockerode");
 const docker = Docker();
 
-const storageRoot = process.env.PAL_STORAGE_ROOT;
-
-docker.pull('python:3.7.9', (err, stream) => {
-    console.log('Installing Python 3.7.9');
-    docker.modem.followProgress(stream, (err, output) => {
-        console.log('Python 3.7.9 installed!');
+docker.pull('python:' + getPythonTag(), (err, stream) => {
+    docker.modem.followProgress(stream, () => {
+        console.log('Python installed!');
     }, (event) => {
         console.log(event.status);
     })
@@ -27,13 +25,12 @@ async function execPython(projectId, socket, io) {
     } catch (e) {}
 
     docker.createContainer({
-        // repl.it uses python 3.7.x
-        Image: 'python:3.7.9',
+        Image: 'python:' + getPythonTag(),
         name: projectId,
         WorkingDir: '/usr/src/app',
         Binds: [
             '/var/run/docker.sock:/var/run/docker.sock',
-            path.resolve(storageRoot + '/' + projectId) + ':/usr/src/app',
+            path.resolve(getStorageRoot() + '/' + projectId) + ':/usr/src/app',
         ],
         Entrypoint: ["python", "index.py"],
         OpenStdin: true,
@@ -101,7 +98,7 @@ module.exports = (io) => {
             }
 
             const dirExists = fs.existsSync(
-                path.resolve(storageRoot + '/' + data.projectId)
+                path.resolve(getStorageRoot() + '/' + data.projectId)
             );
             if (!dirExists) {
                 socket.emit('run', {
