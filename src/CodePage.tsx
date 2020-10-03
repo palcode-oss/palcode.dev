@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 import { Shimmer } from 'react-shimmer';
 import 'firebase/firestore';
 import { useClassroom } from './helpers/classroom';
+import codePage from './styles/codePage.module.scss';
 
 interface Params {
     classroomId: string;
@@ -11,22 +12,35 @@ interface Params {
 export default function CodePage(): ReactElement {
     const {classroomId} = useParams<Params>();
 
-    const code = useClassroom(classroomId)?.code;
+    const classroom = useClassroom(classroomId);
 
     return (
-        <div className='code-page'>
-            <div className='code'>
+        <div className={codePage.page}>
+            <h3 className={codePage.title}>
+                You're joining the classroom '
                 {
-                    code || (
+                    classroom?.name || (
                         <Shimmer
-                            height={24}
+                            height={25}
+                            width={150}
+                            className={codePage.shimmer}
+                        />
+                    )
+                }
+                '
+            </h3>
+            <div className={codePage.code}>
+                {
+                    classroom?.code || (
+                        <Shimmer
+                            height={55}
                             width={200}
-                            className='shimmer'
+                            className={codePage.shimmer}
                         />
                     )
                 }
             </div>
-            <div className='instructions'>
+            <div className={codePage.instruction}>
                 <p>
                     Visit&nbsp;
                     <strong>

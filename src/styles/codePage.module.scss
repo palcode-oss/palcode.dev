@@ -1,0 +1,37 @@
+@import "importables";
+
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(90vh - 50px);
+
+    .code {
+        font-size: 4rem;
+        color: $bg-dark;
+        @include miriam();
+
+        .shimmer {
+            margin-top: 15px;
+            filter: brightness(0.9);
+        }
+    }
+
+    .title {
+        font-size: 25px;
+
+        .shimmer {
+            display: inline-block;
+            margin-top: 0;
+            filter: brightness(0.9);
+        }
+    }
+
+    .instruction {
+        margin-top: 20px;
+        font-size: 1.5rem;
+        max-width: 700px;
+        text-align: center;
+    }
+}
