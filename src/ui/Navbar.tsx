@@ -59,13 +59,6 @@ export default function Navbar(): ReactElement {
                                 <FontAwesomeIcon icon={faHome}/>
                                 &nbsp;Dashboard
                             </Link>
-                            <Link
-                                className='option'
-                                to='/user/settings'
-                            >
-                                <FontAwesomeIcon icon={faCog}/>
-                                &nbsp;Settings
-                            </Link>
                             <button
                                 className='option sign-out'
                                 onClick={signOut}

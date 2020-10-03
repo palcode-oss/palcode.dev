@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback } from 'react';
-import { Classroom, TaskStatus, TaskType } from '../helpers/types';
+import { Classroom, isSubmissionTask, isTemplateTask, TaskStatus, TaskType } from '../helpers/types';
 import { TableCell } from '@material-ui/core';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -41,7 +41,7 @@ export default function TaskRow(
             .update(
                 {
                     tasks: classroom.tasks.filter(
-                        t => t.id !== taskId && t.parentTask !== taskId,
+                        t => t.id !== taskId && (isTemplateTask(t) || t.parentTask !== taskId),
                     ),
                 } as Partial<Classroom>,
             )
@@ -80,7 +80,7 @@ export default function TaskRow(
                         {
                             classroom.tasks.reduce(
                                 (acc, classroomTask) =>
-                                    classroomTask.type === TaskType.Submission
+                                    isSubmissionTask(classroomTask)
                                     && classroomTask.parentTask === taskId
                                     && classroomTask.status === status
                                         ? acc + 1

@@ -42,9 +42,17 @@ export interface SubmissionTask extends TaskProps {
     parentTask: string;
 }
 
-export type Task<T extends TaskType = TaskType.Submission> = T extends TaskType.Submission ? SubmissionTask
+export type Task<T extends TaskType = any> = T extends TaskType.Submission ? SubmissionTask
     : T extends TaskType.Template ? TemplateTask
         : never
+
+export function isSubmissionTask(task: Task): task is SubmissionTask {
+    return task.type === TaskType.Submission
+}
+
+export function isTemplateTask(task: Task): task is TemplateTask {
+    return task.type === TaskType.Template
+}
 
 export interface Classroom {
     created: firebase.firestore.Timestamp;

@@ -4,6 +4,7 @@ import 'firebase/firestore';
 import { useAuth } from './helpers/auth';
 import { Classroom } from './helpers/types';
 import { useSnackbar } from 'notistack';
+import { useHistory } from 'react-router-dom';
 
 export default function JoinClassroom(): ReactElement {
     const [user] = useAuth();
@@ -21,6 +22,7 @@ export default function JoinClassroom(): ReactElement {
     }, [code]);
 
     const {enqueueSnackbar} = useSnackbar();
+    const history = useHistory();
     const [loading, setLoading] = useState(false);
     const joinClassroom = useCallback(() => {
         if (!user) return;
@@ -48,6 +50,7 @@ export default function JoinClassroom(): ReactElement {
                         variant: 'info'
                     });
                     setLoading(false);
+                    history.push(`/classroom/${classroomData.id}/view`);
                     return;
                 }
 
@@ -63,6 +66,7 @@ export default function JoinClassroom(): ReactElement {
                         enqueueSnackbar(`Joined classroom '${classroomData.name}' successfully.`, {
                             variant: 'success'
                         });
+                        history.push(`/classroom/${classroomData.id}/view`);
                     })
                     .catch(() => {
                         setLoading(false);
