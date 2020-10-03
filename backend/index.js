@@ -44,7 +44,7 @@ if (process.env.NODE_ENV !== 'production') {
         cert: fs.readFileSync('cert.pem'),
     }
 
-    https.createServer(options, app);
+    server = https.createServer(options, app);
 }
 
 const io = require("socket.io")(server);
