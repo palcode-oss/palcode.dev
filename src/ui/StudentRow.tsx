@@ -1,9 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
-import { isSubmissionTask, isTemplateTask, SubmissionTask, Task, TaskStatus, TaskType, User } from '../helpers/types';
-import firebase from 'firebase';
-import { Task, TaskStatus, TaskType, User } from '../helpers/types';
+import { isSubmissionTask, SubmissionTask, TaskStatus, User } from '../helpers/types';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
@@ -53,7 +51,7 @@ export default function StudentRow(
         if (!classroom || tasksLoading) return null;
 
         return tasks.filter((task) => {
-            return task.createdBy === studentId && isSubmissionTask(task)
+            return task.createdBy === studentId && isSubmissionTask(task);
         }) as SubmissionTask[];
     }, [studentId, classroom]);
 
@@ -66,8 +64,8 @@ export default function StudentRow(
                 .doc(classroomId)
                 .update(
                     {
-                        members: classroom.members.filter(e => e !== studentId)
-                    } as Partial<User>
+                        members: classroom.members.filter(e => e !== studentId),
+                    } as Partial<User>,
                 )
                 .then(() => {
                     enqueueSnackbar('Student removed successfully!', {
@@ -100,7 +98,10 @@ export default function StudentRow(
             </TableCell>
             {
                 [TaskStatus.Unsubmitted, TaskStatus.Submitted, TaskStatus.HasFeedback].map(status => (
-                    <TableCell align='right' key={status}>
+                    <TableCell
+                        align='right'
+                        key={status}
+                    >
                         {
                             userTasks
                                 ? (
