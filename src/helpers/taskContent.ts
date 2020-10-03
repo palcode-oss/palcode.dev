@@ -66,7 +66,7 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
                     }],
                 }
             ).then(() => setSaving(false));
-        }, 1500);
+        }, 1000);
     }, [fileContent, fileName, taskId, initialDownloadComplete, timeout]);
 
     useEffect(() => {

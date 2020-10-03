@@ -1,10 +1,12 @@
+$navbar-height: 50px;
+
+$bg-light: #151e3f;
+$bg-dark: #030027;
+
 @mixin miriam {
   font-family: 'Miriam', monospace;
   font-weight: 400;
 }
-
-$bg-light: #151e3f;
-$bg-dark: #030027;
 
 @mixin bg-light {
   background-color: $bg-light;
@@ -13,3 +15,4 @@ $bg-dark: #030027;
 @mixin bg-dark {
   background-color: $bg-dark;
 }
+

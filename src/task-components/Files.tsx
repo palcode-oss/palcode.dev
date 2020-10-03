@@ -1,23 +1,26 @@
 import React, { ReactElement } from 'react';
+import editor from '../styles/editor.module.scss';
 
 export default function Files(
     {
         files,
-        onTabSelect
+        onTabSelect,
+        selectedFile,
     }: {
         files: string[],
+        selectedFile: string,
         onTabSelect(fileName: string): void,
     }
 ): ReactElement {
     return (
-        <ul className='files'>
+        <ul className={editor.files}>
             { files.map(file => (
                 <li
                     key={file}
+                    className={file === selectedFile ? editor.fileSelected : editor.file}
                 >
                     <a
                         href='#'
-                        className='file'
                         onClick={() => onTabSelect(file)}
                     >
                         {file}

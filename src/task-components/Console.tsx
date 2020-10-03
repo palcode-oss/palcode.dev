@@ -1,6 +1,7 @@
 import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/socket';
 import React, { useCallback } from 'react';
 import XtermWrapper from './XtermWrapper';
+import editor from '../styles/editor.module.scss';
 
 export default function Console(
     {
@@ -26,10 +27,11 @@ export default function Console(
     }, [running]);
 
     return (
-        <div className='console'>
+        <div className={editor.console}>
             {!running && (
                 <button
                     onClick={run}
+                    className={editor.runButton}
                 >
                     Run
                 </button>
@@ -38,6 +40,7 @@ export default function Console(
             {running && (
                 <button
                     onClick={kill}
+                    className={editor.killButton}
                 >
                     Kill
                 </button>

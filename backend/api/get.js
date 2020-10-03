@@ -21,7 +21,7 @@ router.get('/get-file-list', (req, res) => {
     }
 
     const filteredFiles = fileList.filter(file => {
-        return file !== '__pycache__' && !file.startsWith('.');
+        return file !== '__pycache__' /*&& file !== 'README.md'*/ && !file.startsWith('.');
     });
 
     res.json(filteredFiles);

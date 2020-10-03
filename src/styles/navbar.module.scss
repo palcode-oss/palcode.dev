@@ -3,11 +3,12 @@
 .navbar {
   width: 100%;
   @include bg-dark;
-  padding: 10px;
+  padding: 0 10px;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: $navbar-height;
 
   .title {
     font-size: 32px;
