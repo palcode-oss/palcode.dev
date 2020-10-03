@@ -2,12 +2,6 @@ import React, { ReactElement, ReactNode, useCallback, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import Menu from '@material-ui/core/Menu';
-import { Link } from 'react-router-dom';
-import MenuItem from '@material-ui/core/MenuItem';
-import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
-import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
-import { TableCell } from '@material-ui/core';
 import table from '../styles/table.module.scss';
 
 interface Props {
@@ -16,8 +10,8 @@ interface Props {
 
 export default function DropdownMenu(
     {
-        children
-    }: Props
+        children,
+    }: Props,
 ): ReactElement {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openMenu = useCallback((e: React.MouseEvent<HTMLElement>) => {
@@ -31,7 +25,7 @@ export default function DropdownMenu(
     return (
         <>
             <button
-                className='more-dropdown'
+                className={table.dropdownButton}
                 onClick={openMenu}
             >
                 <FontAwesomeIcon icon={faEllipsisV}/>
@@ -57,5 +51,5 @@ export default function DropdownMenu(
                 }
             </Menu>
         </>
-    )
+    );
 }

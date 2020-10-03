@@ -15,6 +15,7 @@ import { Task, TaskType, TemplateTask } from './helpers/types';
 import { orderBy } from 'lodash';
 import { useClassroom } from './helpers/classroom';
 import table from './styles/table.module.scss';
+import loader from './styles/loader.module.scss';
 
 interface Params {
     classroomId: string;
@@ -49,12 +50,14 @@ export default function ViewClassroom(): ReactElement {
 
     if (!classroom) {
         return (
-            <Loader
-                type='Oval'
-                width={120}
-                height={120}
-                color='blue'
-            />
+            <div className={loader.loader}>
+                <Loader
+                    type='Oval'
+                    width={120}
+                    height={120}
+                    color='blue'
+                />
+            </div>
         );
     }
 

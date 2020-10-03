@@ -6,6 +6,7 @@ import StudentDashboard from './StudentDashboard';
 import TeacherDashboard from './TeacherDashboard';
 import LogInForm, { Page } from './ui/LogInForm';
 import form from './styles/form.module.scss';
+import loader from './styles/loader.module.scss';
 
 export default function Dashboard(): ReactElement {
     const [, loading, userDoc] = useAuth();
@@ -32,7 +33,7 @@ export default function Dashboard(): ReactElement {
 
     if (loading || !userDoc) {
         return (
-            <div className='loading-page'>
+            <div className={loader.loader}>
                 <Loader
                     type='Oval'
                     width={120}

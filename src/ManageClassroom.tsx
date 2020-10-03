@@ -19,6 +19,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
 import { useClassroom } from './helpers/classroom';
+import table from './styles/table.module.scss';
+import loader from './styles/loader.module.scss';
 
 interface Params {
     classroomId: string;
@@ -37,7 +39,7 @@ export default function ManageClassroom(): ReactElement {
     }, [classroomData]);
 
     return (
-        <div className='manage-classroom'>
+        <div className={table.tablePage}>
             {
                 classroomData ? (
                     <>
@@ -46,15 +48,18 @@ export default function ManageClassroom(): ReactElement {
                                 classroomData.name
                             }
                         </h1>
-                        <TableContainer>
-                            <Toolbar>
+                        <TableContainer className={table.tableContainer}>
+                            <Toolbar className={table.toolbar}>
                                 <Typography
                                     variant='h6'
                                     component='div'
                                 >
                                     Class students
                                 </Typography>
-                                <Tooltip title='Show code page'>
+                                <Tooltip
+                                    title='Show code page'
+                                    className={table.button}
+                                >
                                     <Link to={`/classroom/${classroomId}/view_code`}>
                                         <IconButton>
                                             <FontAwesomeIcon icon={faKeyboard}/>
@@ -63,6 +68,18 @@ export default function ManageClassroom(): ReactElement {
                                 </Tooltip>
                             </Toolbar>
                             <Table>
+                                {
+                                    !classroomData.members.length && (
+                                        <caption>
+                                            No students found in classroom. Students can add themselves through
+                                            the&nbsp;
+                                            <Link to={`/classroom/${classroomId}/view_code`}>
+                                                code page
+                                            </Link>
+                                            .
+                                        </caption>
+                                    )
+                                }
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Student name</TableCell>
@@ -74,41 +91,32 @@ export default function ManageClassroom(): ReactElement {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        classroomData.members.length
-                                            ? (
-                                                classroomData.members.map(studentId => (
-                                                    <StudentRow
-                                                        studentId={studentId}
-                                                        classroomId={classroomId}
-                                                        setClassroomUpdater={setClassroomUpdater}
-                                                        key={studentId}
-                                                    />
-                                                ))
-                                            ) : (
-                                                <p>
-                                                    No students found in classroom. Students can add themselves through
-                                                    the&nbsp;
-                                                    <Link to={`/classroom/${classroomId}/view_code`}>
-                                                        code page
-                                                    </Link>
-                                                    .
-                                                </p>
-                                            )
+                                        classroomData.members.map(studentId => (
+                                            <StudentRow
+                                                studentId={studentId}
+                                                classroomId={classroomId}
+                                                setClassroomUpdater={setClassroomUpdater}
+                                                key={studentId}
+                                            />
+                                        ))
                                     }
                                 </TableBody>
                             </Table>
                         </TableContainer>
 
-                        <TableContainer>
-                            <Toolbar>
+                        <TableContainer className={table.tableContainer}>
+                            <Toolbar className={table.toolbar}>
                                 <Typography
                                     variant='h6'
                                     component='div'
                                 >
                                     Class tasks
                                 </Typography>
-                                <Tooltip title='Add new task'>
-                                    <Link to={`/task/new`}>
+                                <Tooltip
+                                    title='Add new task'
+                                    className={table.button}
+                                >
+                                    <Link to='/task/new'>
                                         <IconButton>
                                             <FontAwesomeIcon icon={faPlus}/>
                                         </IconButton>
@@ -116,6 +124,15 @@ export default function ManageClassroom(): ReactElement {
                                 </Tooltip>
                             </Toolbar>
                             <Table>
+                                {
+                                    !tasks.length && (
+                                        <caption>
+                                            No tasks to show yet. Click the&nbsp;
+                                            <FontAwesomeIcon icon={faPlus}/>
+                                            &nbsp;button above to get started.
+                                        </caption>
+                                    )
+                                }
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Task name</TableCell>
@@ -128,38 +145,30 @@ export default function ManageClassroom(): ReactElement {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        tasks.length ?
-                                            (
-                                                tasks
-                                                    .map((task) => (
-                                                        <TaskRow
-                                                            taskId={task.id}
-                                                            classroom={classroomData}
-                                                            classroomId={classroomId}
-                                                            setClassroomUpdater={setClassroomUpdater}
-                                                            key={task.id}
-                                                        />
-                                                    ))
-                                            ) : (
-                                                <p>
-                                                    No tasks to show yet. Click the&nbsp;
-                                                    <FontAwesomeIcon icon={faPlus}/>
-                                                    &nbsp;button above to get started.
-                                                </p>
-                                            )
-
+                                        tasks
+                                            .map((task) => (
+                                                <TaskRow
+                                                    taskId={task.id}
+                                                    classroom={classroomData}
+                                                    classroomId={classroomId}
+                                                    setClassroomUpdater={setClassroomUpdater}
+                                                    key={task.id}
+                                                />
+                                            ))
                                     }
                                 </TableBody>
                             </Table>
                         </TableContainer>
                     </>
                 ) : (
-                    <Loader
-                        type='Oval'
-                        width={120}
-                        height={120}
-                        color='blue'
-                    />
+                    <div className={loader.loader}>
+                        <Loader
+                            type='Oval'
+                            width={120}
+                            height={120}
+                            color='blue'
+                        />
+                    </div>
                 )
             }
         </div>

@@ -9,6 +9,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { Link } from 'react-router-dom';
 import { useClassrooms } from './helpers/classroom';
 import studentDashboard from './styles/studentDashboard.module.scss';
+import loader from './styles/loader.module.scss';
 
 interface Props {
     user: User
@@ -34,12 +35,14 @@ export default function StudentDashboard(
             </div>
             {
                 classroomsLoading ? (
-                    <Loader
-                        type='Oval'
-                        width={120}
-                        height={120}
-                        color='blue'
-                    />
+                    <div className={loader.loader}>
+                        <Loader
+                            type='Oval'
+                            width={120}
+                            height={120}
+                            color='blue'
+                        />
+                    </div>
                 ) : (
                     <div className={studentDashboard.classroomCardContainer}>
                         {
