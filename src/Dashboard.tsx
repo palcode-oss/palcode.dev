@@ -5,6 +5,7 @@ import { Perms } from './helpers/types';
 import StudentDashboard from './StudentDashboard';
 import TeacherDashboard from './TeacherDashboard';
 import LogInForm, { Page } from './ui/LogInForm';
+import form from './styles/form.module.scss';
 
 export default function Dashboard(): ReactElement {
     const [, loading, userDoc] = useAuth();
@@ -12,7 +13,7 @@ export default function Dashboard(): ReactElement {
 
     if (!loading && !userDoc) {
         return (
-            <div className='login-prompt'>
+            <div className={form.loginPrompt}>
                 <h1>
                     Sign up to get started.
                 </h1>
