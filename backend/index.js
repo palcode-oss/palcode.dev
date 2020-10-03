@@ -34,7 +34,19 @@ app.get('/*', (req, res) => {
     res.sendFile(path.resolve('build/index.html'));
 });
 
-const server = require("http").createServer(app);
+let server;
+if (process.env.NODE_ENV !== 'production') {
+    server = require("http").createServer(app);
+} else {
+    const https = require("https");
+    const options = {
+        key: fs.readFileSync('key.pem'),
+        cert: fs.readFileSync('cert.pem'),
+    }
+
+    https.createServer(options, app);
+}
+
 const io = require("socket.io")(server);
 socket(io);
 
