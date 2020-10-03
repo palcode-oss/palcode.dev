@@ -16,7 +16,7 @@ router.get('/get-file-list', (req, res) => {
     try {
         fileList = fs.readdirSync(path.resolve(storageRoot + '/' + projectId));
     } catch (e) {
-        res.sendStatus(500);
+        res.sendStatus(404);
         return;
     }
 
@@ -43,7 +43,7 @@ router.get('/get-file', (req, res) => {
             "utf-8"
         );
     } catch (e) {
-        res.sendStatus(500);
+        res.sendStatus(404);
         return;
     }
 
