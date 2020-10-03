@@ -6,7 +6,7 @@ import NewTask from './NewTask';
 import Task from './Task';
 import Navbar from './ui/Navbar';
 import CodePage from './CodePage';
-import ManageClassroom, { useClassroom } from './ManageClassroom';
+import ManageClassroom from './ManageClassroom';
 import ViewClassroom from './ViewClassroom';
 import JoinClassroom from './JoinClassroom';
 import { useAuth } from './helpers/auth';
@@ -18,21 +18,21 @@ const history = createBrowserHistory();
 
 function RedirectUnauthed(
     {
-        onlyTeachers
-    }: {onlyTeachers?: Boolean}
+        onlyTeachers,
+    }: { onlyTeachers?: boolean },
 ): ReactElement {
     const [userObj, loading, user] = useAuth();
 
     if (onlyTeachers) {
         if ((!loading && !userObj) || (user && user.perms === Perms.Student)) {
             return (
-                <Redirect to='/' />
-            )
+                <Redirect to='/'/>
+            );
         }
     } else {
         if (!loading && !userObj) {
             return (
-                <Redirect to='/' />
+                <Redirect to='/'/>
             );
         }
     }
@@ -45,13 +45,13 @@ interface ClassroomParams {
 }
 
 function EnsureClassroomExists(): ReactElement {
-    const { classroomId } = useParams<ClassroomParams>();
+    const {classroomId} = useParams<ClassroomParams>();
     const [classroomError, setClassroomError] = useState(false);
 
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const handleError = useCallback(() => {
         enqueueSnackbar('We couldn\'t find that classroom - check your URL and try again.', {
-            variant: 'warning'
+            variant: 'warning',
         });
         setClassroomError(true);
     }, []);
@@ -70,7 +70,7 @@ function EnsureClassroomExists(): ReactElement {
 
     if (classroomError) {
         return (
-            <Redirect to='/' />
+            <Redirect to='/'/>
         );
     }
 
@@ -82,13 +82,13 @@ interface TaskParams {
 }
 
 function EnsureTaskExists(): ReactElement {
-    const { taskId } = useParams<TaskParams>();
+    const {taskId} = useParams<TaskParams>();
     const [taskError, setTaskError] = useState(false);
 
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const handleError = useCallback(() => {
         enqueueSnackbar('We couldn\'t find that task - check your URL and try again.', {
-            variant: 'warning'
+            variant: 'warning',
         });
         setTaskError(true);
     }, []);
@@ -107,7 +107,7 @@ function EnsureTaskExists(): ReactElement {
 
     if (taskError) {
         return (
-            <Redirect to='/' />
+            <Redirect to='/'/>
         );
     }
 
@@ -118,41 +118,41 @@ function EnsureTaskExists(): ReactElement {
 export default function Navigation(): ReactElement {
     return (
         <Router history={history}>
-            <Navbar />
+            <Navbar/>
 
             <Switch>
                 <Route path='/classroom/join'>
-                    <RedirectUnauthed />
-                    <JoinClassroom />
+                    <RedirectUnauthed/>
+                    <JoinClassroom/>
                 </Route>
                 <Route path='/classroom/:classroomId/view_code'>
-                    <RedirectUnauthed onlyTeachers />
-                    <EnsureClassroomExists />
-                    <CodePage />
+                    <RedirectUnauthed onlyTeachers/>
+                    <EnsureClassroomExists/>
+                    <CodePage/>
                 </Route>
                 <Route path='/classroom/:classroomId/manage'>
-                    <RedirectUnauthed onlyTeachers />
-                    <EnsureClassroomExists />
-                    <ManageClassroom />
+                    <RedirectUnauthed onlyTeachers/>
+                    <EnsureClassroomExists/>
+                    <ManageClassroom/>
                 </Route>
                 <Route path='/classroom/:classroomId/view'>
-                    <RedirectUnauthed />
-                    <EnsureClassroomExists />
-                    <ViewClassroom />
+                    <RedirectUnauthed/>
+                    <EnsureClassroomExists/>
+                    <ViewClassroom/>
                 </Route>
                 <Route path='/task/new'>
-                    <RedirectUnauthed onlyTeachers />
-                    <NewTask />
+                    <RedirectUnauthed onlyTeachers/>
+                    <NewTask/>
                 </Route>
                 <Route path='/task/:taskId'>
-                    <RedirectUnauthed />
-                    <EnsureTaskExists />
-                    <Task />
+                    <RedirectUnauthed/>
+                    <EnsureTaskExists/>
+                    <Task/>
                 </Route>
                 <Route path='/'>
-                    <Dashboard />
+                    <Dashboard/>
                 </Route>
             </Switch>
         </Router>
-    )
+    );
 }

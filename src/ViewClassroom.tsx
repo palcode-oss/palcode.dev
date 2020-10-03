@@ -1,6 +1,5 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useClassroom } from './ManageClassroom';
 import Loader from 'react-loader-spinner';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -14,6 +13,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TaskSubmissionRow from './ui/TaskSubmissionRow';
 import { Task, TaskType, TemplateTask } from './helpers/types';
 import { orderBy } from 'lodash';
+import { useClassroom } from './helpers/classroom';
 
 interface Params {
     classroomId: string;

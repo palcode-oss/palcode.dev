@@ -7,6 +7,7 @@ import ClassroomCard from './ui/ClassroomCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { Link } from 'react-router-dom';
+import { useClassrooms } from './helpers/classroom';
 
 interface Props {
     user: User
@@ -17,21 +18,7 @@ export default function StudentDashboard(
         user,
     }: Props,
 ): ReactElement {
-    const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-    const [classroomsLoading, setClassroomsLoading] = useState(true);
-
-    useEffect(() => {
-        setClassroomsLoading(true);
-        firebase
-            .firestore()
-            .collection('classrooms')
-            .where('members', 'array-contains', user.uid)
-            .get()
-            .then(data => {
-                setClassrooms(data.docs.map(doc => doc.data()) as Classroom[]);
-                setClassroomsLoading(false);
-            });
-    }, [user]);
+    const [classrooms, classroomsLoading] = useClassrooms(user.uid);
 
     return (
         <div className='student dashboard'>

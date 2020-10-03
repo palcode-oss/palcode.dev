@@ -19,23 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
-
-export function useClassroom(classroomId: string, classroomUpdater?: any): Classroom | null {
-    const [classroom, setClassroom] = useState<Classroom | null>(null);
-    useEffect(() => {
-        firebase
-            .firestore()
-            .collection('classrooms')
-            .doc(classroomId)
-            .get()
-            .then(doc => {
-                const data = doc.data() as Classroom;
-                setClassroom(data);
-            });
-    }, [classroomId, classroomUpdater]);
-
-    return classroom;
-}
+import { useClassroom } from './helpers/classroom';
 
 interface Params {
     classroomId: string;
