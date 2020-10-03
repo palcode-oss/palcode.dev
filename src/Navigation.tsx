@@ -2,7 +2,6 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Redirect, Route, Router, Switch, useParams } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import Dashboard from './Dashboard';
-import NewTask from './NewTask';
 import Task from './Task';
 import Navbar from './ui/Navbar';
 import CodePage from './CodePage';
@@ -139,10 +138,6 @@ export default function Navigation(): ReactElement {
                     <RedirectUnauthed/>
                     <EnsureClassroomExists/>
                     <ViewClassroom/>
-                </Route>
-                <Route path='/task/new'>
-                    <RedirectUnauthed onlyTeachers/>
-                    <NewTask/>
                 </Route>
                 <Route path='/task/:taskId'>
                     <RedirectUnauthed/>

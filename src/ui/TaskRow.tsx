@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback } from 'react';
-import { Classroom, isSubmissionTask, isTemplateTask, TaskStatus, TaskType } from '../helpers/types';
+import { Classroom, isSubmissionTask, isTemplateTask, TaskStatus } from '../helpers/types';
 import { TableCell } from '@material-ui/core';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -9,11 +9,11 @@ import TableRow from '@material-ui/core/TableRow';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useSnackbar } from 'notistack';
-import useTask from '../helpers/taskData';
 import { Shimmer } from 'react-shimmer';
 import { faGraduationCap } from '@fortawesome/free-solid-svg-icons/faGraduationCap';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { useTask, useTasks } from '../helpers/taskData';
 
 interface Props {
     taskId: string;
@@ -32,6 +32,8 @@ export default function TaskRow(
 ): ReactElement {
     const [task] = useTask(taskId);
 
+    const [tasks, tasksLoading] = useTasks(classroom.tasks);
+
     const {enqueueSnackbar} = useSnackbar();
     const deleteTask = useCallback(() => {
         firebase
@@ -40,9 +42,11 @@ export default function TaskRow(
             .doc(classroomId)
             .update(
                 {
-                    tasks: classroom.tasks.filter(
-                        t => t.id !== taskId && (isTemplateTask(t) || t.parentTask !== taskId),
-                    ),
+                    tasks: tasks
+                        .filter(
+                            t => t.id !== taskId && (isTemplateTask(t) || t.parentTask !== taskId),
+                        )
+                        .map(t => t.id),
                 } as Partial<Classroom>,
             )
             .then(() => {
@@ -56,7 +60,9 @@ export default function TaskRow(
                     variant: 'error',
                 });
             });
-    }, [classroomId, classroom, taskId]);
+    }, [classroomId, classroom, taskId, tasks]);
+
+    if (tasksLoading) return <></>;
 
     return (
         <TableRow>
@@ -71,26 +77,6 @@ export default function TaskRow(
                     )
                 }
             </TableCell>
-            {
-                [TaskStatus.Unsubmitted, TaskStatus.Submitted, TaskStatus.HasFeedback].map(status => (
-                    <TableCell
-                        align='right'
-                        key={status}
-                    >
-                        {
-                            classroom.tasks.reduce(
-                                (acc, classroomTask) =>
-                                    isSubmissionTask(classroomTask)
-                                    && classroomTask.parentTask === taskId
-                                    && classroomTask.status === status
-                                        ? acc + 1
-                                        : acc,
-                                0,
-                            )
-                        }
-                    </TableCell>
-                ))
-            }
             <TableCell align='right'>
                 {
                     task ?
@@ -104,10 +90,29 @@ export default function TaskRow(
                         )
                 }
             </TableCell>
+            {
+                [TaskStatus.Unsubmitted, TaskStatus.Submitted, TaskStatus.HasFeedback].map(status => (
+                    <TableCell
+                        align='right'
+                        key={status}
+                    >
+                        {
+                            tasks.reduce(
+                                (acc, classroomTask) =>
+                                    isSubmissionTask(classroomTask)
+                                    && classroomTask.parentTask === taskId
+                                    && classroomTask.status === status
+                                        ? acc + 1
+                                        : acc,
+                                0,
+                            )
+                        }
+                    </TableCell>
+                ))
+            }
             <TableCell align='center'>
                 <DropdownMenu>
-                    {/*TODO: add link in below to grade stuff*/}
-                    <Link to='/'>
+                    <Link to={`/task/${taskId}`}>
                         <MenuItem>
                             <FontAwesomeIcon icon={faGraduationCap}/>
                             &nbsp;Review

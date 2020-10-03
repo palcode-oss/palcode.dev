@@ -16,6 +16,7 @@ import { orderBy } from 'lodash';
 import { useClassroom } from './helpers/classroom';
 import table from './styles/table.module.scss';
 import loader from './styles/loader.module.scss';
+import { useTasks } from './helpers/taskData';
 
 interface Params {
     classroomId: string;
@@ -48,7 +49,9 @@ export default function ViewClassroom(): ReactElement {
         }
     }, [sort, sortDirection]);
 
-    if (!classroom) {
+    const [tasksData, tasksLoading] = useTasks(classroom?.tasks || []);
+
+    if (!classroom || tasksLoading) {
         return (
             <div className={loader.loader}>
                 <Loader
@@ -61,7 +64,7 @@ export default function ViewClassroom(): ReactElement {
         );
     }
 
-    const tasks = classroom.tasks.filter(task => task.type === TaskType.Template) as TemplateTask[];
+    const tasks = tasksData.filter(task => task.type === TaskType.Template) as TemplateTask[];
 
     return (
         <div className={table.tablePage}>
