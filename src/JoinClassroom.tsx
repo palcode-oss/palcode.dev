@@ -5,6 +5,8 @@ import { useAuth } from './helpers/auth';
 import { Classroom } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useHistory } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
+import form from './styles/form.module.scss';
 
 export default function JoinClassroom(): ReactElement {
     const [user] = useAuth();
@@ -78,7 +80,7 @@ export default function JoinClassroom(): ReactElement {
     }, [code, user]);
 
     return (
-        <div className='join-classroom'>
+        <div className={form.joinClassroom}>
             <h1>
                 Join a classroom
             </h1>
@@ -86,19 +88,38 @@ export default function JoinClassroom(): ReactElement {
                 Enter the code displayed on your teacher's screen in the box below to join the new classroom.
             </p>
 
-            <input
-                type='text'
-                value={code}
-                onChange={handleChange}
-                disabled={loading}
-            />
-
-            <button
-                onClick={joinClassroom}
-                disabled={!user || loading}
+            <form
+                autoComplete='off'
+                className={form.form}
             >
-                Join
-            </button>
+
+                <input
+                    type='text'
+                    value={code}
+                    onChange={handleChange}
+                    disabled={loading}
+                    placeholder='Enter your classroom code...'
+                    className={form.textInput}
+                    onClick={(e) => (e.target as HTMLInputElement).select()}
+                />
+
+                <button
+                    onClick={joinClassroom}
+                    disabled={!user || loading}
+                    className={form.button}
+                >
+                    {
+                        loading ? (
+                            <Loader
+                                type='Oval'
+                                width={14}
+                                height={14}
+                                color='white'
+                            />
+                        ) : 'Join'
+                    }
+                </button>
+            </form>
         </div>
     );
 }
