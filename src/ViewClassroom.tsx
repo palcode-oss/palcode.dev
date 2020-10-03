@@ -14,6 +14,7 @@ import TaskSubmissionRow from './ui/TaskSubmissionRow';
 import { Task, TaskType, TemplateTask } from './helpers/types';
 import { orderBy } from 'lodash';
 import { useClassroom } from './helpers/classroom';
+import table from './styles/table.module.scss';
 
 interface Params {
     classroomId: string;
@@ -60,14 +61,14 @@ export default function ViewClassroom(): ReactElement {
     const tasks = classroom.tasks.filter(task => task.type === TaskType.Template) as TemplateTask[];
 
     return (
-        <div className='view-classroom'>
+        <div className={table.tablePage}>
             <h1>
                 {
                     classroom.name
                 }
             </h1>
-            <TableContainer>
-                <Toolbar>
+            <TableContainer className={table.tableContainer}>
+                <Toolbar className={table.toolbar}>
                     <Typography
                         variant='h6'
                         component='div'
@@ -76,6 +77,13 @@ export default function ViewClassroom(): ReactElement {
                     </Typography>
                 </Toolbar>
                 <Table>
+                    {
+                        !tasks.length && (
+                            <caption>
+                                No tasks to show yet. They'll appear here once your teacher creates one.
+                            </caption>
+                        )
+                    }
                     <TableHead>
                         <TableRow>
                             <TableCell>
@@ -132,13 +140,6 @@ export default function ViewClassroom(): ReactElement {
                                         classroom={classroom}
                                     />
                                 ))
-                        }
-                        {
-                            !tasks.length && (
-                                <p>
-                                    No tasks to show yet. They'll appear here once your teacher creates one.
-                                </p>
-                            )
                         }
                     </TableBody>
                 </Table>
