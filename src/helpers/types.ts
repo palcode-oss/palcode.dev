@@ -33,11 +33,11 @@ export interface TaskProps {
     id: string;
 }
 
-export interface TemplateTask extends TaskProps{
+export interface TemplateTask extends TaskProps {
     taskType: TaskType.Template;
 }
 
-export interface SubmissionTask extends TaskProps{
+export interface SubmissionTask extends TaskProps {
     taskType: TaskType.Submission;
     parentTask: string;
 }
