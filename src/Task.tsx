@@ -5,6 +5,7 @@ import { useTaskFiles } from './helpers/taskContent';
 import Files from './task-components/Files';
 import FileEditor from './task-components/FileEditor';
 import { useSocket } from './helpers/socket';
+import Console from './task-components/Console';
 
 interface Params {
     taskId: string;
@@ -34,6 +35,8 @@ export default function Task(): ReactElement {
                 taskId={taskId}
                 fileName={currentTab}
             />
+
+            <Console taskId={taskId} />
         </div>
     )
 }
