@@ -18,9 +18,20 @@
             border-bottom-color: lighten($bg-light, 70);
         }
 
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
         caption {
             text-align: center;
             padding: 12px;
         }
+    }
+}
+
+.tableMenu {
+    a {
+        text-decoration: none;
+        color: black;
     }
 }

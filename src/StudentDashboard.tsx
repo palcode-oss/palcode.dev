@@ -29,6 +29,7 @@ export default function StudentDashboard(
                 </h1>
                 <Link to='/classroom/join'>
                     <FontAwesomeIcon icon={faPlus}/>
+                    &nbsp;Join
                 </Link>
             </div>
             {

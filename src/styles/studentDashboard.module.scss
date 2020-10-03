@@ -12,6 +12,8 @@
         a {
             font-size: 18px;
             color: $bg-light;
+            text-decoration: none;
+            font-weight: bold;
 
             &:hover {
                 color: $bg-dark;
