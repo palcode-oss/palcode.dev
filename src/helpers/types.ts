@@ -28,17 +28,16 @@ export interface TaskProps {
     name: string;
     created: firebase.firestore.Timestamp;
     createdBy: string;
-    status: TaskStatus;
-    type: TaskType;
     id: string;
 }
 
 export interface TemplateTask extends TaskProps {
-    taskType: TaskType.Template;
+    type: TaskType.Template;
 }
 
 export interface SubmissionTask extends TaskProps {
-    taskType: TaskType.Submission;
+    type: TaskType.Submission;
+    status: TaskStatus;
     parentTask: string;
 }
 
@@ -59,7 +58,7 @@ export interface Classroom {
     name: string;
     members: string[];
     owner: string;
-    tasks: Task[];
+    tasks: string[];
     code: string;
     id: string;
 }

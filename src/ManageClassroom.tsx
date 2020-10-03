@@ -6,7 +6,6 @@ import { TableCell } from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import { Link, useParams } from 'react-router-dom';
-import 'firebase/firestore';
 import { Task, TaskType } from './helpers/types';
 import Loader from 'react-loader-spinner';
 import StudentRow from './ui/StudentRow';
@@ -21,6 +20,10 @@ import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
 import { useClassroom } from './helpers/classroom';
 import table from './styles/table.module.scss';
 import loader from './styles/loader.module.scss';
+import NewTaskModal from './ui/NewTaskModal';
+import firebase from 'firebase';
+import 'firebase/firestore';
+import { useTask, useTasks } from './helpers/taskData';
 
 interface Params {
     classroomId: string;
@@ -32,16 +35,14 @@ export default function ManageClassroom(): ReactElement {
     const [classroomUpdater, setClassroomUpdater] = useState(0);
     const classroomData = useClassroom(classroomId, classroomUpdater);
 
-    const tasks: Task[] = useMemo(() => {
-        return classroomData
-            ?.tasks
-            .filter(task => task.type === TaskType.Template) || [];
-    }, [classroomData]);
+    const [tasks, loading] = useTasks(classroomData?.tasks || []);
+
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <div className={table.tablePage}>
             {
-                classroomData ? (
+                classroomData && !loading ? (
                     <>
                         <h1>
                             {
@@ -116,11 +117,9 @@ export default function ManageClassroom(): ReactElement {
                                     title='Add new task'
                                     className={table.button}
                                 >
-                                    <Link to='/task/new'>
-                                        <IconButton>
-                                            <FontAwesomeIcon icon={faPlus}/>
-                                        </IconButton>
-                                    </Link>
+                                    <IconButton onClick={() => setShowModal(true)}>
+                                        <FontAwesomeIcon icon={faPlus}/>
+                                    </IconButton>
                                 </Tooltip>
                             </Toolbar>
                             <Table>
@@ -159,6 +158,15 @@ export default function ManageClassroom(): ReactElement {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+
+                        {
+                            showModal && (
+                                <NewTaskModal
+                                    classroomId={classroomId}
+                                    closeModal={() => setShowModal(false)}
+                                />
+                            )
+                        }
                     </>
                 ) : (
                     <div className={loader.loader}>

@@ -1,9 +1,10 @@
 import { Classroom, TaskType } from '../helpers/types';
-import React, { MouseEvent, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { Shimmer } from 'react-shimmer';
 import { useUser } from '../helpers/auth';
 import { Link } from 'react-router-dom';
 import studentDashboard from '../styles/studentDashboard.module.scss';
+import { useTasks } from '../helpers/taskData';
 
 interface Props {
     classroom: Classroom;
@@ -15,8 +16,8 @@ export default function ClassroomCard(
     }: Props,
 ): ReactElement {
     const [owner, loading] = useUser(classroom.owner);
-    const tasks = classroom
-        .tasks
+    const [tasks, tasksLoading] = useTasks(classroom.tasks);
+    const taskCount = tasks
         .filter(task => task.type === TaskType.Template)
         .length;
 
@@ -43,9 +44,22 @@ export default function ClassroomCard(
             </h3>
             <p className={studentDashboard.taskCount}>
                 {
-                    tasks
+                    !tasksLoading
+                        ? (
+                            <>
+                                {
+                                    taskCount
+                                }
+                                &nbsp;task{taskCount !== 1 ? 's' : ''}
+                            </>
+                        ) : (
+                            <Shimmer
+                                height={12}
+                                width={100}
+                                className={studentDashboard.shimmer}
+                            />
+                        )
                 }
-                &nbsp;task{tasks !== 1 ? 's' : ''}
             </p>
         </Link>
     );

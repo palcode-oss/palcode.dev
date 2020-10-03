@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { TableCell } from '@material-ui/core';
-import { Classroom, Task, TaskStatus, TaskType } from '../helpers/types';
+import { Classroom, isSubmissionTask, SubmissionTask, Task, TaskStatus, TaskType } from '../helpers/types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,7 @@ import { faEye } from '@fortawesome/free-regular-svg-icons/faEye';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { faEdit } from '@fortawesome/free-regular-svg-icons/faEdit';
+import { useTasks } from '../helpers/taskData';
 
 interface Props {
     task: Task;
@@ -28,11 +29,12 @@ export default function TaskSubmissionRow(
     }: Props,
 ): ReactElement {
     const [user] = useAuth();
-    const submission = classroom.tasks.filter(task =>
-        task.taskType === TaskType.Submission
+    const [tasks, tasksLoading] = useTasks(classroom.tasks);
+    const submission = tasks.filter(task =>
+        isSubmissionTask(task)
         && task.parentTask === task.id
         && task.createdBy === user?.uid,
-    )[0];
+    )[0] as SubmissionTask;
 
     return (
         <TableRow>
@@ -43,7 +45,7 @@ export default function TaskSubmissionRow(
             </TableCell>
             <TableCell align='right'>
                 {
-                    user ? (
+                    user && !tasksLoading ? (
                         submission ? (
                             submission.status === TaskStatus.HasFeedback
                                 ? (

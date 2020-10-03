@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
-import { Task, TaskStatus, TaskType, User } from '../helpers/types';
+import { isSubmissionTask, isTemplateTask, SubmissionTask, Task, TaskStatus, TaskType, User } from '../helpers/types';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { useSnackbar } from 'notistack';
 import { useClassroom } from '../helpers/classroom';
+import { useTasks } from '../helpers/taskData';
 
 interface Props {
     studentId: string;
@@ -45,12 +46,13 @@ export default function StudentRow(
     const student = useStudent(studentId);
     const classroom = useClassroom(classroomId);
 
-    const userTasks = useMemo<Task[] | null>(() => {
-        if (!classroom) return null;
+    const [tasks, tasksLoading] = useTasks(classroom?.tasks || []);
+    const userTasks = useMemo<SubmissionTask[] | null>(() => {
+        if (!classroom || tasksLoading) return null;
 
-        return classroom.tasks.filter((task) => {
-            return task.createdBy === studentId && task.type === TaskType.Submission
-        });
+        return tasks.filter((task) => {
+            return task.createdBy === studentId && isSubmissionTask(task)
+        }) as SubmissionTask[];
     }, [studentId, classroom]);
 
     const {enqueueSnackbar} = useSnackbar();
