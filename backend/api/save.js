@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
 
 const storageRoot = process.env.PAL_STORAGE_ROOT;
@@ -59,6 +59,29 @@ router.post('/delete-file', (req, res) => {
     }
 
     fs.unlinkSync(filePath);
+    res.sendStatus(200);
+});
+
+router.post('/clone', (req, res) => {
+    const projectId = req.body.projectId;
+    const sourceProjectId = req.body.sourceProjectId;
+
+    if (!projectId || !sourceProjectId) {
+        res.sendStatus(400);
+        return;
+    }
+
+    const sourceProjectPath = path.resolve(storageRoot + '/' + sourceProjectId);
+    const pathExists = fs.existsSync(sourceProjectPath);
+    if (!pathExists) {
+        res.sendStatus(404);
+        return;
+    }
+
+    const projectPath = path.resolve(storageRoot + '/' + projectId);
+    fs.mkdirSync(projectPath);
+    fs.copySync(sourceProjectPath, projectPath);
+
     res.sendStatus(200);
 });
 
