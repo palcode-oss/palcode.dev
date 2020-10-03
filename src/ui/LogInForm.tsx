@@ -4,6 +4,8 @@ import * as EmailValidator from 'email-validator';
 import firebase from 'firebase';
 import { Perms, User } from '../helpers/types';
 import Loader from 'react-loader-spinner';
+import form from '../styles/form.module.scss';
+import modal from '../styles/modal.module.scss';
 
 interface Props {
     callback: () => void;
@@ -182,48 +184,68 @@ export default function LogInForm(
 
     return (
         <>
-            <form>
+            <form
+                className={form.form}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    page === Page.SignIn ? handleSignIn() : handleSignUp();
+                }}
+            >
                 {
-                    page === Page.SignUp && (
-                        <label htmlFor='display-name-input'>
+                    page === Page.SignUp && <>
+                        <label
+                            className={form.label}
+                            htmlFor='display-name-input'
+                        >
                             Full name
-                            <input
-                                type='text'
-                                id='display-name-input'
-                                onChange={handleDisplayNameChange}
-                                value={displayName}
-                                disabled={loading}
-                            />
                         </label>
-                    )
+                        <input
+                            type='text'
+                            id='display-name-input'
+                            onChange={handleDisplayNameChange}
+                            value={displayName}
+                            disabled={loading}
+                            className={form.textInput}
+                        />
+                    </>
                 }
 
-                <label htmlFor='email-input'>
+                <label
+                    className={form.label}
+                    htmlFor='email-input'
+                >
                     Email address
-                    <input
-                        type='text'
-                        id='email-input'
-                        onChange={handleEmailChange}
-                        value={email}
-                        disabled={loading}
-                    />
                 </label>
 
-                <label htmlFor='password-input'>
+                <input
+                    type='email'
+                    id='email-input'
+                    onChange={handleEmailChange}
+                    value={email}
+                    disabled={loading}
+                    className={form.textInput}
+                />
+
+                <label
+                    className={form.label}
+                    htmlFor='password-input'
+                >
                     Password
-                    <input
-                        type='password'
-                        id='password-input'
-                        onChange={handlePasswordChange}
-                        value={password}
-                        disabled={loading}
-                    />
                 </label>
+
+                <input
+                    type='password'
+                    id='password-input'
+                    onChange={handlePasswordChange}
+                    value={password}
+                    disabled={loading}
+                    className={form.textInput}
+                />
 
                 <button
-                    type='button'
-                    onClick={page === Page.SignIn ? handleSignIn : handleSignUp}
+                    type='submit'
                     disabled={loading}
+                    className={form.button}
                 >
                     {
                         loading
@@ -232,7 +254,7 @@ export default function LogInForm(
                                     type='Oval'
                                     width={14}
                                     height={14}
-                                    color='blue'
+                                    color='white'
                                 />
                             ) : ['Sign up', 'Sign in'][page]
                     }
@@ -240,7 +262,7 @@ export default function LogInForm(
             </form>
 
             <button
-                className='sign-in-up-toggle'
+                className={modal.toggleLink}
                 onClick={changePage}
                 disabled={loading}
             >
