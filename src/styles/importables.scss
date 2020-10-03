@@ -3,6 +3,16 @@ $navbar-height: 50px;
 $bg-light: #151e3f;
 $bg-dark: #030027;
 
+@mixin dark-shimmer {
+  border-radius: 50px;
+  filter: brightness(0.4) contrast(1.5) sepia(1) hue-rotate(-156deg) saturate(1.5);
+}
+
+@mixin light-shimmer {
+  border-radius: 50px;
+  filter: brightness(0.6) contrast(4.5) sepia(1) hue-rotate(-156deg) saturate(1.5);
+}
+
 @mixin miriam {
   font-family: 'Miriam', monospace;
   font-weight: 400;
@@ -15,4 +25,3 @@ $bg-dark: #030027;
 @mixin bg-dark {
   background-color: $bg-dark;
 }
-

@@ -67,7 +67,7 @@
 
             .shimmer {
                 margin-top: 5px;
-                border-radius: 10px;
+                @include light-shimmer();
             }
 
             .name {
