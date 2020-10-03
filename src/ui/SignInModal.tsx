@@ -1,7 +1,5 @@
 import React, { ReactElement, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import 'firebase/auth';
-import 'firebase/firestore';
 import modal from '../styles/modal.module.scss';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 

@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -6,7 +6,6 @@ import { TableCell } from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import { Link, useParams } from 'react-router-dom';
-import { Task, TaskType } from './helpers/types';
 import Loader from 'react-loader-spinner';
 import StudentRow from './ui/StudentRow';
 import TaskRow from './ui/TaskRow';
@@ -21,9 +20,7 @@ import { useClassroom } from './helpers/classroom';
 import table from './styles/table.module.scss';
 import loader from './styles/loader.module.scss';
 import NewTaskModal from './ui/NewTaskModal';
-import firebase from 'firebase';
-import 'firebase/firestore';
-import { useTask, useTasks } from './helpers/taskData';
+import { useTasks } from './helpers/taskData';
 
 interface Params {
     classroomId: string;

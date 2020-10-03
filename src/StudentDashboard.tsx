@@ -1,7 +1,5 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { Classroom, User } from './helpers/types';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import React, { ReactElement } from 'react';
+import { User } from './helpers/types';
 import Loader from 'react-loader-spinner';
 import ClassroomCard from './ui/ClassroomCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

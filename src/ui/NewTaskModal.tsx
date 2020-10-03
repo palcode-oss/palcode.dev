@@ -5,7 +5,7 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 import form from '../styles/form.module.scss';
 import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { v4 } from 'uuid';
 import { Classroom, TaskStatus, TaskType, TemplateTask } from '../helpers/types';

@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import React, { ReactElement } from 'react';
 import { Shimmer } from 'react-shimmer';
-import 'firebase/firestore';
 import { useClassroom } from './helpers/classroom';
 import codePage from './styles/codePage.module.scss';
 
