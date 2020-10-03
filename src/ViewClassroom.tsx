@@ -12,10 +12,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TaskSubmissionRow from './ui/TaskSubmissionRow';
-import * as _ from 'lodash';
 import { Task, TaskType } from './helpers/types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+import { sortBy } from 'lodash';
 
 interface Params {
     classroomId: string;
@@ -114,7 +112,7 @@ export default function ViewClassroom(): ReactElement {
                     </TableHead>
                     <TableBody>
                         {
-                            _.sortBy<Task>(
+                            sortBy<Task>(
                                 tasks,
                                 (
                                     sort === Column.Status
