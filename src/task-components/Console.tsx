@@ -2,6 +2,8 @@ import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/socke
 import React, { useCallback } from 'react';
 import XtermWrapper from './XtermWrapper';
 import editor from '../styles/editor.module.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faSkull } from '@fortawesome/free-solid-svg-icons';
 
 export default function Console(
     {
@@ -33,7 +35,8 @@ export default function Console(
                     onClick={run}
                     className={editor.runButton}
                 >
-                    Run
+                    <FontAwesomeIcon icon={faPlay} />
+                    &nbsp;Run
                 </button>
             )}
 
@@ -42,7 +45,8 @@ export default function Console(
                     onClick={kill}
                     className={editor.killButton}
                 >
-                    Kill
+                    <FontAwesomeIcon icon={faSkull} />
+                    &nbsp;Kill
                 </button>
             )}
 
