@@ -19,12 +19,6 @@ async function execPython(projectId, socket, io) {
         message: 'Starting...'
     });
 
-    try {
-        await docker.getContainer(projectId).remove({
-            force: true,
-        });
-    } catch (e) {}
-
     docker.createContainer({
         Image: 'python:' + getPythonTag(),
         name: projectId,
@@ -94,13 +88,16 @@ async function containerStdin(projectId, stdin) {
 }
 
 async function containerStop(projectId) {
-    const container = docker.getContainer(projectId);
-    return container.kill();
+    try {
+        await docker.getContainer(projectId).remove({
+            force: true,
+        });
+    } catch (e) {}
 }
 
 module.exports = (io) => {
     io.on('connection', (socket) => {
-        socket.on('start', (data) => {
+        socket.on('start', async (data) => {
             if (!data.projectId) {
                 socket.emit('run', {
                     status: 400,
@@ -117,6 +114,8 @@ module.exports = (io) => {
                 });
                 return;
             }
+
+            await containerStop(data.projectId);
 
             socket.join(data.projectId);
             io.to(data.projectId).emit('run', {

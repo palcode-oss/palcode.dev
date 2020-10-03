@@ -1,6 +1,8 @@
 import React, { ReactElement, useEffect, useMemo, useRef } from 'react';
 import {Terminal} from 'xterm';
+import {FitAddon} from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';
+import editor from '../styles/editor.module.scss';
 
 export default function XtermWrapper(
     {
@@ -28,7 +30,10 @@ export default function XtermWrapper(
             return;
         }
 
+        const fitAddon = new FitAddon();
+        terminal.loadAddon(fitAddon);
         terminal.open(terminalContainer.current);
+        fitAddon.fit();
     }, [terminalContainer]);
 
     useEffect(() => {
@@ -48,6 +53,7 @@ export default function XtermWrapper(
     return (
         <div
             ref={terminalContainer}
+            className={editor.xtermContainer}
         />
     )
 }
