@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useMemo, useRef } from 'react';
 import {Terminal} from 'xterm';
 import {FitAddon} from 'xterm-addon-fit';
+import { WebLinksAddon } from 'xterm-addon-web-links';
 import 'xterm/css/xterm.css';
 import editor from '../styles/editor.module.scss';
 
@@ -32,6 +33,7 @@ export default function XtermWrapper(
 
         const fitAddon = new FitAddon();
         terminal.loadAddon(fitAddon);
+        terminal.loadAddon(new WebLinksAddon());
         terminal.open(terminalContainer.current);
         fitAddon.fit();
     }, [terminalContainer]);

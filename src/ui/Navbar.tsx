@@ -89,7 +89,7 @@ export default function Navbar(): ReactElement {
                             <Shimmer
                                 height={16}
                                 width={100}
-                                className='shimmer'
+                                className={styles.shimmer}
                             />
                         </button>
                     )

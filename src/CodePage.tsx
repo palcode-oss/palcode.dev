@@ -27,14 +27,14 @@ export default function CodePage(): ReactElement {
                         />
                     )
                 }
-                '
+                '.
             </h3>
             <div className={codePage.code}>
                 {
                     classroom?.code || (
                         <Shimmer
                             height={55}
-                            width={200}
+                            width={250}
                             className={codePage.shimmer}
                         />
                     )
@@ -44,7 +44,7 @@ export default function CodePage(): ReactElement {
                 <p>
                     Visit&nbsp;
                     <strong>
-                        TODO: add URL
+                        https://palcode.dev/classroom/join
                     </strong>
                     &nbsp;and enter this code to add yourself to this classroom. You'll need to sign up or sign in
                     first.

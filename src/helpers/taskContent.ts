@@ -16,12 +16,17 @@ export function useTaskFiles(taskId: string): [string[], boolean, (fileName: str
         )
             .then(response => {
                 setLoading(false);
-                if (response.status !== 200) {
-                    return;
-                }
 
-                setFiles(response.data);
+                if (response.data.length === 0) {
+                    setFiles(['index.py']);
+                } else {
+                    setFiles(response.data);
+                }
             })
+            .catch(() => {
+                setLoading(false);
+                setFiles(['index.py'])
+            });
     }, [taskId]);
 
     const addLocalFile = useCallback((fileName: string) => {
