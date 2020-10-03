@@ -1,6 +1,5 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import Loader from 'react-loader-spinner';
 import * as EmailValidator from 'email-validator';
 import { useSnackbar } from 'notistack';
@@ -8,6 +7,9 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { Perms, User } from '../helpers/types';
+import modal from '../styles/modal.module.scss';
+import form from '../styles/form.module.scss';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 
 enum Page {
     SignUp,
@@ -103,10 +105,10 @@ export default function SignInModal(
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then((user) => {
-                const userObj = user.user;
-                if (userObj) {
-                    userObj
+            .then(response => {
+                const user = response.user;
+                if (user) {
+                    user
                         .updateProfile({
                             displayName,
                         })
@@ -118,12 +120,12 @@ export default function SignInModal(
                                     firebase
                                         .firestore()
                                         .collection('users')
-                                        .doc(userObj.uid)
+                                        .doc(user.uid)
                                         .set({
                                             email,
                                             displayName,
                                             perms: Perms.Student,
-                                            uid: userObj.uid,
+                                            uid: user.uid,
                                         } as User)
                                         .then(() => {
                                             enqueueSnackbar('Success! You\'re now signed in with your new account.', {
@@ -184,64 +186,86 @@ export default function SignInModal(
     }, [page]);
 
     return (
-        <div className='modal'>
-            <div className='modal-contents'>
-                <div className='modal-head'>
-                    {
-                        page === Page.SignIn ? 'Sign in' : 'Sign up'
-                    }
+        <div className={modal.modal}>
+            <div className={modal.content}>
+                <div className={modal.head}>
+                    <span className={modal.title}>
+                        {
+                            page === Page.SignIn ? 'Sign in' : 'Sign up'
+                        }
+                    </span>
 
                     <button
-                        className='modal-close'
+                        className={modal.close}
                         onClick={closeModal}
                     >
-                        <FontAwesomeIcon icon={faTimes}/>
+                        <FontAwesomeIcon icon={faTimesCircle} />
                     </button>
                 </div>
 
-                <div className='modal-body'>
-                    <form>
+                <div className={modal.body}>
+                    <form
+                        className={form.form}
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            page === Page.SignIn ? handleSignIn() : handleSignUp();
+                        }}
+                    >
                         {
-                            page === Page.SignUp && (
-                                <label htmlFor='display-name-input'>
+                            page === Page.SignUp && <>
+                                <label
+                                    className={form.label}
+                                    htmlFor='display-name-input'
+                                >
                                     Full name
-                                    <input
-                                        type='text'
-                                        id='display-name-input'
-                                        onChange={handleDisplayNameChange}
-                                        value={displayName}
-                                        disabled={loading}
-                                    />
                                 </label>
-                            )
+                                <input
+                                    type='text'
+                                    id='display-name-input'
+                                    onChange={handleDisplayNameChange}
+                                    value={displayName}
+                                    disabled={loading}
+                                    className={form.textInput}
+                                />
+                            </>
                         }
 
-                        <label htmlFor='email-input'>
+                        <label
+                            className={form.label}
+                            htmlFor='email-input'
+                        >
                             Email address
-                            <input
-                                type='text'
-                                id='email-input'
-                                onChange={handleEmailChange}
-                                value={email}
-                                disabled={loading}
-                            />
                         </label>
 
-                        <label htmlFor='password-input'>
+                        <input
+                            type='email'
+                            id='email-input'
+                            onChange={handleEmailChange}
+                            value={email}
+                            disabled={loading}
+                            className={form.textInput}
+                        />
+
+                        <label
+                            className={form.label}
+                            htmlFor='password-input'
+                        >
                             Password
-                            <input
-                                type='password'
-                                id='password-input'
-                                onChange={handlePasswordChange}
-                                value={password}
-                                disabled={loading}
-                            />
                         </label>
+
+                        <input
+                            type='password'
+                            id='password-input'
+                            onChange={handlePasswordChange}
+                            value={password}
+                            disabled={loading}
+                            className={form.textInput}
+                        />
 
                         <button
-                            type='button'
-                            onClick={page === Page.SignIn ? handleSignIn : handleSignUp}
+                            type='submit'
                             disabled={loading}
+                            className={form.button}
                         >
                             {
                                 loading
@@ -250,7 +274,7 @@ export default function SignInModal(
                                             type='Oval'
                                             width={14}
                                             height={14}
-                                            color='blue'
+                                            color='white'
                                         />
                                     ) : ['Sign up', 'Sign in'][page]
                             }
@@ -258,7 +282,7 @@ export default function SignInModal(
                     </form>
 
                     <button
-                        className='sign-in-up-toggle'
+                        className={modal.toggleLink}
                         onClick={changePage}
                         disabled={loading}
                     >

@@ -1,0 +1,54 @@
+@import "importables";
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+
+  padding: 10px;
+
+  .content {
+    @include bg-light;
+    border-radius: 20px;
+    min-width: 30vw;
+
+    box-shadow: 0 0 20px 5px rgba(21, 30, 63, 0.3);
+
+    .head {
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .title {
+        @include miriam;
+        font-size: 24px;
+        color: white;
+      }
+
+      .close {
+        font-size: 18px;
+        color: white;
+      }
+    }
+
+    .body {
+      padding: 0 15px 15px;
+    }
+  }
+}
+
+.toggleLink {
+  margin-top: 10px;
+  color: lighten($bg-light, 50%);
+}

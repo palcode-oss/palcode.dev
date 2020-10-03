@@ -22,8 +22,6 @@ export default function Task(): ReactElement {
         setCurrentTab(fileName);
     }, []);
 
-    const socket = useSocket();
-
     return (
         <div className='task'>
             <Files

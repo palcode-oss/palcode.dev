@@ -1,17 +1,12 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useAuth } from '../helpers/auth';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
-import { faCog } from '@fortawesome/free-solid-svg-icons/faCog';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons/faSignInAlt';
 import { Shimmer } from 'react-shimmer';
 import firebase from 'firebase';
 import 'firebase/auth';
 import { useSnackbar } from 'notistack';
 import SignInModal from './SignInModal';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus';
+import styles from '../styles/navbar.module.scss';
 
 export default function Navbar(): ReactElement {
     const [authUser, authLoading] = useAuth();
@@ -41,37 +36,34 @@ export default function Navbar(): ReactElement {
     }, []);
 
     return (
-        <div className='navbar'>
-            <h1 className='title'>
+        <nav className={styles.navbar}>
+            <h1 className={styles.title}>
                 <Link to='/'>
                     PalCode
                 </Link>
             </h1>
 
-            <div className='nav-options'>
+            <div className={styles.options}>
                 {
                     authUser && (
                         <>
                             <Link
-                                className='option'
+                                className={styles.option}
                                 to='/'
                             >
-                                <FontAwesomeIcon icon={faHome}/>
-                                &nbsp;Dashboard
+                                Dashboard
                             </Link>
                             <Link
-                                className='option'
+                                className={styles.option}
                                 to='/user/settings'
                             >
-                                <FontAwesomeIcon icon={faCog}/>
-                                &nbsp;Settings
+                                Settings
                             </Link>
                             <button
-                                className='option sign-out'
+                                className={styles.option}
                                 onClick={signOut}
                             >
-                                <FontAwesomeIcon icon={faSignOutAlt}/>
-                                &nbsp;Sign out
+                                Sign out
                             </button>
                         </>
                     )
@@ -81,19 +73,17 @@ export default function Navbar(): ReactElement {
                     !authLoading && !authUser && (
                         <>
                             <button
-                                className='option'
+                                className={styles.option}
                                 onClick={signIn}
                             >
-                                <FontAwesomeIcon icon={faSignInAlt}/>
-                                &nbsp;Sign in
+                                Sign in
                             </button>
 
                             <button
-                                className='option'
+                                className={styles.option}
                                 onClick={signUp}
                             >
-                                <FontAwesomeIcon icon={faUserPlus}/>
-                                &nbsp;Sign up
+                                Sign up
                             </button>
                         </>
                     )
@@ -128,6 +118,6 @@ export default function Navbar(): ReactElement {
                     />
                 )
             }
-        </div>
+        </nav>
     );
 }

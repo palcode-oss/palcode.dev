@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Miriam+Libre:wght@400;700&display=swap');
+
+body, html {
+  margin: 0;
+}
+
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+p, h1, h2, h3, h4, h5, h6, a, button, label {
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: unset;
+}
+
+input {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  font-family: unset;
+}
