@@ -1,0 +1,77 @@
+@import "importables";
+
+.dashboard {
+    padding: 30px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        a {
+            font-size: 18px;
+            color: $bg-light;
+
+            &:hover {
+                color: $bg-dark;
+            }
+        }
+    }
+
+    .classroomCardContainer {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+
+        .classroomCard {
+            width: calc(20% - 10px);
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding: 20px;
+            text-decoration: none !important;
+            color: $bg-dark;
+
+            border-radius: 10px;
+            background-color: lighten($bg-light, 73);
+
+            &:hover {
+                background-color: lighten($bg-light, 68);
+            }
+
+            &:focus {
+                background-color: lighten($bg-light, 60);
+            }
+
+            @media only screen and (max-width: 1250px) {
+                width: calc(25% - 10px);
+            }
+
+            @media only screen and (max-width: 920px) {
+                width: calc(33% - 10px);
+            }
+
+            @media only screen and (max-width: 768px) {
+                width: calc(50% - 10px);
+            }
+
+            @media only screen and (max-width: 520px) {
+                width: 100%;
+            }
+
+            .shimmer {
+                margin-top: 5px;
+                border-radius: 10px;
+            }
+
+            .owner {
+                color: $bg-light;
+            }
+
+            .taskCount {
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid lighten($bg-light, 40);
+            }
+        }
+    }
+}

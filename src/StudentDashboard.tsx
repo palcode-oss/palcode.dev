@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { Link } from 'react-router-dom';
 import { useClassrooms } from './helpers/classroom';
+import studentDashboard from './styles/studentDashboard.module.scss';
 
 interface Props {
     user: User
@@ -21,8 +22,8 @@ export default function StudentDashboard(
     const [classrooms, classroomsLoading] = useClassrooms(user.uid);
 
     return (
-        <div className='student dashboard'>
-            <div className='header'>
+        <div className={studentDashboard.dashboard}>
+            <div className={studentDashboard.header}>
                 <h1>
                     My classrooms
                 </h1>
@@ -39,7 +40,7 @@ export default function StudentDashboard(
                         color='blue'
                     />
                 ) : (
-                    <div className='classroom-card-container'>
+                    <div className={studentDashboard.classroomCardContainer}>
                         {
                             !classrooms.length && (
                                 <p>

@@ -3,6 +3,7 @@ import React, { MouseEvent, ReactElement } from 'react';
 import { Shimmer } from 'react-shimmer';
 import { useUser } from '../helpers/auth';
 import { Link } from 'react-router-dom';
+import studentDashboard from '../styles/studentDashboard.module.scss';
 
 interface Props {
     classroom: Classroom;
@@ -21,26 +22,26 @@ export default function ClassroomCard(
 
     return (
         <Link
-            className='classroom-card'
+            className={studentDashboard.classroomCard}
             to={`/classroom/${classroom.id}/view`}
         >
-            <h2 className='classroom-name'>
+            <h2 className={studentDashboard.name}>
                 {classroom.name}
             </h2>
-            <h3 className='classroom-owner'>
+            <h3 className={studentDashboard.owner}>
                 {
                     !loading && owner
                         ? owner.displayName
                         : (
                             <Shimmer
-                                height={12}
-                                width={100}
-                                className='shimmer'
+                                height={18}
+                                width={120}
+                                className={studentDashboard.shimmer}
                             />
                         )
                 }
             </h3>
-            <p className='classroom-task-count'>
+            <p className={studentDashboard.taskCount}>
                 {
                     tasks
                 }
