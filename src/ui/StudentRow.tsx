@@ -5,12 +5,12 @@ import { Task, TaskStatus, TaskType, User } from '../helpers/types';
 import firebase from 'firebase';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
-import { useClassroom } from '../ManageClassroom';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { useSnackbar } from 'notistack';
+import { useClassroom } from '../helpers/classroom';
 
 interface Props {
     studentId: string;

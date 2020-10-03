@@ -1,5 +1,29 @@
 @import "importables";
 
+.loginPrompt {
+  width: 60%;
+  margin: 30px auto;
+
+  p {
+    margin-top: 5px;
+  }
+}
+
+.joinClassroom {
+  padding: 30px;
+  width: 60%;
+  margin: 0 auto;
+
+  p {
+    margin-top: 5px;
+    font-size: 1.2rem;
+  }
+
+  .textInput {
+    font-size: 22px !important;
+  }
+}
+
 .form {
   .label {
     display: block;
@@ -34,6 +58,15 @@
 
     &:hover, &:focus {
       color: lighten($bg-light, 80%);
+    }
+  }
+
+  .loginPrompt &, .joinClassroom & {
+    margin: 20px auto;
+
+    .textInput {
+      color: $bg-dark;
+      border: 1px solid $bg-light;
     }
   }
 }

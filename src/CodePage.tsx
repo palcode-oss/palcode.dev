@@ -1,18 +1,15 @@
-import { useParams } from "react-router-dom";
-import React, { ReactElement, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import React, { ReactElement } from 'react';
 import { Shimmer } from 'react-shimmer';
-
-import firebase from 'firebase';
 import 'firebase/firestore';
-import { Classroom } from './helpers/types';
-import { useClassroom } from './ManageClassroom';
+import { useClassroom } from './helpers/classroom';
 
 interface Params {
     classroomId: string;
 }
 
 export default function CodePage(): ReactElement {
-    const { classroomId } = useParams<Params>();
+    const {classroomId} = useParams<Params>();
 
     const code = useClassroom(classroomId)?.code;
 
@@ -35,9 +32,10 @@ export default function CodePage(): ReactElement {
                     <strong>
                         TODO: add URL
                     </strong>
-                    &nbsp;and enter this code to add yourself to this classroom. You'll need to sign up or sign in first.
+                    &nbsp;and enter this code to add yourself to this classroom. You'll need to sign up or sign in
+                    first.
                 </p>
             </div>
         </div>
-    )
+    );
 }

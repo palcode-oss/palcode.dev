@@ -1,6 +1,5 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useClassroom } from './ManageClassroom';
 import Loader from 'react-loader-spinner';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -12,8 +11,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TaskSubmissionRow from './ui/TaskSubmissionRow';
-import { Task, TaskType } from './helpers/types';
-import { sortBy } from 'lodash';
+import { Task, TaskType, TemplateTask } from './helpers/types';
+import { orderBy } from 'lodash';
+import { useClassroom } from './helpers/classroom';
 
 interface Params {
     classroomId: string;
@@ -57,7 +57,7 @@ export default function ViewClassroom(): ReactElement {
         );
     }
 
-    const tasks = classroom.tasks.filter(task => task.type === TaskType.Template);
+    const tasks = classroom.tasks.filter(task => task.type === TaskType.Template) as TemplateTask[];
 
     return (
         <div className='view-classroom'>
@@ -112,9 +112,9 @@ export default function ViewClassroom(): ReactElement {
                     </TableHead>
                     <TableBody>
                         {
-                            sortBy<Task>(
+                            orderBy<TemplateTask>(
                                 tasks,
-                                (
+                                [(
                                     sort === Column.Status
                                         ? 'status'
                                         : (
@@ -122,8 +122,10 @@ export default function ViewClassroom(): ReactElement {
                                                 ? 'created'
                                                 : 'name'
                                         )
-                                ),
+                                ), 'created'],
+                                [sortDirection === SortDirection.Asc ? 'asc' : 'desc', 'desc']
                             )
+
                                 .map((task) => (
                                     <TaskSubmissionRow
                                         task={task}

@@ -53,12 +53,6 @@ export default function Navbar(): ReactElement {
                             >
                                 Dashboard
                             </Link>
-                            <Link
-                                className={styles.option}
-                                to='/user/settings'
-                            >
-                                Settings
-                            </Link>
                             <button
                                 className={styles.option}
                                 onClick={signOut}

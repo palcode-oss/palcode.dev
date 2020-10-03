@@ -7,6 +7,8 @@ import ClassroomCard from './ui/ClassroomCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { Link } from 'react-router-dom';
+import { useClassrooms } from './helpers/classroom';
+import studentDashboard from './styles/studentDashboard.module.scss';
 
 interface Props {
     user: User
@@ -14,28 +16,14 @@ interface Props {
 
 export default function StudentDashboard(
     {
-        user
-    }: Props
+        user,
+    }: Props,
 ): ReactElement {
-    const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-    const [classroomsLoading, setClassroomsLoading] = useState(true);
-
-    useEffect(() => {
-        setClassroomsLoading(true);
-        firebase
-            .firestore()
-            .collection('classrooms')
-            .where('members', 'array-contains', user.uid)
-            .get()
-            .then(data => {
-                setClassrooms(data.docs.map(doc => doc.data()) as Classroom[]);
-                setClassroomsLoading(false);
-            });
-    }, [user]);
+    const [classrooms, classroomsLoading] = useClassrooms(user.uid);
 
     return (
-        <div className='student dashboard'>
-            <div className='header'>
+        <div className={studentDashboard.dashboard}>
+            <div className={studentDashboard.header}>
                 <h1>
                     My classrooms
                 </h1>
@@ -52,7 +40,7 @@ export default function StudentDashboard(
                         color='blue'
                     />
                 ) : (
-                    <div className='classroom-card-container'>
+                    <div className={studentDashboard.classroomCardContainer}>
                         {
                             !classrooms.length && (
                                 <p>
@@ -64,12 +52,15 @@ export default function StudentDashboard(
                         }
                         {
                             classrooms.map(classroom => (
-                                <ClassroomCard classroom={classroom} />
+                                <ClassroomCard
+                                    classroom={classroom}
+                                    key={classroom.id}
+                                />
                             ))
                         }
                     </div>
                 )
             }
         </div>
-    )
+    );
 }
