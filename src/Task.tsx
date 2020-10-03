@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useTask from './helpers/taskData';
-import { useTaskFiles } from './helpers/taskContent';
+import { deleteRemoteFile, useTaskFiles } from './helpers/taskContent';
 import Files from './task-components/Files';
 import FileEditor from './task-components/FileEditor';
 import Console from './task-components/Console';
@@ -17,7 +17,7 @@ export default function Task(): ReactElement {
     const [task, taskLoading] = useTask(taskId);
 
     const [currentTab, setCurrentTab] = useState('index.py');
-    const [files, filesLoading, addLocalFile] = useTaskFiles(taskId);
+    const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId);
 
     const selectTab = useCallback((fileName) => {
         setCurrentTab(fileName);
@@ -29,7 +29,13 @@ export default function Task(): ReactElement {
 
         addLocalFile(fileName);
         setCurrentTab(fileName);
-    }, [taskId, files]);
+    }, [files]);
+
+    const deleteFile = useCallback((fileName: string) => {
+        deleteLocalFile(fileName);
+        setCurrentTab('index.py');
+        deleteRemoteFile(taskId, fileName);
+    }, [files, taskId]);
 
     return (
         <div className={editor.editor}>
@@ -40,6 +46,7 @@ export default function Task(): ReactElement {
                         onTabSelect={selectTab}
                         selectedFile={currentTab}
                         onNewFile={addFile}
+                        onFileDelete={deleteFile}
                     />
                 }
 

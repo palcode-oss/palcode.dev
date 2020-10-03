@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
-export function useTaskFiles(taskId: string): [string[], boolean, (fileName: string) => void] {
+export function useTaskFiles(taskId: string): [string[], boolean, (fileName: string) => void, (fileName: string) => void] {
     const [files, setFiles] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -40,7 +40,15 @@ export function useTaskFiles(taskId: string): [string[], boolean, (fileName: str
         ]);
     }, [files]);
 
-    return [files, loading, addLocalFile];
+    const deleteLocalFile = useCallback((fileName: string) => {
+        if (!files.includes(fileName)) {
+            return;
+        }
+
+        setFiles(files.filter(e => e !== fileName));
+    }, [files]);
+
+    return [files, loading, addLocalFile, deleteLocalFile];
 }
 
 export function useFileContent(taskId: string, fileName: string): [boolean, string, (fileContent: string) => void] {
@@ -112,4 +120,11 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
     }, [taskId, fileName, initialDownloadComplete]);
 
     return [loading, fileContent, setFileContent];
+}
+
+export function deleteRemoteFile(taskId: string, fileName: string) {
+    return axios.post(process.env.REACT_APP_API + '/delete-file', {
+        projectId: taskId,
+        fileName,
+    });
 }
