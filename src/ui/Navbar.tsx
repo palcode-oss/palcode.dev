@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useState } from 'react';
 import { useAuth } from '../helpers/auth';
 import { Link } from 'react-router-dom';
 import { Shimmer } from 'react-shimmer';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/auth';
 import { useSnackbar } from 'notistack';
 import SignInModal from './SignInModal';

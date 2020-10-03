@@ -11,7 +11,7 @@ import ViewClassroom from './ViewClassroom';
 import JoinClassroom from './JoinClassroom';
 import { useAuth } from './helpers/auth';
 import { Perms } from './helpers/types';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { useSnackbar } from 'notistack';
 
 const history = createBrowserHistory();

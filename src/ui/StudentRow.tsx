@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useEffect, useMemo, useState } from '
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import { Task, TaskStatus, TaskType, User } from '../helpers/types';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
 import DropdownMenu from './DropdownMenu';
