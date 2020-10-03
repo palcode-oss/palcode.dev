@@ -36,30 +36,45 @@ export default function TaskRow(
 
     const {enqueueSnackbar} = useSnackbar();
     const deleteTask = useCallback(() => {
-        firebase
-            .firestore()
-            .collection('classrooms')
-            .doc(classroomId)
-            .update(
-                {
-                    tasks: tasks
-                        .filter(
-                            t => t.id !== taskId && (isTemplateTask(t) || t.parentTask !== taskId),
-                        )
-                        .map(t => t.id),
-                } as Partial<Classroom>,
-            )
+        if (tasksLoading) return;
+
+        Promise.all(
+            tasks
+                .filter(t => t.id === taskId || (!isTemplateTask(t) && t.parentTask === taskId))
+                .map(t =>
+                    firebase
+                        .firestore()
+                        .collection('tasks')
+                        .doc(t.id)
+                        .delete()
+                )
+        )
             .then(() => {
-                enqueueSnackbar('Task & submissions removed successfully!', {
-                    variant: 'success',
-                });
-                setClassroomUpdater(Math.random());
+                firebase
+                    .firestore()
+                    .collection('classrooms')
+                    .doc(classroomId)
+                    .update(
+                        {
+                            tasks: tasks
+                                .filter(
+                                    t => t.id !== taskId && (isTemplateTask(t) || t.parentTask !== taskId),
+                                )
+                                .map(t => t.id),
+                        } as Partial<Classroom>,
+                    )
+                    .then(() => {
+                        enqueueSnackbar('Task & submissions removed successfully!', {
+                            variant: 'success',
+                        });
+                        setClassroomUpdater(Math.random());
+                    })
+                    .catch(() => {
+                        enqueueSnackbar('Something went wrong while attempting to delete that task. Try again.', {
+                            variant: 'error',
+                        });
+                    });
             })
-            .catch(() => {
-                enqueueSnackbar('Something went wrong while attempting to delete that task. Try again.', {
-                    variant: 'error',
-                });
-            });
     }, [classroomId, classroom, taskId, tasks]);
 
     if (tasksLoading) return <></>;
