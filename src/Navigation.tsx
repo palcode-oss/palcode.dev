@@ -9,6 +9,7 @@ import Settings from "./Settings";
 import CodePage from './CodePage';
 import ManageClassroom from './ManageClassroom';
 import ViewClassroom from './ViewClassroom';
+import JoinClassroom from './JoinClassroom';
 
 const history = createBrowserHistory();
 
@@ -20,6 +21,9 @@ export default function Navigation(): ReactElement {
             <Switch>
                 <Route path='/user/settings'>
                     <Settings />
+                </Route>
+                <Route path='/classroom/join'>
+                    <JoinClassroom />
                 </Route>
                 <Route path='/classroom/:classroomId/view_code'>
                     <CodePage />

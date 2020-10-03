@@ -4,6 +4,9 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 import Loader from 'react-loader-spinner';
 import ClassroomCard from './ui/ClassroomCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+import { Link } from 'react-router-dom';
 
 interface Props {
     user: User
@@ -32,9 +35,14 @@ export default function StudentDashboard(
 
     return (
         <div className='student dashboard'>
-            <h1>
-                My classrooms
-            </h1>
+            <div className='header'>
+                <h1>
+                    My classrooms
+                </h1>
+                <Link to='/classroom/join'>
+                    <FontAwesomeIcon icon={faPlus}/>
+                </Link>
+            </div>
             {
                 classroomsLoading ? (
                     <Loader
@@ -45,6 +53,15 @@ export default function StudentDashboard(
                     />
                 ) : (
                     <div className='classroom-card-container'>
+                        {
+                            !classrooms.length && (
+                                <p>
+                                    You're not a part of any classrooms yet. Click the&nbsp;
+                                    <FontAwesomeIcon icon={faPlus}/>
+                                    &nbsp;button above to get started.
+                                </p>
+                            )
+                        }
                         {
                             classrooms.map(classroom => (
                                 <ClassroomCard classroom={classroom} />
