@@ -1,0 +1,36 @@
+@import "importables";
+
+.navbar {
+  width: 100%;
+  @include bg-dark;
+  padding: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    font-size: 32px;
+
+    &, a {
+      color: white;
+      text-decoration: none;
+      @include miriam;
+    }
+  }
+
+  .options {
+    .option {
+      color: white;
+      text-decoration: none;
+
+      padding: 5px 10px;
+      border-radius: 10px;
+      vertical-align: baseline;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}

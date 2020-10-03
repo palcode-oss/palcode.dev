@@ -1,0 +1,39 @@
+@import "importables";
+
+.form {
+  .label {
+    display: block;
+    color: #6081db;
+    margin-bottom: 5px;
+  }
+
+  .textInput {
+    display: block;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+
+    padding: 8px 10px;
+    border-radius: 10px;
+
+    font-size: 16px;
+    color: white;
+    @include miriam;
+
+    margin-bottom: 8px;
+  }
+
+  .button {
+    padding: 7px 10px;
+    border-radius: 10px;
+    background-color: lighten($bg-light, 10%);
+
+    margin-top: 5px;
+
+    color: lighten($bg-light, 60%);
+    transition: color 100ms ease-in-out;
+
+    &:hover, &:focus {
+      color: lighten($bg-light, 80%);
+    }
+  }
+}
