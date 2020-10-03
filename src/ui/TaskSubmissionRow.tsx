@@ -1,6 +1,14 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { TableCell } from '@material-ui/core';
-import { Classroom, isSubmissionTask, SubmissionTask, Task, TaskStatus, TaskType } from '../helpers/types';
+import {
+    Classroom,
+    isSubmissionTask,
+    SubmissionTask,
+    Task,
+    TaskStatus,
+    TaskType,
+    TemplateTask,
+} from '../helpers/types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,6 +24,10 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { faEdit } from '@fortawesome/free-regular-svg-icons/faEdit';
 import { useTasks } from '../helpers/taskData';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import { useHistory } from 'react-router-dom';
+import { v4 } from 'uuid';
 
 interface Props {
     task: Task;
@@ -35,6 +47,51 @@ export default function TaskSubmissionRow(
         && task.parentTask === task.id
         && task.createdBy === user?.uid,
     )[0] as SubmissionTask;
+
+    const history = useHistory();
+    const openSubmission = useCallback(() => {
+        if (!user) return;
+
+        firebase
+            .firestore()
+            .collection('tasks')
+            .where('createdBy', '==', user.uid)
+            .where('parentTask', '==', task.id)
+            .get()
+            .then((data) => {
+                if (data.empty) {
+                    const id = v4();
+
+                    firebase
+                        .firestore()
+                        .collection('tasks')
+                        .doc(id)
+                        .set({
+                            createdBy: user.uid,
+                            name: task.name,
+                            status: TaskStatus.Unsubmitted,
+                            type: TaskType.Submission,
+                            id,
+                            created: new firebase.firestore.Timestamp(new Date().valueOf() / 1000, 0),
+                            parentTask: task.id,
+                        } as SubmissionTask)
+                        .then(() => {
+                            firebase
+                                .firestore()
+                                .collection('classrooms')
+                                .doc(classroom.id)
+                                .update({
+                                    tasks: classroom.tasks.concat(id)
+                                })
+                                .then(() => {
+                                    history.push(`/task/${id}`);
+                                })
+                        });
+                } else {
+                    history.push(`/task/${data.docs[0].id}`);
+                }
+            })
+    }, [task, classroom, user]);
 
     return (
         <TableRow>
@@ -83,13 +140,10 @@ export default function TaskSubmissionRow(
             </TableCell>
             <TableCell align='center'>
                 <DropdownMenu>
-                    {/*TODO: add URL here*/}
-                    <Link to='/'>
-                        <MenuItem>
-                            <FontAwesomeIcon icon={faEdit}/>
-                            &nbsp;Edit submission
-                        </MenuItem>
-                    </Link>
+                    <MenuItem onClick={openSubmission}>
+                        <FontAwesomeIcon icon={faEdit}/>
+                        &nbsp;Edit submission
+                    </MenuItem>
                 </DropdownMenu>
             </TableCell>
         </TableRow>
