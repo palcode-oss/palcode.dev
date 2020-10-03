@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Classroom, User } from './helpers/types';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import Loader from 'react-loader-spinner';
 import ClassroomCard from './ui/ClassroomCard';

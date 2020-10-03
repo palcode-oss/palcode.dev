@@ -2,11 +2,13 @@ import React, { ReactElement } from 'react';
 import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default function Files(
     {
         files,
         onTabSelect,
+        onFileDelete,
         selectedFile,
         onNewFile,
     }: {
@@ -14,6 +16,7 @@ export default function Files(
         selectedFile: string,
         onTabSelect(fileName: string): void,
         onNewFile(): void,
+        onFileDelete(fileName: string): void,
     }
 ): ReactElement {
     return (
@@ -38,6 +41,18 @@ export default function Files(
                         >
                             {file}
                         </a>
+
+                        {
+                            file === selectedFile && file !== 'index.py' && <a
+                                href='#'
+                                onClick={() => onFileDelete(file)}
+                                className={editor.fileDelete}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faTrash}
+                                />
+                            </a>
+                        }
                     </li>
                 )) }
             </ul>

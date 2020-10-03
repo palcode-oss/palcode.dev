@@ -5,7 +5,7 @@ import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { TableCell } from '@material-ui/core';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import TableBody from '@material-ui/core/TableBody';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

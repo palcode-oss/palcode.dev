@@ -63,9 +63,19 @@
           @include bg-dark;
         }
 
+        $file-delete-color: #832626;
         .fileSelected, .fileSelected a {
           color: lighten($bg-light, 70%);
           @include bg-light;
+
+          .fileDelete {
+            color: $file-delete-color;
+            transition: color 100ms ease-in-out;
+
+            &:hover {
+              color: lighten($file-delete-color, 30%);
+            }
+          }
         }
       }
     }

@@ -1,3 +1,18 @@
+@import "importables";
+
 .image {
   width: 100%;
+}
+
+.table {
+  border-collapse: collapse;
+
+  .tableCell, .tableHeaderCell {
+    border: 2px solid $bg-light;
+    padding: 10px;
+  }
+
+  .tableHeaderCell {
+    font-weight: 700;
+  }
 }

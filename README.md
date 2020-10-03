@@ -1,68 +1,38 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# PalCode
+The free replacement for Repl.it Classrooms.
 
-## Available Scripts
+## Building
+https://palcode.dev is hosted via a DigitalOcean Droplet. Because building React requires tons of memory (for some reason), this isn't done on the Droplet, but instead by GitHub's CI, which auto-scales memory.
 
-In the project directory, you can run:
+A typical build takes about 5 minutes, so to avoid a massive CI bill, builds are on a manual schedule, and can be triggered through [the Actions dashboard](https://github.com/palkerecsenyi/palcode/actions?query=workflow%3ACI).
 
-### `yarn start`
+There's a script on the Droplet (`/opt/palcode/install-build.sh`) which uses the GitHub API to download a build artifact created by the CI as a zip. To run it, first modify the artifact ID inside it (you can get this by copying the link in the Actions dashboard), and then run `./install-build.sh`. Then, just extract the zip into an empty `build` directory.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Node.js is run by PM2. When backend changes have been pulled, run `pm2 restart palcode` to propagate them.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+You may need to run `yarn run install` to update packages.
 
-### `yarn test`
+## Development
+To run PalCode locally, first set some environment variables:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `PAL_STORAGE_ROOT` - a read/writeable directory to store user code and files in
+- `PAL_PORT` - the port to run the server on. Make sure this is different to your React development port (3000 by default)
+- `REACT_APP_API` - set this to `http://localhost:<your server port>/api`
+- `REACT_APP_SOCKET` - set this to `http://localhost:<your server port>`
 
-### `yarn build`
+Next, [download Docker CE](https://docs.docker.com/get-docker/) for your computer. It's available for all operating systems.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Finally, start the two scripts (in separate terminals):
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+```shell script
+# terminal 1
+yarn run start
+```
+```shell script
+# terminal 2
+yarn run start-server-dev
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Your browser will automatically be opened to the frontend, and you'll need to wait up to 2 minutes for the page to load, as the first build takes a while to complete. From then on, changes you make to the code will automatically be refreshed in your browser.
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+When running this for the first time, you'll notice that Terminal 2 installs the [Python Docker environment](https://hub.docker.com/_/python). This download is about 300MB and is necessary to run Python code. You don't need to do anything - the download is fully automatic. However, you won't be able to run code until the installation has completed.

@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import editor from '../styles/editor.module.scss';
 import BriefingSyntaxHighlighter from './briefing-renderers/BriefingSyntaxHighlighter';
 import BriefingImage from './briefing-renderers/BriefingImage';
+import { BriefingTable, BriefingTableCell } from './briefing-renderers/BriefingTable';
 
 export default function Briefing(
     {
@@ -21,6 +22,8 @@ export default function Briefing(
                 renderers={{
                     code: BriefingSyntaxHighlighter,
                     image: BriefingImage,
+                    table: BriefingTable,
+                    tableCell: BriefingTableCell,
                 }}
             />
         </div>

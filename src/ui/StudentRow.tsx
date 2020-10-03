@@ -3,6 +3,8 @@ import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import { isSubmissionTask, isTemplateTask, SubmissionTask, Task, TaskStatus, TaskType, User } from '../helpers/types';
 import firebase from 'firebase';
+import { Task, TaskStatus, TaskType, User } from '../helpers/types';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
 import DropdownMenu from './DropdownMenu';

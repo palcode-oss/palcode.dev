@@ -1,6 +1,6 @@
 import { Classroom } from './types';
 import { useEffect, useState } from 'react';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 export function useClassroom(classroomId: string, classroomUpdater?: any): Classroom | null {
     const [classroom, setClassroom] = useState<Classroom | null>(null);

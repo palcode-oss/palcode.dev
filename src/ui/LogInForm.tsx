@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import * as EmailValidator from 'email-validator';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { Perms, User } from '../helpers/types';
 import Loader from 'react-loader-spinner';
 import form from '../styles/form.module.scss';
