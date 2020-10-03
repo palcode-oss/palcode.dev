@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useMemo, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -6,9 +6,8 @@ import { TableCell } from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import { Link, useParams } from 'react-router-dom';
-import firebase from 'firebase';
 import 'firebase/firestore';
-import { Classroom, Task, TaskType } from './helpers/types';
+import { Task, TaskType } from './helpers/types';
 import Loader from 'react-loader-spinner';
 import StudentRow from './ui/StudentRow';
 import TaskRow from './ui/TaskRow';
