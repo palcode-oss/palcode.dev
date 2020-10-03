@@ -100,16 +100,26 @@
         justify-content: center;
         align-items: center;
         @include miriam;
+
+        transition: background-color 100ms ease-in-out;
       }
 
       .runButton {
         color: lighten($run-color, 50%);
         background-color: $run-color;
+
+        &:hover {
+          background-color: darken($run-color, 5%);
+        }
       }
 
       .killButton {
         color: lighten($kill-color, 50%);
         background-color: $kill-color;
+
+        &:hover {
+          background-color: darken($kill-color, 5%);
+        }
       }
 
       .xtermContainer {
