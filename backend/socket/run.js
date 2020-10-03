@@ -3,6 +3,7 @@ const path = require("path");
 const {getPythonTag, getStorageRoot} = require("../helpers");
 const Docker = require("dockerode");
 const docker = Docker();
+const uuid = require("uuid").v4;
 
 docker.pull('python:' + getPythonTag(), (err, stream) => {
     docker.modem.followProgress(stream, () => {
@@ -39,14 +40,16 @@ async function execPython(projectId, socket, io) {
         if (err) {
             io.to(projectId).emit('run', {
                 status: 500,
-                message: 'Run failed. Try again.'
+                message: 'Run failed. Try again.',
+                running: false,
             });
             return;
         }
 
         io.to(projectId).emit('run', {
             status: 200,
-            message: 'Container created! Mounting...'
+            message: 'Container created! Mounting...',
+            running: true,
         });
 
         container.start();
@@ -57,16 +60,19 @@ async function execPython(projectId, socket, io) {
         }, (err, stream) => {
             stream.on('data', (chunk) => {
                 const stdout = chunk.toString('utf8');
+                const stdoutID = uuid();
                 io.to(projectId).emit('run', {
                     status: 200,
                     stdout,
+                    stdoutID,
+                    running: true,
                 });
             });
 
             stream.on('end', () => {
                 io.to(projectId).emit('run', {
                     status: 200,
-                    end: true,
+                    running: false,
                 });
             });
         });
@@ -85,6 +91,11 @@ async function containerStdin(projectId, stdin) {
         });
         return container.wait();
     });
+}
+
+async function containerStop(projectId) {
+    const container = docker.getContainer(projectId);
+    return container.kill();
 }
 
 module.exports = (io) => {
@@ -110,6 +121,11 @@ module.exports = (io) => {
             socket.join(data.projectId);
             io.to(data.projectId).emit('run', {
                 status: 200,
+                running: true,
+                // ansi seq for clearing terminal
+                // see https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
+                stdout: '\033[2J\033[H',
+                stdoutID: 'cls',
             });
             execPython(data.projectId, socket, io);
         });
@@ -123,6 +139,17 @@ module.exports = (io) => {
             }
 
             containerStdin(data.projectId, data.stdin);
-        })
+        });
+
+        socket.on('stop', (data) => {
+            if (!data.projectId) {
+                socket.emit('run', {
+                    status: 400,
+                });
+                return;
+            }
+
+            containerStop(data.projectId);
+        });
     });
 }
