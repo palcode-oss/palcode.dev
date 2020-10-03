@@ -14,8 +14,8 @@ interface Props {
 
 export default function StudentDashboard(
     {
-        user
-    }: Props
+        user,
+    }: Props,
 ): ReactElement {
     const [classrooms, setClassrooms] = useState<Classroom[]>([]);
     const [classroomsLoading, setClassroomsLoading] = useState(true);
@@ -64,12 +64,15 @@ export default function StudentDashboard(
                         }
                         {
                             classrooms.map(classroom => (
-                                <ClassroomCard classroom={classroom} />
+                                <ClassroomCard
+                                    classroom={classroom}
+                                    key={classroom.id}
+                                />
                             ))
                         }
                     </div>
                 )
             }
         </div>
-    )
+    );
 }
