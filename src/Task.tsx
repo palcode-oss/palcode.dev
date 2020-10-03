@@ -17,11 +17,19 @@ export default function Task(): ReactElement {
     const [task, taskLoading] = useTask(taskId);
 
     const [currentTab, setCurrentTab] = useState('index.py');
-    const [files, filesLoading] = useTaskFiles(taskId, currentTab);
+    const [files, filesLoading, addLocalFile] = useTaskFiles(taskId);
 
     const selectTab = useCallback((fileName) => {
         setCurrentTab(fileName);
     }, []);
+
+    const addFile = useCallback(() => {
+        const fileName = window.prompt('Enter file name:');
+        if (!fileName) return;
+
+        addLocalFile(fileName);
+        setCurrentTab(fileName);
+    }, [taskId, files]);
 
     return (
         <div className={editor.editor}>
@@ -31,6 +39,7 @@ export default function Task(): ReactElement {
                         files={files}
                         onTabSelect={selectTab}
                         selectedFile={currentTab}
+                        onNewFile={addFile}
                     />
                 }
 

@@ -18,39 +18,55 @@
       height: $files-height;
     }
 
-    .files {
-      list-style: none;
-      margin-block-start: 0;
-      margin-block-end: 0;
-      padding-block-start: 0;
-      padding-block-end: 0;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
-      padding-inline-start: 0;
-
+    .filesContainer {
       display: flex;
-      justify-content: flex-start;
-      align-items: flex-end;
       width: 100%;
       height: $files-height;
       @include bg-dark;
 
-      .file, .file a, .fileSelected, .fileSelected a {
-        padding: 10px 5px;
-        text-decoration: none;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        transition: background-color 100ms ease-in-out;
+      .newFile {
+        padding: 0 10px;
+        color: lighten($bg-light, 20%);
+
+        &:hover {
+          color: lighten($bg-light, 60%);
+        }
       }
 
-      .file, .file a {
-        color: lighten($bg-dark, 60%);
-        @include bg-dark;
-      }
+      .files {
+        flex: 1;
 
-      .fileSelected, .fileSelected a {
-        color: lighten($bg-light, 70%);
-        @include bg-light;
+        list-style: none;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        padding-block-start: 0;
+        padding-block-end: 0;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+        padding-inline-start: 0;
+
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        width: 100%;
+
+        .file, .file a, .fileSelected, .fileSelected a {
+          padding: 10px 5px;
+          text-decoration: none;
+          border-top-left-radius: 15px;
+          border-top-right-radius: 15px;
+          transition: background-color 100ms ease-in-out;
+        }
+
+        .file, .file a {
+          color: lighten($bg-dark, 60%);
+          @include bg-dark;
+        }
+
+        .fileSelected, .fileSelected a {
+          color: lighten($bg-light, 70%);
+          @include bg-light;
+        }
       }
     }
 

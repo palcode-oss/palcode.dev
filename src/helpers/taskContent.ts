@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
-export function useTaskFiles(taskId: string, currentTab: string): [string[], boolean] {
+export function useTaskFiles(taskId: string): [string[], boolean, (fileName: string) => void] {
     const [files, setFiles] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -22,9 +22,20 @@ export function useTaskFiles(taskId: string, currentTab: string): [string[], boo
 
                 setFiles(response.data);
             })
-    }, [taskId, currentTab]);
+    }, [taskId]);
 
-    return [files, loading];
+    const addLocalFile = useCallback((fileName: string) => {
+        if (files.includes(fileName)) {
+            return;
+        }
+
+        setFiles([
+            ...files,
+            fileName
+        ]);
+    }, [files]);
+
+    return [files, loading, addLocalFile];
 }
 
 export function useFileContent(taskId: string, fileName: string): [boolean, string, (fileContent: string) => void] {
@@ -85,13 +96,14 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
         )
             .then(response => {
                 setLoading(false);
-                if (response.status !== 200) {
-                    return;
-                }
-
                 setInitialDownloadComplete(true);
                 setFileContent(response.data);
-            });
+            })
+            .catch(() => {
+                setLoading(false);
+                setInitialDownloadComplete(true);
+                setFileContent('');
+            })
     }, [taskId, fileName, initialDownloadComplete]);
 
     return [loading, fileContent, setFileContent];
