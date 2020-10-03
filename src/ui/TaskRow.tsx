@@ -60,7 +60,7 @@ export default function TaskRow(
                     variant: 'error',
                 });
             });
-    }, [classroomId, classroom, taskId]);
+    }, [classroomId, classroom, taskId, tasks]);
 
     if (tasksLoading) return <></>;
 
@@ -112,7 +112,6 @@ export default function TaskRow(
             }
             <TableCell align='center'>
                 <DropdownMenu>
-                    {/*TODO: add link in below to grade stuff*/}
                     <Link to={`/task/${taskId}`}>
                         <MenuItem>
                             <FontAwesomeIcon icon={faGraduationCap}/>
