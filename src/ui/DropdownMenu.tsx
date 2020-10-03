@@ -8,6 +8,7 @@ import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
 import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { TableCell } from '@material-ui/core';
+import table from '../styles/table.module.scss';
 
 interface Props {
     children: ReactNode;
@@ -37,7 +38,7 @@ export default function DropdownMenu(
             </button>
 
             <Menu
-                id='table-menu'
+                className={table.tableMenu}
                 anchorEl={anchorEl}
                 anchorOrigin={{
                     vertical: 'bottom',

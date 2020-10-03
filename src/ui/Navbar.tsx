@@ -87,7 +87,7 @@ export default function Navbar(): ReactElement {
                     authLoading && (
                         <button className='option loading'>
                             <Shimmer
-                                height={12}
+                                height={16}
                                 width={100}
                                 className='shimmer'
                             />

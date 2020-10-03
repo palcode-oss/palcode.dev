@@ -12,6 +12,8 @@
         a {
             font-size: 18px;
             color: $bg-light;
+            text-decoration: none;
+            font-weight: bold;
 
             &:hover {
                 color: $bg-dark;
@@ -37,14 +39,14 @@
             color: $bg-dark;
 
             border-radius: 10px;
-            background-color: lighten($bg-light, 73);
+            background-color: lighten($bg-light, 78);
 
             &:hover {
-                background-color: lighten($bg-light, 68);
+                background-color: lighten($bg-light, 74);
             }
 
             &:focus {
-                background-color: lighten($bg-light, 60);
+                background-color: lighten($bg-light, 68);
             }
 
             @media only screen and (max-width: 1250px) {
@@ -66,6 +68,10 @@
             .shimmer {
                 margin-top: 5px;
                 border-radius: 10px;
+            }
+
+            .name {
+                font-size: 26px;
             }
 
             .owner {
