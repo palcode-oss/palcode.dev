@@ -49,57 +49,54 @@ export default function TaskSubmissionRow(
     }, [tasks, user]);
 
     const history = useHistory();
-    const openSubmission = useCallback(() => {
+    const openSubmission = useCallback(async () => {
         if (!user) return;
 
-        firebase
+        const existingTaskResponse = await firebase
             .firestore()
             .collection('tasks')
             .where('createdBy', '==', user.uid)
             .where('parentTask', '==', task.id)
-            .get()
-            .then((data) => {
-                if (data.empty) {
-                    const doc = firebase
-                        .firestore()
-                        .collection('tasks')
-                        .doc();
+            .get();
 
-                    doc
-                        .set({
-                            createdBy: user.uid,
-                            name: task.name,
-                            status: TaskStatus.Unsubmitted,
-                            type: TaskType.Submission,
-                            id: doc.id,
-                            created: new firebase.firestore.Timestamp(new Date().valueOf() / 1000, 0),
-                            parentTask: task.id,
-                        } as SubmissionTask)
-                        .then(() => {
-                            firebase
-                                .firestore()
-                                .collection('classrooms')
-                                .doc(classroom.id)
-                                .update({
-                                    tasks: classroom.tasks.concat(doc.id)
-                                })
-                                .then(() => {
-                                    return axios.post(
-                                        process.env.REACT_APP_API + '/clone',
-                                        {
-                                            projectId: doc.id,
-                                            sourceProjectId: task.id,
-                                        }
-                                    )
-                                })
-                                .then(() => {
-                                    history.push(`/task/${doc.id}`);
-                                });
-                        });
-                } else {
-                    history.push(`/task/${data.docs[0].id}`);
-                }
-            })
+        if (!existingTaskResponse.empty) {
+            history.push(`/task/${existingTaskResponse.docs[0].id}`);
+            return;
+        }
+
+        const taskDoc = firebase
+            .firestore()
+            .collection('tasks')
+            .doc();
+
+        await taskDoc
+            .set({
+                createdBy: user.uid,
+                name: task.name,
+                status: TaskStatus.Unsubmitted,
+                type: TaskType.Submission,
+                id: taskDoc.id,
+                created: firebase.firestore.Timestamp.now(),
+                parentTask: task.id,
+            } as SubmissionTask);
+
+        await firebase
+            .firestore()
+            .collection('classrooms')
+            .doc(classroom.id)
+            .update({
+                tasks: classroom.tasks.concat(taskDoc.id)
+            });
+
+        await axios.post(
+            process.env.REACT_APP_API + '/clone',
+            {
+                projectId: taskDoc.id,
+                sourceProjectId: task.id,
+            }
+        );
+
+        history.push(`/task/${taskDoc.id}`);
     }, [task, classroom, user]);
 
     return (
