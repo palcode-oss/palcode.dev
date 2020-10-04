@@ -5,3 +5,4 @@ build/*
 .env
 install-build.sh
 *.pem
+*.log

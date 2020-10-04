@@ -114,7 +114,7 @@ export default function VoiceFeedbackUpload(
                     }
                 );
 
-                setUploadMd5Hash('');
+                setUploadMd5Hash('deleted');
             })
             .catch(err => {
                 setUploading(false);
