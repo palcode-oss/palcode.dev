@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { TableCell } from '@material-ui/core';
 import { Classroom, isSubmissionTask, SubmissionTask, Task, TaskStatus, TaskType } from '../helpers/types';
 import DropdownMenu from './DropdownMenu';
@@ -16,6 +16,10 @@ import { useHistory } from 'react-router-dom';
 import loader from '../styles/loader.module.scss';
 import axios from 'axios';
 import TaskStatusIndicator from './TaskStatus';
+import { faAward } from '@fortawesome/free-solid-svg-icons/faAward';
+import modal from '../styles/modal.module.scss';
+import form from '../styles/form.module.scss';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 
 interface Props {
     task: Task;
@@ -89,6 +93,11 @@ export default function TaskSubmissionRow(
         history.push(`/task/${taskDoc.id}`);
     }, [task, classroom, user]);
 
+    const [showFeedback, setShowFeedback] = useState(false);
+    const displayFeedback = useCallback(() => {
+        setShowFeedback(true);
+    }, []);
+
     return (
         <TableRow>
             <TableCell>
@@ -120,8 +129,60 @@ export default function TaskSubmissionRow(
                         <FontAwesomeIcon icon={faEdit}/>
                         &nbsp;Edit submission
                     </MenuItem>
+                    {
+                        submission?.status === TaskStatus.HasFeedback && (
+                            <MenuItem onClick={displayFeedback}>
+                                <FontAwesomeIcon icon={faAward}/>
+                                &nbsp;View feedback
+                            </MenuItem>
+                        )
+                    }
                 </DropdownMenu>
             </TableCell>
+
+            {
+                showFeedback && submission.feedback && (
+                    <div className={modal.modal}>
+                        <div className={modal.content}>
+                            <div className={modal.head}>
+                                <span className={modal.title}>
+                                    Feedback for {submission.name}
+                                </span>
+
+                                <button
+                                    className={modal.close}
+                                    onClick={() => setShowFeedback(false)}
+                                >
+                                    <FontAwesomeIcon icon={faTimesCircle}/>
+                                </button>
+                            </div>
+
+                            <div className={modal.body}>
+                                <strong>
+                                    Feedback from your teacher:
+                                </strong>
+
+                                <p className={modal.feedback}>
+                                    {
+                                        submission.feedback
+                                    }
+                                </p>
+
+                                <button
+                                    className={form.button}
+                                    onClick={() => setShowFeedback(false)}
+                                    style={{
+                                        float: 'right',
+                                        margin: 10,
+                                    }}
+                                >
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </TableRow>
     );
 }

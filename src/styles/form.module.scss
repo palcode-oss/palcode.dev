@@ -48,30 +48,6 @@
     margin-bottom: 8px;
   }
 
-  .button {
-    padding: 7px 10px;
-    border-radius: 10px;
-    background-color: lighten($bg-light, 10%);
-
-    margin-top: 5px;
-
-    color: lighten($bg-light, 60%);
-    transition: color 100ms ease-in-out;
-
-    &:hover, &:focus {
-      color: lighten($bg-light, 80%);
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-    }
-
-    svg {
-      display: inline-block;
-      margin-right: 5px;
-    }
-  }
-
   .loginPrompt &, .joinClassroom & {
     margin: 20px auto;
 
@@ -79,5 +55,29 @@
       color: $bg-dark;
       border: 1px solid $bg-light;
     }
+  }
+}
+
+.button {
+  padding: 7px 10px;
+  border-radius: 10px;
+  background-color: lighten($bg-light, 10%);
+
+  margin-top: 5px;
+
+  color: lighten($bg-light, 60%);
+  transition: color 100ms ease-in-out;
+
+  &:hover, &:focus {
+    color: lighten($bg-light, 80%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  svg {
+    display: inline-block;
+    margin-right: 5px;
   }
 }

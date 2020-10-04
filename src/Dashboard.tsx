@@ -43,9 +43,9 @@ export default function Dashboard(): ReactElement {
         );
     }
 
-    if (userDoc.perms === Perms.Student) {
-        return <StudentDashboard user={userDoc}/>;
+    if (userDoc.perms !== Perms.Student) {
+        return <TeacherDashboard user={userDoc}/>;
     }
 
-    return <TeacherDashboard user={userDoc}/>;
+    return <StudentDashboard user={userDoc}/>;
 }
