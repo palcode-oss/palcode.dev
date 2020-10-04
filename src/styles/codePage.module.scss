@@ -14,7 +14,8 @@
         @include miriam();
 
         .shimmer {
-            margin-top: 15px;
+            margin-top: 55px;
+            margin-bottom: 55px;
             @include dark-shimmer();
         }
     }
@@ -25,7 +26,7 @@
 
         .shimmer {
             display: inline-block;
-            margin-top: 0;
+            margin-top: 10px;
             @include dark-shimmer();
         }
     }

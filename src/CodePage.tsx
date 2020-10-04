@@ -32,8 +32,8 @@ export default function CodePage(): ReactElement {
                 {
                     classroom?.code || (
                         <Shimmer
-                            height={55}
-                            width={250}
+                            height={120}
+                            width={700}
                             className={codePage.shimmer}
                         />
                     )
