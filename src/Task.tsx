@@ -9,6 +9,8 @@ import Briefing from './task-components/Briefing';
 import Controls from './task-components/Controls';
 import { useTask } from './helpers/taskData';
 import Feedback from './task-components/Feedback';
+import { TaskType } from './helpers/types';
+import { useSnackbar } from 'notistack';
 
 interface Params {
     taskId: string;
@@ -23,9 +25,10 @@ export default function Task(
 ): ReactElement {
     const { taskId } = useParams<Params>();
     const [task, taskLoading] = useTask(taskId);
+    const {enqueueSnackbar} = useSnackbar();
 
     const [currentTab, setCurrentTab] = useState('index.py');
-    const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId);
+    const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId, );
 
     const selectTab = useCallback((fileName) => {
         setCurrentTab(fileName);
@@ -34,6 +37,16 @@ export default function Task(
     const addFile = useCallback(() => {
         const fileName = window.prompt('Enter file name:');
         if (!fileName) return;
+
+        if (fileName === 'README.md') {
+            enqueueSnackbar(
+                'You can\'t edit README.md because it\'s a reserved file name.',
+                {
+                    variant: 'error',
+                }
+            );
+            return;
+        }
 
         addLocalFile(fileName);
         setCurrentTab(fileName);
@@ -56,6 +69,7 @@ export default function Task(
                         onNewFile={addFile}
                         onFileDelete={deleteFile}
                         readOnly={!!teacherView}
+                        showReadme={task?.type === TaskType.Template}
                     />
                 }
 

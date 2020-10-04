@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { useTask, useTasks } from '../helpers/taskData';
 import loader from '../styles/loader.module.scss';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
     taskId: string;
@@ -132,6 +133,12 @@ export default function TaskRow(
                         <MenuItem>
                             <FontAwesomeIcon icon={faGraduationCap}/>
                             &nbsp;Review
+                        </MenuItem>
+                    </Link>
+                    <Link to={`/task/${taskId}`}>
+                        <MenuItem>
+                            <FontAwesomeIcon icon={faEdit} />
+                            &nbsp;Edit template
                         </MenuItem>
                     </Link>
                     <MenuItem onClick={deleteTask}>
