@@ -42,15 +42,22 @@ export function useTasks(taskIds: string[]): [Task[], boolean] {
                     .collection('tasks')
                     .doc(taskId)
                     .get()
-                    .then(snapshot => ({
-                        ...snapshot.data() as TaskDoc,
-                        id: snapshot.id
-                    } as Task)),
+                    .then(snapshot => {
+                        if (snapshot.exists) {
+                            return {
+                                ...snapshot.data() as TaskDoc,
+                                id: snapshot.id,
+                            } as Task;
+                        } else {
+                            return null;
+                        }
+                    })
+                    .catch(() => null),
                 ),
         )
             .then(tasks => {
                 setTasksLoading(false);
-                setTasks(tasks);
+                setTasks(tasks.filter(task => task) as Task[]);
             });
     }, [taskIds.join(',')]);
 
