@@ -127,7 +127,7 @@ export default function TaskSubmissionRow(
                     ) : (
                         <Shimmer
                             height={12}
-                            width={80}
+                            width={90}
                             className={loader.grayShimmer}
                         />
                     )

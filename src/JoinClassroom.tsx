@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useAuth } from './helpers/auth';
-import { Classroom } from './helpers/types';
+import { Classroom, ClassroomDoc } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useHistory } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
@@ -46,7 +46,10 @@ export default function JoinClassroom(): ReactElement {
                     return;
                 }
 
-                const classroomData = data.docs[0].data() as Classroom;
+                const classroomData = {
+                    ...data.docs[0].data() as ClassroomDoc,
+                    id: data.docs[0].id
+                } as Classroom;
                 if (classroomData.members.includes(user.uid)) {
                     enqueueSnackbar('Looks like you\'re already a member of this classroom.', {
                         variant: 'info'

@@ -144,6 +144,7 @@ export default function ViewClassroom(): ReactElement {
                                     <TaskSubmissionRow
                                         task={task}
                                         classroom={classroom}
+                                        key={task.id}
                                     />
                                 ))
                         }

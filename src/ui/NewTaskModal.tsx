@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { Classroom, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
+import { Classroom, TaskDoc, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 
@@ -53,9 +53,8 @@ export default function NewTaskModal(
                 name: title,
                 status: TaskStatus.Unsubmitted,
                 type: TaskType.Template,
-                id: doc.id,
                 created: new firebase.firestore.Timestamp(new Date().valueOf() / 1000, 0),
-            } as TemplateTask)
+            } as TaskDoc<TaskType.Template>)
             .then(() => {
                 firebase
                     .firestore()
