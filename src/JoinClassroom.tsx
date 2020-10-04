@@ -12,18 +12,23 @@ export default function JoinClassroom(): ReactElement {
     const [user] = useAuth();
 
     const [code, setCode] = useState('');
+    const {enqueueSnackbar} = useSnackbar();
     const handleChange = useCallback((e) => {
-        setCode(
-            e.target.value ?
-                e.target.value
-                    .replace(/[^0-9]/g, '')
-                    .padStart(6, '0')
-                    .slice(-6)
-                : '',
-        );
+        if (
+            Number.isInteger(parseInt(e.target.value))
+            || e.target.value === ''
+        ) {
+            setCode(e.target.value);
+        } else {
+            enqueueSnackbar(
+                'Please enter a 6-digit numerical classroom code.',
+                {
+                    variant: 'warning',
+                }
+            );
+        }
     }, [code]);
 
-    const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const joinClassroom = useCallback(() => {
@@ -92,22 +97,28 @@ export default function JoinClassroom(): ReactElement {
             </p>
 
             <form
-                autoComplete='off'
                 className={form.form}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    joinClassroom()
+                }}
             >
-
                 <input
                     type='text'
-                    value={code}
-                    onChange={handleChange}
-                    disabled={loading}
-                    placeholder='Enter your classroom code...'
                     className={form.textInput}
+                    placeholder='Enter your classroom code...'
+                    autoComplete='off'
+                    maxLength={6}
+                    minLength={6}
+
+                    value={code}
+                    disabled={loading}
+
+                    onChange={handleChange}
                     onClick={(e) => (e.target as HTMLInputElement).select()}
                 />
 
                 <button
-                    onClick={joinClassroom}
                     disabled={!user || loading}
                     className={form.button}
                 >

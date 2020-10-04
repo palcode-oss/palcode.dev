@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { Classroom, ClassroomDoc, TaskDoc, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
+import { ClassroomDoc } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 
@@ -40,30 +40,29 @@ export default function NewClassroomModal(
         if (!user) return;
 
         setLoading(true);
-        const doc = firebase
+        const classroomDoc = firebase
             .firestore()
             .collection('classrooms')
             .doc();
 
         const getCode = () => Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
         let code = getCode();
-        let good = false;
-        for (; !good;) {
-            await firebase
+        let codeIsUnique = false;
+        while (!codeIsUnique) {
+            const existingCodeResponse = await firebase
                 .firestore()
                 .collection('classrooms')
                 .where('code', '==', code)
-                .get()
-                .then((doc) => {
-                    if (doc.empty) {
-                        good = true;
-                    } else {
-                        code = getCode();
-                    }
-                });
+                .get();
+
+            if (existingCodeResponse.empty) {
+                codeIsUnique = true;
+            } else {
+                code = getCode();
+            }
         }
 
-        doc
+        classroomDoc
             .set({
                 owner: user.uid,
                 name,
@@ -77,7 +76,7 @@ export default function NewClassroomModal(
                     variant: 'success',
                 });
                 setLoading(false);
-                history.push(`/classroom/${doc.id}/manage`);
+                history.push(`/classroom/${classroomDoc.id}/manage`);
             });
     }, [name, user]);
 
