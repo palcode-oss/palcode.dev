@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { TableCell } from '@material-ui/core';
 import {
     Classroom,
@@ -7,12 +7,10 @@ import {
     Task,
     TaskStatus,
     TaskType,
-    TemplateTask,
 } from '../helpers/types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import TableRow from '@material-ui/core/TableRow';
 import { useAuth } from '../helpers/auth';
 import { Shimmer } from 'react-shimmer';
@@ -21,13 +19,13 @@ import { faCommentDots } from '@fortawesome/free-regular-svg-icons/faCommentDots
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons/faPaperPlane';
 import { faEye } from '@fortawesome/free-regular-svg-icons/faEye';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { faEdit } from '@fortawesome/free-regular-svg-icons/faEdit';
 import { useTasks } from '../helpers/taskData';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useHistory } from 'react-router-dom';
 import loader from '../styles/loader.module.scss';
+import axios from 'axios';
 
 interface Props {
     task: Task;
@@ -42,11 +40,13 @@ export default function TaskSubmissionRow(
 ): ReactElement {
     const [user] = useAuth();
     const [tasks, tasksLoading] = useTasks(classroom.tasks);
-    const submission = tasks.filter(newTask =>
-        isSubmissionTask(newTask)
-        && newTask.parentTask === task.id
-        && newTask.createdBy === user?.uid,
-    )[0] as SubmissionTask;
+    const submission = useMemo<SubmissionTask>(() => {
+        return tasks.filter(newTask =>
+            isSubmissionTask(newTask)
+            && newTask.parentTask === task.id
+            && newTask.createdBy === user?.uid,
+        )[0] as SubmissionTask;
+    }, [tasks, user]);
 
     const history = useHistory();
     const openSubmission = useCallback(() => {
@@ -84,8 +84,17 @@ export default function TaskSubmissionRow(
                                     tasks: classroom.tasks.concat(doc.id)
                                 })
                                 .then(() => {
-                                    history.push(`/task/${doc.id}`);
+                                    return axios.post(
+                                        process.env.REACT_APP_API + '/clone',
+                                        {
+                                            projectId: doc.id,
+                                            sourceProjectId: task.id,
+                                        }
+                                    )
                                 })
+                                .then(() => {
+                                    history.push(`/task/${doc.id}`);
+                                });
                         });
                 } else {
                     history.push(`/task/${data.docs[0].id}`);
