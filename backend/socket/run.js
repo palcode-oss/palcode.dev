@@ -4,6 +4,7 @@ const {getPythonTag, getStorageRoot} = require("../helpers");
 const Docker = require("dockerode");
 const docker = Docker();
 const uuid = require("uuid").v4;
+const sanitize = require("sanitize-filename");
 
 docker.pull('python:' + getPythonTag(), (err, stream) => {
     docker.modem.followProgress(stream, () => {
@@ -25,7 +26,7 @@ async function execPython(projectId, socket, io) {
         WorkingDir: '/usr/src/app',
         Binds: [
             '/var/run/docker.sock:/var/run/docker.sock',
-            path.resolve(getStorageRoot() + '/' + projectId) + ':/usr/src/app',
+            path.resolve(getStorageRoot(), sanitize(projectId)) + ':/usr/src/app',
         ],
         Entrypoint: ["python", "index.py"],
         OpenStdin: true,
@@ -106,7 +107,7 @@ module.exports = (io) => {
             }
 
             const dirExists = fs.existsSync(
-                path.resolve(getStorageRoot() + '/' + data.projectId)
+                path.resolve(getStorageRoot(), sanitize(data.projectId))
             );
             if (!dirExists) {
                 socket.emit('run', {
