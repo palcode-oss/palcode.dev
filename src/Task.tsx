@@ -1,6 +1,5 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useTask } from './helpers/taskData';
 import { deleteRemoteFile, useTaskFiles } from './helpers/taskContent';
 import Files from './task-components/Files';
 import FileEditor from './task-components/FileEditor';
@@ -14,7 +13,6 @@ interface Params {
 
 export default function Task(): ReactElement {
     const { taskId } = useParams<Params>();
-    const [task, taskLoading] = useTask(taskId);
 
     const [currentTab, setCurrentTab] = useState('index.py');
     const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId);

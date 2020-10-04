@@ -5,6 +5,10 @@ import editor from '../styles/editor.module.scss';
 import BriefingSyntaxHighlighter from './briefing-renderers/BriefingSyntaxHighlighter';
 import BriefingImage from './briefing-renderers/BriefingImage';
 import { BriefingTable, BriefingTableCell } from './briefing-renderers/BriefingTable';
+import { useTask } from '../helpers/taskData';
+import { Shimmer } from 'react-shimmer';
+import loader from '../styles/loader.module.scss';
+import briefingRenderer from '../styles/briefing-renderer.module.scss';
 
 export default function Briefing(
     {
@@ -14,9 +18,33 @@ export default function Briefing(
     }
 ): ReactElement {
     const briefing = useBriefing(taskId);
+    const [task, taskLoading] = useTask(taskId);
 
     return (
         <div className={editor.briefingText}>
+            {
+                taskLoading && (
+                    <Shimmer
+                        height={30}
+                        width={200}
+                        duration={1000}
+                        className={loader.grayShimmer}
+                    />
+                )
+            }
+
+            {
+                !taskLoading && (
+                    <h1
+                        className={briefingRenderer.briefingTitle}
+                    >
+                        {
+                            task?.name
+                        }
+                    </h1>
+                )
+            }
+
             <ReactMarkdown
                 source={briefing}
                 renderers={{
