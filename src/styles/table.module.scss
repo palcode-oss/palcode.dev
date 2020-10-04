@@ -35,6 +35,11 @@
         caption {
             text-align: center;
             padding: 12px;
+
+            a {
+                color: $bg-light;
+                font-size: 0.91rem;
+            }
         }
 
         .dropdownButton {
