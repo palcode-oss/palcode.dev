@@ -10,6 +10,7 @@ import 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import TaskStatusIndicator from '../ui/TaskStatus';
 import VoiceFeedbackUpload from './VoiceFeedbackUpload';
+import { completeTaskFeedback } from '../helpers/taskFeedback';
 
 export default function Feedback(
     {
@@ -49,6 +50,7 @@ export default function Feedback(
                         preventDuplicate: true,
                     }
                 );
+                completeTaskFeedback(taskId);
             })
             .catch(() => {
                 setLoading(false);

@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { getVoiceFeedbackDownloadUrl } from '../helpers/voiceFeedback';
+import { getVoiceFeedbackDownloadUrl } from '../helpers/taskFeedback';
 import editor from '../styles/editor.module.scss';
 
 export default function VoiceFeedbackPreview(

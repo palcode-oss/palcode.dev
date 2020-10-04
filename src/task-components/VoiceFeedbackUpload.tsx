@@ -3,7 +3,12 @@ import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone, faStop, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useSnackbar } from 'notistack';
-import { deleteVoiceFeedback, uploadVoiceFeedback } from '../helpers/voiceFeedback';
+import {
+    completeTaskFeedback,
+    deleteVoiceFeedback,
+    uncompleteTaskFeedback,
+    uploadVoiceFeedback,
+} from '../helpers/taskFeedback';
 import VoiceFeedbackPreview from './VoiceFeedbackPreview';
 
 export default function VoiceFeedbackUpload(
@@ -58,6 +63,8 @@ export default function VoiceFeedbackUpload(
                                 if (data.metadata.md5Hash) {
                                     setUploadMd5Hash(data.metadata.md5Hash);
                                 }
+
+                                completeTaskFeedback(taskId);
                             })
                             .catch(() => {
                                 setUploading(false);
@@ -115,6 +122,7 @@ export default function VoiceFeedbackUpload(
                 );
 
                 setUploadMd5Hash('deleted');
+                uncompleteTaskFeedback(taskId);
             })
             .catch(err => {
                 setUploading(false);
