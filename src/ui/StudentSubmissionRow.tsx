@@ -1,4 +1,4 @@
-import { SubmissionTask } from '../helpers/types';
+import { SubmissionTask, TaskStatus } from '../helpers/types';
 import { TableCell } from '@material-ui/core';
 import { Shimmer } from 'react-shimmer';
 import moment from 'moment';
@@ -8,9 +8,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGraduationCap } from '@fortawesome/free-solid-svg-icons/faGraduationCap';
 import TableRow from '@material-ui/core/TableRow';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUser } from '../helpers/auth';
 import TaskStatusIndicator from './TaskStatus';
+import firebase from 'firebase';
 
 interface Props {
     task: SubmissionTask;
@@ -22,6 +23,24 @@ export default function StudentSubmissionRow(
     }: Props,
 ) {
     const [creator, creatorLoading] = useUser(task.createdBy);
+    const [taskSubmissionTime, setTaskSubmissionTime] = useState<null | firebase.firestore.Timestamp>(null);
+    useEffect(() => {
+        if (task.status === TaskStatus.Unsubmitted) return;
+
+        firebase
+            .firestore()
+            .collection('tasks')
+            .doc(task.id)
+            .collection('statusUpdates')
+            .where('status', '==', TaskStatus.Submitted)
+            .get()
+            .then(data => {
+                if (!data.empty) {
+                    setTaskSubmissionTime(data.docs[0].data().createdAt as firebase.firestore.Timestamp);
+                }
+            });
+    }, [task]);
+
 
     return (
         <TableRow>
@@ -44,6 +63,25 @@ export default function StudentSubmissionRow(
             <TableCell align='right'>
                 {
                     moment(task.created.toDate()).fromNow()
+                }
+            </TableCell>
+            <TableCell align='right'>
+                {
+                    task.status !== TaskStatus.Unsubmitted ? (
+                        taskSubmissionTime ? (
+                            moment(taskSubmissionTime.toDate()).fromNow()
+                        ) : (
+                            <Shimmer
+                                height={12}
+                                width={100}
+                                className='shimmer'
+                            />
+                        )
+                    ) : (
+                        <>
+                            &mdash;
+                        </>
+                    )
                 }
             </TableCell>
             <TableCell align='center'>
