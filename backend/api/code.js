@@ -6,7 +6,7 @@ const { getPythonTag, getStorageRoot } = require("../helpers");
 const Docker = require("dockerode");
 const docker = Docker();
 
-router.get('/pyflakes', (req, res) => {
+/*router.get('/pyflakes', (req, res) => {
     // TODO: implement linting
     const projectId = req.query.projectId;
     const fileName = req.query.fileName;
@@ -26,6 +26,6 @@ router.get('/pyflakes', (req, res) => {
              + ':/usr/src/app',
         ],
     });
-});
+});*/
 
 module.exports = router;

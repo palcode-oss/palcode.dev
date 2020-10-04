@@ -2,18 +2,19 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs-extra");
 const path = require("path");
+const sanitize = require("sanitize-filename");
 
 const storageRoot = process.env.PAL_STORAGE_ROOT;
 
 router.post('/save', (req, res) => {
-    const projectId = req.body.projectId;
+    const projectId = sanitize(req.body.projectId);
     const files = req.body.files;
     if (!projectId || !files || !files.length) {
         res.sendStatus(400);
         return;
     }
 
-    const projectPath = path.resolve(storageRoot + '/' + projectId);
+    const projectPath = path.resolve(storageRoot, projectId);
     const projectExists = fs.existsSync(projectPath);
     if (!projectExists) {
         fs.mkdirSync(projectPath);
@@ -26,7 +27,7 @@ router.post('/save', (req, res) => {
     }
 
     files.forEach(file => {
-        const fileName = file.name;
+        const fileName = sanitize(file.name);
         const fileContent = file.content;
 
         if (!fileName || !fileContent) {
@@ -34,7 +35,7 @@ router.post('/save', (req, res) => {
         }
 
         fs.writeFileSync(
-            path.resolve(projectPath + '/' + fileName),
+            path.resolve(projectPath, fileName),
             fileContent,
         );
     });
@@ -43,15 +44,15 @@ router.post('/save', (req, res) => {
 });
 
 router.post('/delete-file', (req, res) => {
-    const projectId = req.body.projectId;
-    const fileName = req.body.fileName;
+    const projectId = sanitize(req.body.projectId);
+    const fileName = sanitize(req.body.fileName);
 
     if (!projectId || !fileName) {
         res.sendStatus(400);
         return;
     }
 
-    const filePath = path.resolve(storageRoot + '/' + projectId + '/' + fileName);
+    const filePath = path.resolve(storageRoot, projectId, fileName);
     const fileExists = fs.existsSync(filePath);
     if (!fileExists) {
         res.sendStatus(404);
@@ -63,22 +64,22 @@ router.post('/delete-file', (req, res) => {
 });
 
 router.post('/clone', (req, res) => {
-    const projectId = req.body.projectId;
-    const sourceProjectId = req.body.sourceProjectId;
+    const projectId = sanitize(req.body.projectId);
+    const sourceProjectId = sanitize(req.body.sourceProjectId);
 
     if (!projectId || !sourceProjectId) {
         res.sendStatus(400);
         return;
     }
 
-    const sourceProjectPath = path.resolve(storageRoot + '/' + sourceProjectId);
+    const sourceProjectPath = path.resolve(storageRoot, sourceProjectId);
     const pathExists = fs.existsSync(sourceProjectPath);
     if (!pathExists) {
         res.sendStatus(404);
         return;
     }
 
-    const projectPath = path.resolve(storageRoot + '/' + projectId);
+    const projectPath = path.resolve(storageRoot, projectId);
     fs.mkdirSync(projectPath);
     fs.copySync(sourceProjectPath, projectPath);
 
