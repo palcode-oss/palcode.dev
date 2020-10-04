@@ -13,6 +13,7 @@ import { useSnackbar } from 'notistack';
 import { useClassroom } from '../helpers/classroom';
 import { useTasks } from '../helpers/taskData';
 import { useStudent } from '../helpers/auth';
+import loader from '../styles/loader.module.scss';
 
 interface Props {
     studentId: string;
@@ -75,7 +76,7 @@ export default function StudentRow(
                             <Shimmer
                                 height={12}
                                 width={80}
-                                className='shimmer'
+                                className={loader.grayShimmer}
                             />
                         )
                 }
@@ -94,7 +95,7 @@ export default function StudentRow(
                                     <Shimmer
                                         height={12}
                                         width={40}
-                                        className='shimmer'
+                                        className={loader.grayShimmer}
                                     />
                                 )
                         }

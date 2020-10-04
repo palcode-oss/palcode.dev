@@ -47,7 +47,7 @@ export default function ReviewTask(): ReactElement {
                         <Shimmer
                             height={22}
                             width={120}
-                            className='shimmer'
+                            className={loader.grayShimmer}
                         />
                     ) : (
                         task.name
