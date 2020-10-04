@@ -11,7 +11,9 @@ import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect, useState } from 'react';
 import { useUser } from '../helpers/auth';
 import TaskStatusIndicator from './TaskStatus';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import loader from '../styles/loader.module.scss';
 
 interface Props {
     task: SubmissionTask;
@@ -33,6 +35,7 @@ export default function StudentSubmissionRow(
             .doc(task.id)
             .collection('statusUpdates')
             .where('status', '==', TaskStatus.Submitted)
+            .orderBy('createdAt', 'desc')
             .get()
             .then(data => {
                 if (!data.empty) {
@@ -50,7 +53,7 @@ export default function StudentSubmissionRow(
                         <Shimmer
                             height={12}
                             width={120}
-                            className='shimmer'
+                            className={loader.grayShimmer}
                         />
                     ) : (
                         creator.displayName
@@ -74,7 +77,7 @@ export default function StudentSubmissionRow(
                             <Shimmer
                                 height={12}
                                 width={100}
-                                className='shimmer'
+                                className={loader.grayShimmer}
                             />
                         )
                     ) : (

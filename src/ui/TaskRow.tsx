@@ -14,6 +14,7 @@ import { faGraduationCap } from '@fortawesome/free-solid-svg-icons/faGraduationC
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { useTask, useTasks } from '../helpers/taskData';
+import loader from '../styles/loader.module.scss';
 
 interface Props {
     taskId: string;
@@ -87,7 +88,7 @@ export default function TaskRow(
                         <Shimmer
                             height={12}
                             width={80}
-                            className='shimmer'
+                            className={loader.grayShimmer}
                         />
                     )
                 }
@@ -100,7 +101,7 @@ export default function TaskRow(
                             <Shimmer
                                 height={12}
                                 width={120}
-                                className='shimmer'
+                                className={loader.grayShimmer}
                             />
                         )
                 }
