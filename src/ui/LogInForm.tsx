@@ -241,6 +241,14 @@ export default function LogInForm(
                     className={form.textInput}
                 />
 
+                {
+                    page === Page.SignUp && (
+                        <p>
+                            Your data will be handled in accordance with The Manchester Grammar School's privacy policies.
+                        </p>
+                    )
+                }
+
                 <button
                     type='submit'
                     disabled={loading}

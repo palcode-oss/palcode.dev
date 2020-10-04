@@ -19,8 +19,7 @@ export default function Dashboard(): ReactElement {
                     Sign up to get started.
                 </h1>
                 <p>
-                    Sign up for a personal account to get started using PalCode. You'll be able to join your classrooms
-                    after sign-up.
+                    You'll be able to join your classrooms after sign-up.
                 </p>
                 <LogInForm
                     callback={() => window.location.reload()}
