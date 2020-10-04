@@ -76,7 +76,7 @@ export default function TaskSubmissionRow(
                 status: TaskStatus.Unsubmitted,
                 type: TaskType.Submission,
                 id: taskDoc.id,
-                created: new firebase.firestore.Timestamp(new Date().valueOf() / 1000, 0),
+                created: firebase.firestore.Timestamp.now(),
                 parentTask: task.id,
             } as SubmissionTask);
 
