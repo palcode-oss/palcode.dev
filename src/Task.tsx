@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { deleteRemoteFile, useTaskFiles } from './helpers/taskContent';
 import Files from './task-components/Files';
@@ -11,6 +11,7 @@ import { useTask } from './helpers/taskData';
 import Feedback from './task-components/Feedback';
 import { TaskType } from './helpers/types';
 import { useSnackbar } from 'notistack';
+import { useAuth } from './helpers/auth';
 
 interface Params {
     taskId: string;
@@ -25,6 +26,7 @@ export default function Task(
 ): ReactElement {
     const { taskId } = useParams<Params>();
     const [task, taskLoading] = useTask(taskId);
+    const [,, user] = useAuth();
     const {enqueueSnackbar} = useSnackbar();
 
     const [currentTab, setCurrentTab] = useState('index.py');
@@ -58,6 +60,20 @@ export default function Task(
         deleteRemoteFile(taskId, fileName);
     }, [files, taskId]);
 
+    const readOnly = useMemo<boolean>(() => {
+        if (!task || !user) return true;
+
+        if (teacherView) {
+            return true;
+        }
+
+        if (task.type === TaskType.Template) {
+            return user.perms === 0;
+        }
+
+        return false;
+    }, [task, teacherView, user]);
+
     return (
         <div className={editor.editor}>
             <div className={editor.interactive}>
@@ -68,7 +84,7 @@ export default function Task(
                         selectedFile={currentTab}
                         onNewFile={addFile}
                         onFileDelete={deleteFile}
-                        readOnly={!!teacherView}
+                        readOnly={readOnly}
                         showReadme={task?.type === TaskType.Template}
                     />
                 }
@@ -80,7 +96,7 @@ export default function Task(
                 <FileEditor
                     taskId={taskId}
                     fileName={currentTab}
-                    readOnly={!!teacherView}
+                    readOnly={readOnly}
                 />
 
                 <Console taskId={taskId} />

@@ -36,16 +36,20 @@ export default function Files(
             }
 
             <ul className={editor.files}>
-                <li
-                    className={selectedFile === 'README.md' ? editor.fileSelected : editor.file}
-                >
-                    <a
-                        href='#'
-                        onClick={() => onTabSelect('README.md')}
-                    >
-                        README.md
-                    </a>
-                </li>
+                {
+                    showReadme && (
+                        <li
+                            className={selectedFile === 'README.md' ? editor.fileSelected : editor.file}
+                        >
+                            <a
+                                href='#'
+                                onClick={() => onTabSelect('README.md')}
+                            >
+                                README.md
+                            </a>
+                        </li>
+                    )
+                }
                 { files.map(file => (
                     <li
                         key={file}
