@@ -23,6 +23,10 @@ import loader from './styles/loader.module.scss';
 import Typography from '@material-ui/core/Typography';
 import { useOwnedClassroom } from './helpers/classroom';
 import Loader from 'react-loader-spinner';
+import IconButton from '@material-ui/core/IconButton';
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+import Tooltip from '@material-ui/core/Tooltip';
+import NewClassroomModal from './ui/NewClassroomModal';
 
 interface Props {
     user: User
@@ -56,6 +60,8 @@ export default function TeacherDashboard(
             });
     }, []);
 
+    const [showModal, setShowModal] = useState(false);
+
     return (
         <div className={table.tablePage}>
             {
@@ -72,8 +78,25 @@ export default function TeacherDashboard(
                                 >
                                     My classrooms
                                 </Typography>
+                                <Tooltip
+                                    title='Create new classroom'
+                                    className={table.button}
+                                >
+                                    <IconButton onClick={() => setShowModal(true)}>
+                                        <FontAwesomeIcon icon={faPlus}/>
+                                    </IconButton>
+                                </Tooltip>
                             </Toolbar>
                             <Table>
+                                {
+                                    !classroomData.length && (
+                                        <caption>
+                                            No classrooms to show yet. Click the&nbsp;
+                                            <FontAwesomeIcon icon={faPlus}/>
+                                            &nbsp;button above to create one.
+                                        </caption>
+                                    )
+                                }
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Class name</TableCell>
@@ -121,6 +144,11 @@ export default function TeacherDashboard(
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        {
+                            showModal && (
+                                <NewClassroomModal closeModal={() => setShowModal(false)} />
+                            )
+                        }
                     </>
                 ) : (
                     <div className={loader.loader}>

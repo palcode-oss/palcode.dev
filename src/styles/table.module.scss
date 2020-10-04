@@ -24,6 +24,10 @@
             border-bottom-color: lighten($bg-light, 70);
         }
 
+        thead:last-child tr th {
+            border-bottom: none;
+        }
+
         tbody tr:last-child td {
             border-bottom: none;
         }
