@@ -28,6 +28,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useHistory } from 'react-router-dom';
 import { v4 } from 'uuid';
+import loader from '../styles/loader.module.scss';
 
 interface Props {
     task: Task;
@@ -42,10 +43,10 @@ export default function TaskSubmissionRow(
 ): ReactElement {
     const [user] = useAuth();
     const [tasks, tasksLoading] = useTasks(classroom.tasks);
-    const submission = tasks.filter(task =>
-        isSubmissionTask(task)
-        && task.parentTask === task.id
-        && task.createdBy === user?.uid,
+    const submission = tasks.filter(newTask =>
+        isSubmissionTask(newTask)
+        && newTask.parentTask === task.id
+        && newTask.createdBy === user?.uid,
     )[0] as SubmissionTask;
 
     const history = useHistory();
@@ -128,7 +129,7 @@ export default function TaskSubmissionRow(
                         <Shimmer
                             height={12}
                             width={80}
-                            className='shimmer'
+                            className={loader.grayShimmer}
                         />
                     )
                 }
