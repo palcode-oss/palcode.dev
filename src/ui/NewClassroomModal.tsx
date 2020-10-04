@@ -7,33 +7,31 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { Classroom, TaskDoc, TaskStatus, TaskType } from '../helpers/types';
+import { Classroom, ClassroomDoc, TaskDoc, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 
 interface Props {
-    classroomId: string;
     closeModal: () => void;
 }
 
-export default function NewTaskModal(
+export default function NewClassroomModal(
     {
-        classroomId,
         closeModal,
     }: Props,
 ): ReactElement {
-    const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
     const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value);
+        setName(e.target.value);
     }, []);
 
     const [loading, setLoading] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
     const [user] = useAuth();
     const history = useHistory();
-    const createTask = useCallback(() => {
-        if (title.length <= 3) {
-            enqueueSnackbar('Enter a title at least 4 characters in length.', {
+    const createTask = useCallback(async () => {
+        if (name.length <= 3) {
+            enqueueSnackbar('Enter a classroom name at least 4 characters in length.', {
                 variant: 'warning',
             });
             return;
@@ -44,48 +42,51 @@ export default function NewTaskModal(
         setLoading(true);
         const doc = firebase
             .firestore()
-            .collection('tasks')
+            .collection('classrooms')
             .doc();
+
+        const getCode = () => Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        let code = getCode();
+        let good = false;
+        for (; !good;) {
+            await firebase
+                .firestore()
+                .collection('classrooms')
+                .where('code', '==', code)
+                .get()
+                .then((doc) => {
+                    if (doc.empty) {
+                        good = true;
+                    } else {
+                        code = getCode();
+                    }
+                });
+        }
 
         doc
             .set({
-                createdBy: user.uid,
-                name: title,
-                status: TaskStatus.Unsubmitted,
-                type: TaskType.Template,
+                owner: user.uid,
+                name,
+                members: [],
                 created: firebase.firestore.Timestamp.now(),
-            } as TaskDoc<TaskType.Template>)
+                tasks: [],
+                code,
+            } as ClassroomDoc)
             .then(() => {
-                firebase
-                    .firestore()
-                    .collection('classrooms')
-                    .doc(classroomId)
-                    .get()
-                    .then((snapshot) => {
-                        firebase
-                            .firestore()
-                            .collection('classrooms')
-                            .doc(classroomId)
-                            .update({
-                                tasks: (snapshot.data() as Classroom).tasks.concat(doc.id),
-                            } as Partial<Classroom>)
-                            .then(() => {
-                                enqueueSnackbar('Task created successfully!', {
-                                    variant: 'success',
-                                });
-                                setLoading(false);
-                                history.push(`/task/${doc.id}`);
-                            });
-                    });
+                enqueueSnackbar('Classroom created successfully!', {
+                    variant: 'success',
+                });
+                setLoading(false);
+                history.push(`/classroom/${doc.id}/manage`);
             });
-    }, [classroomId, title, user]);
+    }, [name, user]);
 
     return (
         <div className={modal.modal}>
             <div className={modal.content}>
                 <div className={modal.head}>
                     <span className={modal.title}>
-                        New task
+                        New classroom
                     </span>
 
                     <button
@@ -106,21 +107,22 @@ export default function NewTaskModal(
                     >
                         <label
                             className={form.label}
-                            htmlFor='title-input'
+                            htmlFor='name-input'
                         >
-                            Task title
+                            Classroom name
                         </label>
                         <input
                             type='text'
-                            id='title-input'
+                            id='name-input'
                             onChange={handleTitleChange}
-                            value={title}
+                            value={name}
                             disabled={loading}
                             className={form.textInput}
                         />
 
                         <p>
-                            You'll be able to set instructions in the Markdown editor after creating the task.
+                            You'll be able to view the code and share it with your students later. Pupils will then
+                            be able to self-admit to the classroom.
                         </p>
 
                         <button
@@ -137,7 +139,7 @@ export default function NewTaskModal(
                                             height={14}
                                             color='white'
                                         />
-                                    ) : 'Create task'
+                                    ) : 'Create classroom'
                             }
                         </button>
                     </form>
