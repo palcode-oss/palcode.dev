@@ -8,11 +8,10 @@ export function useTask(taskId: string): [Task | null, boolean] {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        firebase.firestore()
+        return firebase.firestore()
             .collection('tasks')
             .doc(taskId)
-            .get()
-            .then(response => {
+            .onSnapshot(response => {
                 setLoading(false);
 
                 if (!response.exists) {

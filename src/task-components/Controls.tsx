@@ -3,6 +3,8 @@ import { isSubmissionTask, Task, TaskStatus } from '../helpers/types';
 import form from '../styles/form.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEject, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 export default function Controls(
     {
@@ -18,12 +20,35 @@ export default function Controls(
             return null;
         }
 
+        if (!Number.isInteger(task.status)) {
+            return TaskStatus.Unsubmitted;
+        }
+
         return task.status;
     }, [task]);
 
-    const onButtonPress = useCallback((e: FormEvent) => {
+    const onButtonPress = useCallback(async (e: FormEvent) => {
         e.preventDefault();
-    }, []);
+        const targetSubmissionStatus: TaskStatus = submissionStatus === TaskStatus.Unsubmitted
+            ? TaskStatus.Submitted :
+            TaskStatus.Unsubmitted;
+
+        const taskDoc = firebase.firestore()
+            .collection('tasks')
+            .doc(taskId)
+
+        await taskDoc
+            .update({
+                status: targetSubmissionStatus,
+            });
+
+        await taskDoc
+            .collection('statusUpdates')
+            .add({
+                status: targetSubmissionStatus,
+                createdAt: firebase.firestore.Timestamp.now(),
+            });
+    }, [submissionStatus, taskId]);
 
     if (submissionStatus === null) {
         return null;
@@ -40,13 +65,13 @@ export default function Controls(
                 {
                     submissionStatus === TaskStatus.Unsubmitted && <>
                         <FontAwesomeIcon icon={faPaperPlane} />
-                        &nbsp;Submit task
+                        Submit task
                     </>
                 }
                 {
                     [TaskStatus.Submitted, TaskStatus.HasFeedback].includes(submissionStatus) && <>
                         <FontAwesomeIcon icon={faEject} />
-                        &nbsp;Unsubmit
+                        Unsubmit
                     </>
                 }
             </button>

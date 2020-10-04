@@ -148,15 +148,12 @@
 
     padding: 20px;
 
-    .submitButton {
-
-    }
-
     .briefingText {
       color: lighten($bg-dark, 85%);
 
       flex: 1;
       overflow: auto;
+      margin-top: 5px;
 
       p, h1, h2, h3, h4, h5, h6 {
         margin: 10px 0;

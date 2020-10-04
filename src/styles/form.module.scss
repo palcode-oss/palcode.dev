@@ -59,6 +59,11 @@
     &:hover, &:focus {
       color: lighten($bg-light, 80%);
     }
+
+    svg {
+      display: inline-block;
+      margin-right: 5px;
+    }
   }
 
   .loginPrompt &, .joinClassroom & {
