@@ -77,6 +77,7 @@ export default function ReviewTask(): ReactElement {
                             <TableCell>Student name</TableCell>
                             <TableCell align='right'>Status</TableCell>
                             <TableCell align='right'>Response created</TableCell>
+                            <TableCell align='right'>Submitted</TableCell>
                             <TableCell align='center'>Actions</TableCell>
                         </TableRow>
                     </TableHead>
