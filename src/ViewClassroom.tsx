@@ -11,7 +11,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TaskSubmissionRow from './ui/TaskSubmissionRow';
-import { Task, TaskType, TemplateTask } from './helpers/types';
+import { TaskType, TemplateTask } from './helpers/types';
 import { orderBy } from 'lodash';
 import { useClassroom } from './helpers/classroom';
 import table from './styles/table.module.scss';

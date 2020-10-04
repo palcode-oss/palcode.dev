@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { Classroom, TaskDoc, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
+import { Classroom, TaskDoc, TaskStatus, TaskType } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 

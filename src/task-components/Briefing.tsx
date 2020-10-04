@@ -5,20 +5,23 @@ import editor from '../styles/editor.module.scss';
 import BriefingSyntaxHighlighter from './briefing-renderers/BriefingSyntaxHighlighter';
 import BriefingImage from './briefing-renderers/BriefingImage';
 import { BriefingTable, BriefingTableCell } from './briefing-renderers/BriefingTable';
-import { useTask } from '../helpers/taskData';
 import { Shimmer } from 'react-shimmer';
 import loader from '../styles/loader.module.scss';
 import briefingRenderer from '../styles/briefing-renderer.module.scss';
+import { Task } from '../helpers/types';
 
 export default function Briefing(
     {
-        taskId
+        taskId,
+        task,
+        taskLoading,
     } : {
-        taskId: string
+        taskId: string,
+        task: Task | null,
+        taskLoading: boolean,
     }
 ): ReactElement {
     const briefing = useBriefing(taskId);
-    const [task, taskLoading] = useTask(taskId);
 
     return (
         <div className={editor.briefingText}>

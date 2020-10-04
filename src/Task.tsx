@@ -6,6 +6,8 @@ import FileEditor from './task-components/FileEditor';
 import Console from './task-components/Console';
 import editor from './styles/editor.module.scss';
 import Briefing from './task-components/Briefing';
+import Controls from './task-components/Controls';
+import { useTask } from './helpers/taskData';
 
 interface Params {
     taskId: string;
@@ -13,6 +15,7 @@ interface Params {
 
 export default function Task(): ReactElement {
     const { taskId } = useParams<Params>();
+    const [task, taskLoading] = useTask(taskId);
 
     const [currentTab, setCurrentTab] = useState('index.py');
     const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId);
@@ -60,8 +63,16 @@ export default function Task(): ReactElement {
                 <Console taskId={taskId} />
             </div>
 
-            <div className={editor.briefing}>
-                <Briefing taskId={taskId} />
+            <div className={editor.sidebar}>
+                <Controls
+                    task={task}
+                    taskId={taskId}
+                />
+                <Briefing
+                    taskId={taskId}
+                    task={task}
+                    taskLoading={taskLoading}
+                />
             </div>
         </div>
     )
