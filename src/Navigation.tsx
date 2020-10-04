@@ -22,14 +22,21 @@ function RedirectUnauthed(
 ): ReactElement {
     const [userObj, loading, user] = useAuth();
 
+    const {enqueueSnackbar} = useSnackbar();
     if (onlyTeachers) {
         if ((!loading && !userObj) || (user && user.perms === Perms.Student)) {
+            enqueueSnackbar('Oops - it appears that you\'re not allowed to access that page!', {
+                variant: 'error'
+            });
             return (
                 <Redirect to='/'/>
             );
         }
     } else {
         if (!loading && !userObj) {
+            enqueueSnackbar('Try logging in first, then accessing this page again.', {
+                variant: 'warning'
+            });
             return (
                 <Redirect to='/'/>
             );

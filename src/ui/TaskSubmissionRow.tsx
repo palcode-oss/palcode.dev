@@ -27,7 +27,6 @@ import { useTasks } from '../helpers/taskData';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useHistory } from 'react-router-dom';
-import { v4 } from 'uuid';
 import loader from '../styles/loader.module.scss';
 
 interface Props {
@@ -61,18 +60,18 @@ export default function TaskSubmissionRow(
             .get()
             .then((data) => {
                 if (data.empty) {
-                    const id = v4();
-
-                    firebase
+                    const doc = firebase
                         .firestore()
                         .collection('tasks')
-                        .doc(id)
+                        .doc();
+
+                    doc
                         .set({
                             createdBy: user.uid,
                             name: task.name,
                             status: TaskStatus.Unsubmitted,
                             type: TaskType.Submission,
-                            id,
+                            id: doc.id,
                             created: new firebase.firestore.Timestamp(new Date().valueOf() / 1000, 0),
                             parentTask: task.id,
                         } as SubmissionTask)
@@ -82,10 +81,10 @@ export default function TaskSubmissionRow(
                                 .collection('classrooms')
                                 .doc(classroom.id)
                                 .update({
-                                    tasks: classroom.tasks.concat(id)
+                                    tasks: classroom.tasks.concat(doc.id)
                                 })
                                 .then(() => {
-                                    history.push(`/task/${id}`);
+                                    history.push(`/task/${doc.id}`);
                                 })
                         });
                 } else {
