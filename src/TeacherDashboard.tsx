@@ -9,14 +9,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import TableBody from '@material-ui/core/TableBody';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import MenuItem from '@material-ui/core/MenuItem';
-import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
-import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
-import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import moment from 'moment';
-import DropdownMenu from './ui/DropdownMenu';
 import Toolbar from '@material-ui/core/Toolbar';
 import table from './styles/table.module.scss';
 import loader from './styles/loader.module.scss';
@@ -27,6 +20,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import Tooltip from '@material-ui/core/Tooltip';
 import NewClassroomModal from './ui/NewClassroomModal';
+import ClassroomRow from './ui/ClassroomRow';
 
 interface Props {
     user: User
@@ -109,36 +103,11 @@ export default function TeacherDashboard(
                                 <TableBody>
                                     {
                                         classroomData.map(classroom => (
-                                            <TableRow key={classroom.id}>
-                                                <TableCell>{classroom.name}</TableCell>
-                                                <TableCell align='right'>{classroom.members.length}</TableCell>
-                                                <TableCell align='right'>{classroom.tasks.length}</TableCell>
-                                                <TableCell align='right'>
-                                                    {
-                                                        moment(classroom.created.toDate()).fromNow()
-                                                    }
-                                                </TableCell>
-                                                <TableCell align='center'>
-                                                    <DropdownMenu>
-                                                        <Link to={`/classroom/${classroom.id}/view_code`}>
-                                                            <MenuItem>
-                                                                <FontAwesomeIcon icon={faKeyboard}/>
-                                                                &nbsp;View code page
-                                                            </MenuItem>
-                                                        </Link>
-                                                        <Link to={`/classroom/${classroom.id}/manage`}>
-                                                            <MenuItem>
-                                                                <FontAwesomeIcon icon={faEdit}/>
-                                                                &nbsp;Manage classroom
-                                                            </MenuItem>
-                                                        </Link>
-                                                        <MenuItem onClick={() => handleDelete(classroom.id)}>
-                                                            <FontAwesomeIcon icon={faTrashAlt}/>
-                                                            &nbsp;Delete
-                                                        </MenuItem>
-                                                    </DropdownMenu>
-                                                </TableCell>
-                                            </TableRow>
+                                            <ClassroomRow
+                                                classroom={classroom}
+                                                handleDelete={handleDelete}
+                                                key={classroom.id}
+                                            />
                                         ))
                                     }
                                 </TableBody>
@@ -146,7 +115,7 @@ export default function TeacherDashboard(
                         </TableContainer>
                         {
                             showModal && (
-                                <NewClassroomModal closeModal={() => setShowModal(false)} />
+                                <NewClassroomModal closeModal={() => setShowModal(false)}/>
                             )
                         }
                     </>
