@@ -159,5 +159,29 @@
         margin: 10px 0;
       }
     }
+
+    .feedbackHeader {
+      color: white;
+      margin-top: 15px;
+      margin-bottom: 10px;
+      @include miriam;
+      font-weight: 700;
+    }
+
+    .feedbackTaskStatus {
+      color: lighten($bg-light, 60%);
+      margin-bottom: 10px;
+    }
+
+    .feedbackTextarea {
+      background-color: transparent;
+      outline: none;
+      font-family: 'Lato', sans-serif;
+
+      max-width: 100%;
+      min-width: 50%;
+      min-height: 100px;
+      max-height: 400px;
+    }
   }
 }

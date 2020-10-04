@@ -7,7 +7,7 @@ import { faEye } from '@fortawesome/free-regular-svg-icons/faEye';
 import { faEyeSlash } from '@fortawesome/free-regular-svg-icons/faEyeSlash';
 
 interface Props {
-    task?: SubmissionTask
+    task?: SubmissionTask | null
 }
 
 export default function TaskStatusIndicator(

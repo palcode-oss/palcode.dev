@@ -125,40 +125,45 @@ function EnsureTaskExists(): ReactElement {
 export default function Navigation(): ReactElement {
     return (
         <Router history={history}>
-            <Navbar/>
+            <Navbar />
 
             <Switch>
                 <Route path='/classroom/join'>
-                    <RedirectUnauthed/>
-                    <JoinClassroom/>
+                    <RedirectUnauthed />
+                    <JoinClassroom />
                 </Route>
                 <Route path='/classroom/:classroomId/view_code'>
-                    <RedirectUnauthed onlyTeachers/>
-                    <EnsureClassroomExists/>
+                    <RedirectUnauthed onlyTeachers />
+                    <EnsureClassroomExists />
                     <CodePage/>
                 </Route>
                 <Route path='/classroom/:classroomId/manage'>
-                    <RedirectUnauthed onlyTeachers/>
-                    <EnsureClassroomExists/>
-                    <ManageClassroom/>
+                    <RedirectUnauthed onlyTeachers />
+                    <EnsureClassroomExists />
+                    <ManageClassroom />
                 </Route>
                 <Route path='/classroom/:classroomId/view'>
-                    <RedirectUnauthed/>
-                    <EnsureClassroomExists/>
-                    <ViewClassroom/>
+                    <RedirectUnauthed />
+                    <EnsureClassroomExists />
+                    <ViewClassroom />
                 </Route>
                 <Route path='/task/:taskId/review'>
-                    <RedirectUnauthed onlyTeachers/>
-                    <EnsureTaskExists/>
-                    <ReviewTask/>
+                    <RedirectUnauthed onlyTeachers />
+                    <EnsureTaskExists />
+                    <ReviewTask />
+                </Route>
+                <Route path='/task/:taskId/feedback'>
+                    <RedirectUnauthed onlyTeachers />
+                    <EnsureTaskExists />
+                    <Task teacherView />
                 </Route>
                 <Route path='/task/:taskId'>
-                    <RedirectUnauthed/>
-                    <EnsureTaskExists/>
-                    <Task/>
+                    <RedirectUnauthed />
+                    <EnsureTaskExists />
+                    <Task />
                 </Route>
                 <Route path='/'>
-                    <Dashboard/>
+                    <Dashboard />
                 </Route>
             </Switch>
         </Router>

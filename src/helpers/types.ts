@@ -41,6 +41,7 @@ export interface SubmissionTask extends TaskProps {
     type: TaskType.Submission;
     status: TaskStatus;
     parentTask: string;
+    feedback?: string;
 }
 
 export type Task<T extends TaskType = any> = T extends TaskType.Submission ? SubmissionTask

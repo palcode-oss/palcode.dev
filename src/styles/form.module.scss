@@ -39,6 +39,8 @@
     padding: 8px 10px;
     border-radius: 10px;
 
+    outline: none;
+
     font-size: 16px;
     color: white;
     @include miriam;
@@ -58,6 +60,10 @@
 
     &:hover, &:focus {
       color: lighten($bg-light, 80%);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
     }
 
     svg {

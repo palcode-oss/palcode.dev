@@ -8,12 +8,19 @@ import editor from './styles/editor.module.scss';
 import Briefing from './task-components/Briefing';
 import Controls from './task-components/Controls';
 import { useTask } from './helpers/taskData';
+import Feedback from './task-components/Feedback';
 
 interface Params {
     taskId: string;
 }
 
-export default function Task(): ReactElement {
+export default function Task(
+    {
+        teacherView,
+    }: {
+        teacherView?: boolean,
+    }
+): ReactElement {
     const { taskId } = useParams<Params>();
     const [task, taskLoading] = useTask(taskId);
 
@@ -48,6 +55,7 @@ export default function Task(): ReactElement {
                         selectedFile={currentTab}
                         onNewFile={addFile}
                         onFileDelete={deleteFile}
+                        readOnly={!!teacherView}
                     />
                 }
 
@@ -58,21 +66,32 @@ export default function Task(): ReactElement {
                 <FileEditor
                     taskId={taskId}
                     fileName={currentTab}
+                    readOnly={!!teacherView}
                 />
 
                 <Console taskId={taskId} />
             </div>
 
             <div className={editor.sidebar}>
-                <Controls
-                    task={task}
-                    taskId={taskId}
-                />
-                <Briefing
-                    taskId={taskId}
-                    task={task}
-                    taskLoading={taskLoading}
-                />
+                {
+                    !teacherView && <>
+                        <Controls
+                            task={task}
+                            taskId={taskId}
+                        />
+                        <Briefing
+                            taskId={taskId}
+                            task={task}
+                            taskLoading={taskLoading}
+                        />
+                    </>
+                }
+                {
+                    teacherView && <Feedback
+                        taskId={taskId}
+                        task={task}
+                    />
+                }
             </div>
         </div>
     )

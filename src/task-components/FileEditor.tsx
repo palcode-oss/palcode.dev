@@ -21,9 +21,11 @@ export default function FileEditor(
     {
         taskId,
         fileName,
+        readOnly,
     }: {
         taskId: string,
         fileName: string,
+        readOnly: boolean,
     }
 ) {
     const [loading, fileContent, setFileContent] = useFileContent(taskId, fileName);
@@ -73,6 +75,9 @@ export default function FileEditor(
                 onChange={setFileContent}
                 width='100%'
                 height='100%'
+                options={{
+                    readOnly,
+                }}
             />
         </div>
     )

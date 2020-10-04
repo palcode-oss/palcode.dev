@@ -11,9 +11,11 @@ export default function Files(
         onFileDelete,
         selectedFile,
         onNewFile,
+        readOnly,
     }: {
         files: string[],
         selectedFile: string,
+        readOnly: boolean,
         onTabSelect(fileName: string): void,
         onNewFile(): void,
         onFileDelete(fileName: string): void,
@@ -21,13 +23,15 @@ export default function Files(
 ): ReactElement {
     return (
         <div className={editor.filesContainer}>
-            <button
-                className={editor.newFile}
-                onClick={onNewFile}
-                title='New file'
-            >
-                <FontAwesomeIcon icon={faFile} />
-            </button>
+            {!readOnly &&
+                <button
+                    className={editor.newFile}
+                    onClick={onNewFile}
+                    title='New file'
+                >
+                    <FontAwesomeIcon icon={faFile}/>
+                </button>
+            }
 
             <ul className={editor.files}>
                 { files.map(file => (
@@ -43,7 +47,10 @@ export default function Files(
                         </a>
 
                         {
-                            file === selectedFile && file !== 'index.py' && <a
+                            file === selectedFile
+                            && file !== 'index.py'
+                            && !readOnly
+                            && <a
                                 href='#'
                                 onClick={() => onFileDelete(file)}
                                 className={editor.fileDelete}
