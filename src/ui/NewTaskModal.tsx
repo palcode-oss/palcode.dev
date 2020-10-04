@@ -7,7 +7,6 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { v4 } from 'uuid';
 import { Classroom, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
@@ -35,7 +34,7 @@ export default function NewTaskModal(
     const createTask = useCallback(() => {
         if (title.length <= 3) {
             enqueueSnackbar('Enter a title at least 4 characters in length.', {
-                variant: 'warning'
+                variant: 'warning',
             });
             return;
         }
@@ -43,18 +42,19 @@ export default function NewTaskModal(
         if (!user) return;
 
         setLoading(true);
-        const id = v4();
-        firebase
+        const doc = firebase
             .firestore()
             .collection('tasks')
-            .doc(id)
+            .doc();
+
+        doc
             .set({
                 createdBy: user.uid,
                 name: title,
                 status: TaskStatus.Unsubmitted,
                 type: TaskType.Template,
-                id,
-                created: new firebase.firestore.Timestamp(new Date().valueOf() / 1000, 0)
+                id: doc.id,
+                created: new firebase.firestore.Timestamp(new Date().valueOf() / 1000, 0),
             } as TemplateTask)
             .then(() => {
                 firebase
@@ -68,16 +68,16 @@ export default function NewTaskModal(
                             .collection('classrooms')
                             .doc(classroomId)
                             .update({
-                                tasks: (snapshot.data() as Classroom).tasks.concat(id)
+                                tasks: (snapshot.data() as Classroom).tasks.concat(doc.id),
                             } as Partial<Classroom>)
                             .then(() => {
                                 enqueueSnackbar('Task created successfully!', {
-                                    variant: 'success'
+                                    variant: 'success',
                                 });
                                 setLoading(false);
-                                history.push(`/task/${id}`);
-                            })
-                    })
+                                history.push(`/task/${doc.id}`);
+                            });
+                    });
             });
     }, [classroomId, title, user]);
 

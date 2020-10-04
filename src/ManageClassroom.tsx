@@ -21,6 +21,7 @@ import table from './styles/table.module.scss';
 import loader from './styles/loader.module.scss';
 import NewTaskModal from './ui/NewTaskModal';
 import { useTasks } from './helpers/taskData';
+import { isTemplateTask } from './helpers/types';
 
 interface Params {
     classroomId: string;
@@ -33,6 +34,7 @@ export default function ManageClassroom(): ReactElement {
     const classroomData = useClassroom(classroomId, classroomUpdater);
 
     const [tasks, loading] = useTasks(classroomData?.tasks || []);
+    const templateTasks = tasks.filter(task => isTemplateTask(task));
 
     const [showModal, setShowModal] = useState(false);
 
@@ -121,7 +123,7 @@ export default function ManageClassroom(): ReactElement {
                             </Toolbar>
                             <Table>
                                 {
-                                    !tasks.length && (
+                                    !templateTasks.length && !loading && (
                                         <caption>
                                             No tasks to show yet. Click the&nbsp;
                                             <FontAwesomeIcon icon={faPlus}/>
@@ -141,7 +143,7 @@ export default function ManageClassroom(): ReactElement {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        tasks
+                                        templateTasks
                                             .map((task) => (
                                                 <TaskRow
                                                     taskId={task.id}
