@@ -4,11 +4,13 @@ import 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { User, UserDoc } from './types';
 
-export function useUser(userId: string): [User | null, boolean] {
+export function useUser(userId?: string): [User | null, boolean] {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!userId) return;
+
         setLoading(true);
         firebase
             .firestore()

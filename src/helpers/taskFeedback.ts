@@ -21,12 +21,21 @@ export function getVoiceFeedbackDownloadUrl(taskId: string): Promise<any> {
         .getDownloadURL();
 }
 
-function updateTaskFeedback(taskId: string, target: TaskStatus): Promise<void> {
-    return firebase.firestore()
+async function updateTaskFeedback(taskId: string, target: TaskStatus): Promise<void> {
+    await firebase.firestore()
         .collection('tasks')
         .doc(taskId)
         .update({
             status: target,
+        });
+
+    await firebase.firestore()
+        .collection('tasks')
+        .doc(taskId)
+        .collection('statusUpdates')
+        .add({
+            status: target,
+            createdAt: firebase.firestore.Timestamp.now(),
         });
 }
 

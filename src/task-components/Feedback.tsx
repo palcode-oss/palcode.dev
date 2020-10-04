@@ -2,6 +2,7 @@ import { isSubmissionTask, Task } from '../helpers/types';
 import React, { FormEvent, ReactElement, useCallback, useEffect, useState } from 'react';
 import form from '../styles/form.module.scss';
 import editor from '../styles/editor.module.scss';
+import loader from '../styles/loader.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import Loader from 'react-loader-spinner';
@@ -11,6 +12,8 @@ import { useSnackbar } from 'notistack';
 import TaskStatusIndicator from '../ui/TaskStatus';
 import VoiceFeedbackUpload from './VoiceFeedbackUpload';
 import { completeTaskFeedback } from '../helpers/taskFeedback';
+import { useUser } from '../helpers/auth';
+import { Shimmer } from 'react-shimmer';
 
 export default function Feedback(
     {
@@ -23,6 +26,7 @@ export default function Feedback(
 ): ReactElement {
     const [loading, setLoading] = useState(false);
     const [feedback, setFeedback] = useState('');
+    const [user, userLoading] = useUser(task?.createdBy);
 
     useEffect(() => {
         if (task && isSubmissionTask(task) && task.feedback) {
@@ -74,8 +78,28 @@ export default function Feedback(
                     Feedback
                 </h1>
 
+                {
+                    userLoading && (
+                        <Shimmer
+                            className={loader.grayShimmer}
+                            height={10}
+                            width={100}
+                        />
+                    )
+                }
+
+                {
+                    !userLoading && user && (
+                        <p
+                            className={editor.feedbackMetadata}
+                        >
+                            Created by: <strong>{user.displayName}</strong>
+                        </p>
+                    )
+                }
+
                 <p
-                    className={editor.feedbackTaskStatus}
+                    className={editor.feedbackMetadata}
                 >
                     {!!task && isSubmissionTask(task) && (
                         <TaskStatusIndicator
