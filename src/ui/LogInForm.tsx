@@ -22,7 +22,7 @@ export default function LogInForm(
     {
         callback,
         page,
-        setPage
+        setPage,
     }: Props,
 ): ReactElement {
     const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export default function LogInForm(
     }, []);
 
     const {enqueueSnackbar} = useSnackbar();
-    const handleSignIn = useCallback(() => {
+    const handleSignIn = useCallback(async () => {
         if (!EmailValidator.validate(email)) {
             enqueueSnackbar('Enter a valid email address.', {
                 variant: 'warning',
@@ -60,17 +60,9 @@ export default function LogInForm(
         }
 
         setLoading(true);
-        firebase
+        const user = await firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then((user) => {
-                enqueueSnackbar(`Welcome back, ${user.user?.displayName}! Signed in successfully.`, {
-                    variant: 'success',
-                });
-
-                setLoading(false);
-                callback();
-            })
             .catch(() => {
                 enqueueSnackbar('Something went wrong while signing you in. Please check your details and try again.', {
                     variant: 'error',
@@ -78,10 +70,21 @@ export default function LogInForm(
 
                 setLoading(false);
                 setPassword('');
+
+                return null;
             });
+
+        if (!user) return;
+
+        enqueueSnackbar(`Welcome back, ${user.user?.displayName}! Signed in successfully.`, {
+            variant: 'success',
+        });
+
+        setLoading(false);
+        callback();
     }, [email, password]);
 
-    const handleSignUp = useCallback(() => {
+    const handleSignUp = useCallback(async () => {
         if (!EmailValidator.validate(email)) {
             enqueueSnackbar('Enter a valid email address.', {
                 variant: 'error',
@@ -99,59 +102,9 @@ export default function LogInForm(
         }
 
         setLoading(true);
-        firebase
+        const user = await firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then((user) => {
-                const userObj = user.user;
-                if (userObj) {
-                    userObj
-                        .updateProfile({
-                            displayName,
-                        })
-                        .then(() => {
-                            firebase
-                                .auth()
-                                .signInWithEmailAndPassword(email, password)
-                                .then(() => {
-                                    firebase
-                                        .firestore()
-                                        .collection('users')
-                                        .doc(userObj.uid)
-                                        .set({
-                                            email,
-                                            displayName,
-                                            perms: Perms.Student,
-                                        } as UserDoc)
-                                        .then(() => {
-                                            enqueueSnackbar('Success! You\'re now signed in with your new account.', {
-                                                variant: 'success',
-                                            });
-
-                                            setLoading(false);
-                                            callback();
-                                        });
-                                })
-                                .catch(() => {
-                                    enqueueSnackbar('Your new account was created successfully - log in to get started!', {
-                                        variant: 'success',
-                                    });
-
-                                    setLoading(false);
-                                    setPage(Page.SignIn);
-                                    setPassword('');
-                                });
-                        })
-                        .catch(() => {
-                            enqueueSnackbar('Something went wrong while setting up your account. Try again later.', {
-                                variant: 'error',
-                            });
-
-                            setLoading(false);
-                            setPassword('');
-                        });
-                }
-            })
             .catch((err) => {
                 if (err.code === 'auth/email-already-in-use') {
                     enqueueSnackbar('That email address seems to already be in use. Try signing in instead.', {
@@ -167,7 +120,54 @@ export default function LogInForm(
 
                 setLoading(false);
                 setPassword('');
+                return null;
             });
+
+        const userObj = user?.user;
+        if (!userObj) return;
+
+        await userObj
+            .updateProfile({
+                displayName,
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong while setting up your account. Try again later.', {
+                    variant: 'error',
+                });
+
+                setLoading(false);
+                setPassword('');
+            });
+
+        await firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .catch(() => {
+                enqueueSnackbar('Your new account was created successfully - log in to get started!', {
+                    variant: 'success',
+                });
+
+                setLoading(false);
+                setPage(Page.SignIn);
+                setPassword('');
+            });
+
+        await firebase
+            .firestore()
+            .collection('users')
+            .doc(userObj.uid)
+            .set({
+                email,
+                displayName,
+                perms: Perms.Student,
+            } as UserDoc);
+
+        enqueueSnackbar('Success! You\'re now signed in with your new account.', {
+            variant: 'success',
+        });
+
+        setLoading(false);
+        callback();
     }, [email, password, displayName]);
 
     const changePage = useCallback(() => {
@@ -244,7 +244,8 @@ export default function LogInForm(
                 {
                     page === Page.SignUp && (
                         <p>
-                            Your data will be handled in accordance with The Manchester Grammar School's privacy policies.
+                            Your data will be handled in accordance with The Manchester Grammar School's privacy
+                            policies.
                         </p>
                     )
                 }
