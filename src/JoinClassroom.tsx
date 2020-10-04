@@ -24,6 +24,8 @@ export default function JoinClassroom(): ReactElement {
                 'Please enter a 6-digit numerical classroom code.',
                 {
                     variant: 'warning',
+                    preventDuplicate: true,
+                    autoHideDuration: 400,
                 }
             );
         }
