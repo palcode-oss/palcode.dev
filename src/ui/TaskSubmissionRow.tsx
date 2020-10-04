@@ -1,23 +1,12 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { TableCell } from '@material-ui/core';
-import {
-    Classroom,
-    isSubmissionTask,
-    SubmissionTask,
-    Task,
-    TaskStatus,
-    TaskType,
-} from '../helpers/types';
+import { Classroom, isSubmissionTask, SubmissionTask, Task, TaskStatus, TaskType } from '../helpers/types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TableRow from '@material-ui/core/TableRow';
 import { useAuth } from '../helpers/auth';
 import { Shimmer } from 'react-shimmer';
-import { faEyeSlash } from '@fortawesome/free-regular-svg-icons/faEyeSlash';
-import { faCommentDots } from '@fortawesome/free-regular-svg-icons/faCommentDots';
-import { faPaperPlane } from '@fortawesome/free-regular-svg-icons/faPaperPlane';
-import { faEye } from '@fortawesome/free-regular-svg-icons/faEye';
 import moment from 'moment';
 import { faEdit } from '@fortawesome/free-regular-svg-icons/faEdit';
 import { useTasks } from '../helpers/taskData';
@@ -26,6 +15,7 @@ import 'firebase/firestore';
 import { useHistory } from 'react-router-dom';
 import loader from '../styles/loader.module.scss';
 import axios from 'axios';
+import TaskStatusIndicator from './TaskStatus';
 
 interface Props {
     task: Task;
@@ -85,7 +75,7 @@ export default function TaskSubmissionRow(
             .collection('classrooms')
             .doc(classroom.id)
             .update({
-                tasks: classroom.tasks.concat(taskDoc.id)
+                tasks: classroom.tasks.concat(taskDoc.id),
             });
 
         await axios.post(
@@ -93,7 +83,7 @@ export default function TaskSubmissionRow(
             {
                 projectId: taskDoc.id,
                 sourceProjectId: task.id,
-            }
+            },
         );
 
         history.push(`/task/${taskDoc.id}`);
@@ -109,27 +99,7 @@ export default function TaskSubmissionRow(
             <TableCell align='right'>
                 {
                     user && !tasksLoading ? (
-                        submission ? (
-                            submission.status === TaskStatus.HasFeedback
-                                ? (
-                                    <>
-                                        <FontAwesomeIcon icon={faCommentDots}/> Returned
-                                    </>
-                                ) : submission.status === TaskStatus.Submitted ? (
-                                    <>
-                                        <FontAwesomeIcon icon={faPaperPlane}/> Submitted
-                                    </>
-                                ) : (
-                                    <>
-                                        <FontAwesomeIcon icon={faEye}/> Opened
-                                    </>
-                                )
-
-                        ) : (
-                            <>
-                                <FontAwesomeIcon icon={faEyeSlash}/> Not opened
-                            </>
-                        )
+                        <TaskStatusIndicator task={submission}/>
                     ) : (
                         <Shimmer
                             height={12}

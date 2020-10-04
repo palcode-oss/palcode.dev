@@ -127,7 +127,7 @@ export default function TaskRow(
             }
             <TableCell align='center'>
                 <DropdownMenu>
-                    <Link to={`/task/${taskId}`}>
+                    <Link to={`/task/${taskId}/review`}>
                         <MenuItem>
                             <FontAwesomeIcon icon={faGraduationCap}/>
                             &nbsp;Review

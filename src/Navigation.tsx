@@ -12,6 +12,7 @@ import { useAuth } from './helpers/auth';
 import { Perms } from './helpers/types';
 import firebase from 'firebase/app';
 import { useSnackbar } from 'notistack';
+import ReviewTask from './ReviewTask';
 
 const history = createBrowserHistory();
 
@@ -26,7 +27,7 @@ function RedirectUnauthed(
     if (onlyTeachers) {
         if ((!loading && !userObj) || (user && user.perms === Perms.Student)) {
             enqueueSnackbar('Oops - it appears that you\'re not allowed to access that page!', {
-                variant: 'error'
+                variant: 'error',
             });
             return (
                 <Redirect to='/'/>
@@ -35,7 +36,7 @@ function RedirectUnauthed(
     } else {
         if (!loading && !userObj) {
             enqueueSnackbar('Try logging in first, then accessing this page again.', {
-                variant: 'warning'
+                variant: 'warning',
             });
             return (
                 <Redirect to='/'/>
@@ -145,6 +146,11 @@ export default function Navigation(): ReactElement {
                     <RedirectUnauthed/>
                     <EnsureClassroomExists/>
                     <ViewClassroom/>
+                </Route>
+                <Route path='/task/:taskId/review'>
+                    <RedirectUnauthed onlyTeachers/>
+                    <EnsureTaskExists/>
+                    <ReviewTask/>
                 </Route>
                 <Route path='/task/:taskId'>
                     <RedirectUnauthed/>

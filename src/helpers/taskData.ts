@@ -1,5 +1,5 @@
-import { Task, TaskDoc } from './types';
-import { useEffect, useState } from 'react';
+import { SubmissionTask, Task, TaskDoc } from './types';
+import { ReactElement, useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
@@ -61,4 +61,30 @@ export function useTasks(taskIds: string[]): [Task[], boolean] {
     }, [taskIds.join(',')]);
 
     return [tasks, tasksLoading];
+}
+
+export function useSubmissions(taskId: string): [SubmissionTask[], boolean] {
+    const [submissions, setSubmissions] = useState<SubmissionTask[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(true);
+
+        firebase
+            .firestore()
+            .collection('tasks')
+            .where('parentTask', '==', taskId)
+            .get()
+            .then(tasks => {
+                setLoading(false);
+                setSubmissions(
+                    tasks.docs.map(task => ({
+                        ...task.data() as TaskDoc,
+                        id: task.id,
+                    } as SubmissionTask))
+                )
+            })
+    }, [taskId]);
+
+    return [submissions, loading];
 }
