@@ -17,6 +17,7 @@ export default function BriefingSyntaxHighlighter(
         customStyle={{
             fontSize: 14
         }}
+        showLineNumbers={false}
     >
         {value}
     </SyntaxHighlighter>
