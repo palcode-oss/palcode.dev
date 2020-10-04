@@ -1,4 +1,4 @@
-import { Task } from './types';
+import { Task, TaskDoc } from './types';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -20,9 +20,9 @@ export function useTask(taskId: string): [Task | null, boolean] {
                 }
 
                 setTask({
-                    ...response.data() as Task,
+                    ...response.data() as TaskDoc,
                     id: response.id,
-                });
+                } as Task);
             });
     }, [taskId]);
 
@@ -42,7 +42,10 @@ export function useTasks(taskIds: string[]): [Task[], boolean] {
                     .collection('tasks')
                     .doc(taskId)
                     .get()
-                    .then(snapshot => snapshot.data() as Task),
+                    .then(snapshot => ({
+                        ...snapshot.data() as TaskDoc,
+                        id: snapshot.id
+                    } as Task)),
                 ),
         )
             .then(tasks => {

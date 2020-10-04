@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { User } from './types';
+import { User, UserDoc } from './types';
 
 export function useUser(userId: string): [User | null, boolean] {
     const [user, setUser] = useState<User | null>(null);
@@ -17,7 +17,10 @@ export function useUser(userId: string): [User | null, boolean] {
             .get()
             .then((doc) => {
                 setLoading(false);
-                setUser(doc.data() as User);
+                setUser({
+                    ...doc.data() as UserDoc,
+                    uid: doc.id,
+                });
             });
     }, [userId]);
 
@@ -41,7 +44,10 @@ export function useAuth(): [firebase.User | null, boolean, User | null] {
                         .doc(authUser.uid)
                         .get()
                         .then((doc) => {
-                            setUserDoc(doc.data() as User);
+                            setUserDoc({
+                                ...doc.data() as UserDoc,
+                                uid: doc.id,
+                            });
                             setLoading(false);
                         });
                 } else {
@@ -53,4 +59,24 @@ export function useAuth(): [firebase.User | null, boolean, User | null] {
     }, []);
 
     return [user, loading, userDoc];
+}
+
+export function useStudent(studentId: string) {
+    const [student, setStudent] = useState<User | null>(null);
+    useEffect(() => {
+        firebase
+            .firestore()
+            .collection('users')
+            .doc(studentId)
+            .get()
+            .then(doc => {
+                const data = {
+                    ...doc.data() as UserDoc,
+                    uid: doc.id,
+                } as User;
+                setStudent(data);
+            });
+    }, [studentId]);
+
+    return student;
 }

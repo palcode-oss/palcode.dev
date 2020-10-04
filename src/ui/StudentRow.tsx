@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
-import { isSubmissionTask, SubmissionTask, TaskStatus, User } from '../helpers/types';
+import { isSubmissionTask, SubmissionTask, TaskStatus, User, UserDoc } from '../helpers/types';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
@@ -12,28 +12,12 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { useSnackbar } from 'notistack';
 import { useClassroom } from '../helpers/classroom';
 import { useTasks } from '../helpers/taskData';
+import { useStudent } from '../helpers/auth';
 
 interface Props {
     studentId: string;
     classroomId: string;
     setClassroomUpdater: (updater: number) => void;
-}
-
-export function useStudent(studentId: string) {
-    const [student, setStudent] = useState<User | null>(null);
-    useEffect(() => {
-        firebase
-            .firestore()
-            .collection('users')
-            .doc(studentId)
-            .get()
-            .then(doc => {
-                const data = doc.data() as User;
-                setStudent(data);
-            });
-    }, [studentId]);
-
-    return student;
 }
 
 export default function StudentRow(

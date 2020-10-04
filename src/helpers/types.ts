@@ -13,6 +13,8 @@ export interface User {
     uid: string;
 }
 
+export type UserDoc = Omit<User, 'uid'>;
+
 export enum TaskStatus {
     Unsubmitted,
     Submitted,
@@ -45,6 +47,8 @@ export type Task<T extends TaskType = any> = T extends TaskType.Submission ? Sub
     : T extends TaskType.Template ? TemplateTask
         : never
 
+export type TaskDoc<T extends TaskType = any> = Omit<Task<T>, 'id'>;
+
 export function isSubmissionTask(task: Task): task is SubmissionTask {
     return task.type === TaskType.Submission
 }
@@ -62,3 +66,5 @@ export interface Classroom {
     code: string;
     id: string;
 }
+
+export type ClassroomDoc = Omit<Classroom, 'id'>;

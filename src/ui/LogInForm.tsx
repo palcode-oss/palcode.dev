@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import * as EmailValidator from 'email-validator';
 import firebase from 'firebase/app';
-import { Perms, User } from '../helpers/types';
+import { Perms, User, UserDoc } from '../helpers/types';
 import Loader from 'react-loader-spinner';
 import form from '../styles/form.module.scss';
 import modal from '../styles/modal.module.scss';
@@ -122,8 +122,7 @@ export default function LogInForm(
                                             email,
                                             displayName,
                                             perms: Perms.Student,
-                                            uid: userObj.uid,
-                                        } as User)
+                                        } as UserDoc)
                                         .then(() => {
                                             enqueueSnackbar('Success! You\'re now signed in with your new account.', {
                                                 variant: 'success',

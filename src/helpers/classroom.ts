@@ -1,4 +1,4 @@
-import { Classroom } from './types';
+import { Classroom, ClassroomDoc } from './types';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 
@@ -11,7 +11,10 @@ export function useClassroom(classroomId: string, classroomUpdater?: any): Class
             .doc(classroomId)
             .get()
             .then(doc => {
-                const data = doc.data() as Classroom;
+                const data = {
+                    ...doc.data() as ClassroomDoc,
+                    id: doc.id,
+                } as Classroom;
                 setClassroom(data);
             });
     }, [classroomId, classroomUpdater]);
@@ -31,7 +34,10 @@ export function useClassrooms(userId: string): [Classroom[], boolean] {
             .where('members', 'array-contains', userId)
             .get()
             .then(data => {
-                setClassrooms(data.docs.map(doc => doc.data()) as Classroom[]);
+                setClassrooms(data.docs.map(doc => ({
+                    ...doc.data() as ClassroomDoc,
+                    id: doc.id,
+                })) as Classroom[]);
                 setClassroomsLoading(false);
             });
     }, [userId]);
