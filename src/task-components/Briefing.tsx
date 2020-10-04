@@ -9,6 +9,8 @@ import { Shimmer } from 'react-shimmer';
 import loader from '../styles/loader.module.scss';
 import briefingRenderer from '../styles/briefing-renderer.module.scss';
 import { Task } from '../helpers/types';
+import BriefingLink from './briefing-renderers/BriefingLink';
+import BriefingListItem from './briefing-renderers/BriefingListItem';
 
 export default function Briefing(
     {
@@ -55,6 +57,8 @@ export default function Briefing(
                     image: BriefingImage,
                     table: BriefingTable,
                     tableCell: BriefingTableCell,
+                    link: BriefingLink,
+                    listItem: BriefingListItem,
                 }}
             />
         </div>

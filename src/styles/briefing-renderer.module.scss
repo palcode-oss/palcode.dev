@@ -17,6 +17,20 @@
   }
 }
 
+.link {
+  transition: color 100ms ease-in-out;
+  color: lighten($bg-light, 50%);
+
+  &:hover, &:focus {
+    color: lighten($bg-light, 70%);
+  }
+}
+
+.listItem {
+  margin-top: 5px;
+  list-style-type: circle;
+}
+
 .briefingTitle {
   @include miriam;
 }
