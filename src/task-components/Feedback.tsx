@@ -9,6 +9,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useSnackbar } from 'notistack';
 import TaskStatusIndicator from '../ui/TaskStatus';
+import VoiceFeedbackUpload from './VoiceFeedbackUpload';
 
 export default function Feedback(
     {
@@ -62,47 +63,53 @@ export default function Feedback(
     }, [feedback, taskId]);
 
     return (
-        <form
-            className={form.form}
-            onSubmit={saveFeedback}
-        >
-            <h1 className={editor.feedbackHeader}>
-                Feedback
-            </h1>
-
-            <p
-                className={editor.feedbackTaskStatus}
+        <>
+            <form
+                className={form.form}
+                onSubmit={saveFeedback}
             >
-                {!!task && isSubmissionTask(task) && (
-                    <TaskStatusIndicator
-                        task={task}
-                    />
-                )}
-            </p>
+                <h1 className={editor.feedbackHeader}>
+                    Feedback
+                </h1>
 
-            <textarea
-                className={`${form.textInput} ${editor.feedbackTextarea}`}
-                value={feedback}
-                onChange={e => setFeedback(e.target.value)}
+                <p
+                    className={editor.feedbackTaskStatus}
+                >
+                    {!!task && isSubmissionTask(task) && (
+                        <TaskStatusIndicator
+                            task={task}
+                        />
+                    )}
+                </p>
+
+                <textarea
+                    className={`${form.textInput} ${editor.feedbackTextarea}`}
+                    value={feedback}
+                    onChange={e => setFeedback(e.target.value)}
+                />
+
+                <button
+                    type='submit'
+                    disabled={loading}
+                    className={form.button}
+                >
+                    {loading ? (
+                        <Loader
+                            type='Oval'
+                            width={14}
+                            height={14}
+                            color='white'
+                        />
+                    ) : <>
+                        <FontAwesomeIcon icon={faCheckCircle} />
+                        Save
+                    </>}
+                </button>
+            </form>
+
+            <VoiceFeedbackUpload
+                taskId={taskId}
             />
-
-            <button
-                type='submit'
-                disabled={loading}
-                className={form.button}
-            >
-                {loading ? (
-                    <Loader
-                        type='Oval'
-                        width={14}
-                        height={14}
-                        color='white'
-                    />
-                ) : <>
-                    <FontAwesomeIcon icon={faCheckCircle} />
-                    Save
-                </>}
-            </button>
-        </form>
+        </>
     )
 }

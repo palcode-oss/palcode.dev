@@ -183,5 +183,44 @@
       min-height: 100px;
       max-height: 400px;
     }
+
+    .voiceFeedback {
+      .voiceRecord, .voiceStop, .voiceDelete {
+        height: 50px;
+        width: 50px;
+        border-radius: 25px;
+        font-size: 18px;
+
+        background-color: $bg-light;
+        color: lighten($bg-light, 70%);
+
+        margin-top: 20px;
+
+        transition: color 100ms ease-in-out;
+        &:hover {
+          color: white;
+        }
+
+        &:disabled {
+          background-color: transparent;
+          cursor: not-allowed;
+        }
+      }
+
+      .voiceRecord, .voiceStop {
+        margin-right: 10px;
+      }
+
+      .voiceRecordActive, .voiceRecordActive:hover {
+        color: #ef6a6a;
+      }
+
+      .voiceFeedbackPreview {
+        outline: none;
+        display: block;
+
+        margin-top: 10px;
+      }
+    }
   }
 }
