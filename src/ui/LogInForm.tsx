@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import * as EmailValidator from 'email-validator';
 import firebase from 'firebase/app';
-import { Perms, User, UserDoc } from '../helpers/types';
+import { Perms, UserDoc } from '../helpers/types';
 import Loader from 'react-loader-spinner';
 import form from '../styles/form.module.scss';
 import modal from '../styles/modal.module.scss';
