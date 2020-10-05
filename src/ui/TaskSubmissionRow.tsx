@@ -20,6 +20,7 @@ import { faAward } from '@fortawesome/free-solid-svg-icons/faAward';
 import modal from '../styles/modal.module.scss';
 import form from '../styles/form.module.scss';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
+import StudentFeedbackPreview from './StudentFeedbackPreview';
 
 interface Props {
     task: Task;
@@ -140,49 +141,11 @@ export default function TaskSubmissionRow(
                 </DropdownMenu>
             </TableCell>
 
-            {
-                showFeedback && submission.feedback && (
-                    <div className={modal.modal}>
-                        <div className={modal.content}>
-                            <div className={modal.head}>
-                                <span className={modal.title}>
-                                    Feedback for {submission.name}
-                                </span>
-
-                                <button
-                                    className={modal.close}
-                                    onClick={() => setShowFeedback(false)}
-                                >
-                                    <FontAwesomeIcon icon={faTimesCircle}/>
-                                </button>
-                            </div>
-
-                            <div className={modal.body}>
-                                <strong>
-                                    Feedback from your teacher:
-                                </strong>
-
-                                <p className={modal.feedback}>
-                                    {
-                                        submission.feedback
-                                    }
-                                </p>
-
-                                <button
-                                    className={form.button}
-                                    onClick={() => setShowFeedback(false)}
-                                    style={{
-                                        float: 'right',
-                                        margin: 10,
-                                    }}
-                                >
-                                    OK
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
+            <StudentFeedbackPreview
+                showFeedback={showFeedback}
+                submission={submission}
+                onClose={() => setShowFeedback(false)}
+            />
         </TableRow>
     );
 }
