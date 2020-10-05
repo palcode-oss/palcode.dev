@@ -27,9 +27,9 @@ export default function StudentFeedbackPreview(
         <div className={modal.modal}>
             <div className={modal.content}>
                 <div className={modal.head}>
-                                <span className={modal.title}>
-                                    Feedback for {submission.name}
-                                </span>
+                    <span className={modal.title}>
+                        Feedback for {submission.name}
+                    </span>
 
                     <button
                         className={modal.close}
