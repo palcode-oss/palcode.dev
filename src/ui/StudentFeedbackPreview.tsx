@@ -6,19 +6,21 @@ import React from 'react';
 import { SubmissionTask } from '../helpers/types';
 import VoiceFeedbackPreview from '../task-components/VoiceFeedbackPreview';
 
+interface Props {
+    showFeedback: boolean;
+    submission: SubmissionTask;
+    onClose(): void;
+}
+
 export default function StudentFeedbackPreview(
     {
         showFeedback,
         submission,
         onClose,
-    }: {
-        showFeedback: boolean,
-        submission: SubmissionTask,
-        onClose(): void,
-    }
+    }: Props
 ) {
     if (!showFeedback || !submission.feedback) {
-        return null;
+        return <></>;
     }
 
     return (
