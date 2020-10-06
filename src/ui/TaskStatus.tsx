@@ -18,22 +18,30 @@ export default function TaskStatusIndicator(
     return task ? (
         task.status === TaskStatus.HasFeedback
             ? (
-                <>
+                <span style={{
+                        color: '#474747'
+                }}>
                     <FontAwesomeIcon icon={faCommentDots}/> Returned
-                </>
+                </span>
             ) : task.status === TaskStatus.Submitted ? (
-                <>
+                <span style={{
+                        color: '#1f7a22'
+                }}>
                     <FontAwesomeIcon icon={faPaperPlane}/> Submitted
-                </>
+                </span>
             ) : (
-                <>
+                <span style={{
+                        color: '#0e488a'
+                }}>
                     <FontAwesomeIcon icon={faEye}/> Opened
-                </>
+                </span>
             )
 
     ) : (
-        <>
+        <span style={{
+               color: '#8a0e0e'
+        }}>
             <FontAwesomeIcon icon={faEyeSlash}/> Not opened
-        </>
+        </span>
     )
 }
