@@ -55,7 +55,6 @@ export function useOwnedClassroom(userId: string, updater?: any): [Classroom[], 
             const data = await firebase
                 .firestore()
                 .collection('classrooms')
-                .where('owner', '==', userId)
                 .get()
                 .then(data => data.docs);
 
