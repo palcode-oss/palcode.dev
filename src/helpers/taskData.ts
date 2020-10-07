@@ -33,32 +33,20 @@ export function useTasks(taskIds: string[]): [Task[], boolean] {
     const [tasksLoading, setTasksLoading] = useState(false);
 
     useEffect(() => {
+        if (taskIds.length === 0) return;
+
         setTasksLoading(true);
-        Promise.all(
-            taskIds
-                .map(taskId => firebase
-                    .firestore()
-                    .collection('tasks')
-                    .doc(taskId)
-                    .get()
-                    .then(snapshot => {
-                        if (snapshot.exists) {
-                            return {
-                                ...snapshot.data() as TaskDoc,
-                                id: snapshot.id,
-                            } as Task;
-                        } else {
-                            return null;
-                        }
-                    })
-                    .catch(() => null),
-                ),
-        )
-            .then(tasks => {
+        return firebase.firestore()
+            .collection('tasks')
+            .where(firebase.firestore.FieldPath.documentId(), 'in', taskIds)
+            .onSnapshot(snapshot => {
                 setTasksLoading(false);
-                setTasks(tasks.filter(task => task) as Task[]);
+                setTasks(snapshot.docs.map(e => ({
+                    id: e.id,
+                    ...e.data() as TaskDoc,
+                } as Task)));
             });
-    }, [taskIds.join(',')]);
+    }, [taskIds]);
 
     return [tasks, tasksLoading];
 }

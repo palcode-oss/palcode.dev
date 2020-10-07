@@ -12,33 +12,37 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { useSnackbar } from 'notistack';
 import { useClassroom } from '../helpers/classroom';
 import { useTasks } from '../helpers/taskData';
-import { useStudent } from '../helpers/auth';
+import { useUserByUsername } from '../helpers/auth';
 import loader from '../styles/loader.module.scss';
 
 interface Props {
-    studentId: string;
+    memberUsername: string;
     classroomId: string;
     setClassroomUpdater: (updater: number) => void;
 }
 
 export default function StudentRow(
     {
-        studentId,
+        memberUsername,
         classroomId,
         setClassroomUpdater,
     }: Props,
 ): ReactElement {
-    const student = useStudent(studentId);
+    const [student, studentLoading] = useUserByUsername(memberUsername);
     const classroom = useClassroom(classroomId);
 
     const [tasks, tasksLoading] = useTasks(classroom?.tasks || []);
     const userTasks = useMemo<SubmissionTask[] | null>(() => {
         if (!classroom || tasksLoading) return null;
 
+        if (!student) {
+            return [];
+        }
+
         return tasks.filter((task) => {
-            return task.createdBy === studentId && isSubmissionTask(task);
+            return task.createdBy === student.uid && isSubmissionTask(task);
         }) as SubmissionTask[];
-    }, [studentId, classroom]);
+    }, [classroom, student, tasks]);
 
     const {enqueueSnackbar} = useSnackbar();
     const deleteStudent = useCallback(() => {
@@ -47,11 +51,9 @@ export default function StudentRow(
                 .firestore()
                 .collection('classrooms')
                 .doc(classroomId)
-                .update(
-                    {
-                        members: classroom.members.filter(e => e !== studentId),
-                    } as Partial<User>,
-                )
+                .update({
+                        members: firebase.firestore.FieldValue.arrayRemove(memberUsername),
+                })
                 .then(() => {
                     enqueueSnackbar('Student removed successfully!', {
                         variant: 'success',
@@ -64,14 +66,28 @@ export default function StudentRow(
                     });
                 });
         }
-    }, [classroom, studentId]);
+    }, [classroom, memberUsername]);
+
+    const studentName = useMemo(() => {
+        if (student) {
+            return student.displayName;
+        }
+
+        if (!student && studentLoading) {
+            return null;
+        }
+
+        if (!student && !studentLoading) {
+            return memberUsername + ' (not signed up)';
+        }
+    }, [student, studentLoading, memberUsername]);
 
     return (
         <TableRow>
             <TableCell>
                 {
-                    student
-                        ? student.displayName
+                    studentName
+                        ? studentName
                         : (
                             <Shimmer
                                 height={12}

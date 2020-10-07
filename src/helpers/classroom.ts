@@ -22,7 +22,7 @@ export function useClassroom(classroomId: string, classroomUpdater?: any): Class
     return classroom;
 }
 
-export function useClassrooms(userId: string): [Classroom[], boolean] {
+export function useClassrooms(username: string): [Classroom[], boolean] {
     const [classrooms, setClassrooms] = useState<Classroom[]>([]);
     const [classroomsLoading, setClassroomsLoading] = useState(true);
 
@@ -31,7 +31,7 @@ export function useClassrooms(userId: string): [Classroom[], boolean] {
         firebase
             .firestore()
             .collection('classrooms')
-            .where('members', 'array-contains', userId)
+            .where('members', 'array-contains', username)
             .get()
             .then(data => {
                 setClassrooms(data.docs.map(doc => ({
@@ -40,7 +40,7 @@ export function useClassrooms(userId: string): [Classroom[], boolean] {
                 })) as Classroom[]);
                 setClassroomsLoading(false);
             });
-    }, [userId]);
+    }, [username]);
 
     return [classrooms, classroomsLoading];
 }

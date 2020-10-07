@@ -17,9 +17,6 @@ import loader from '../styles/loader.module.scss';
 import axios from 'axios';
 import TaskStatusIndicator from './TaskStatus';
 import { faAward } from '@fortawesome/free-solid-svg-icons/faAward';
-import modal from '../styles/modal.module.scss';
-import form from '../styles/form.module.scss';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 import StudentFeedbackPreview from './StudentFeedbackPreview';
 
 interface Props {
@@ -80,7 +77,7 @@ export default function TaskSubmissionRow(
             .collection('classrooms')
             .doc(classroom.id)
             .update({
-                tasks: classroom.tasks.concat(taskDoc.id),
+                tasks: firebase.firestore.FieldValue.arrayUnion(taskDoc.id),
             });
 
         await axios.post(

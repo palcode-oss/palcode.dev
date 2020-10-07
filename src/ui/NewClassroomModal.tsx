@@ -29,7 +29,7 @@ export default function NewClassroomModal(
     const {enqueueSnackbar} = useSnackbar();
     const [user] = useAuth();
     const history = useHistory();
-    const createTask = useCallback(async () => {
+    const createClassroom = useCallback(async () => {
         if (name.length <= 3) {
             enqueueSnackbar('Enter a classroom name at least 4 characters in length.', {
                 variant: 'warning',
@@ -45,23 +45,6 @@ export default function NewClassroomModal(
             .collection('classrooms')
             .doc();
 
-        const getCode = () => Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-        let code = getCode();
-        let codeIsUnique = false;
-        while (!codeIsUnique) {
-            const existingCodeResponse = await firebase
-                .firestore()
-                .collection('classrooms')
-                .where('code', '==', code)
-                .get();
-
-            if (existingCodeResponse.empty) {
-                codeIsUnique = true;
-            } else {
-                code = getCode();
-            }
-        }
-
         classroomDoc
             .set({
                 owner: user.uid,
@@ -69,7 +52,6 @@ export default function NewClassroomModal(
                 members: [],
                 created: firebase.firestore.Timestamp.now(),
                 tasks: [],
-                code,
             } as ClassroomDoc)
             .then(() => {
                 enqueueSnackbar('Classroom created successfully!', {
@@ -101,7 +83,7 @@ export default function NewClassroomModal(
                         className={form.form}
                         onSubmit={(e) => {
                             e.preventDefault();
-                            createTask();
+                            createClassroom();
                         }}
                     >
                         <label
@@ -120,8 +102,7 @@ export default function NewClassroomModal(
                         />
 
                         <p>
-                            You'll be able to view the code and share it with your students later. Pupils will then
-                            be able to self-admit to the classroom.
+                            You'll be able to paste a list of usernames once the classroom has been created.
                         </p>
 
                         <button

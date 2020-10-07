@@ -21,7 +21,7 @@ export default function Dashboard(): ReactElement {
                     To get started, click the button below to sign in with your MGS account. You won't need to provide any other details.
                 </p>
                 <LogInForm
-                    callback={() => {}}
+                    callback={() => window.location.reload()}
                 />
             </div>
         );

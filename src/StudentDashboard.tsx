@@ -18,7 +18,7 @@ export default function StudentDashboard(
         user,
     }: Props,
 ): ReactElement {
-    const [classrooms, classroomsLoading] = useClassrooms(user.uid);
+    const [classrooms, classroomsLoading] = useClassrooms(user.username);
 
     return (
         <div className={studentDashboard.dashboard}>

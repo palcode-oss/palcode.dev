@@ -15,13 +15,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
 import { useClassroom } from './helpers/classroom';
 import table from './styles/table.module.scss';
 import loader from './styles/loader.module.scss';
 import NewTaskModal from './ui/NewTaskModal';
 import { useTasks } from './helpers/taskData';
 import { isTemplateTask } from './helpers/types';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 interface Params {
     classroomId: string;
@@ -57,12 +57,12 @@ export default function ManageClassroom(): ReactElement {
                                     Class students
                                 </Typography>
                                 <Tooltip
-                                    title='Show code page'
+                                    title='Add students'
                                     className={table.button}
                                 >
-                                    <Link to={`/classroom/${classroomId}/view_code`}>
+                                    <Link to={`/classroom/${classroomId}/add_students`}>
                                         <IconButton>
-                                            <FontAwesomeIcon icon={faKeyboard}/>
+                                            <FontAwesomeIcon icon={faUserPlus}/>
                                         </IconButton>
                                     </Link>
                                 </Tooltip>
@@ -71,10 +71,9 @@ export default function ManageClassroom(): ReactElement {
                                 {
                                     !classroomData.members.length && (
                                         <caption>
-                                            No students found in classroom. Students can add themselves through
-                                            the&nbsp;
-                                            <Link to={`/classroom/${classroomId}/view_code`}>
-                                                code page
+                                            No students found in classroom. You can add a list of student usernames&nbsp;
+                                            <Link to={`/classroom/${classroomId}/add_students`}>
+                                                by clicking here
                                             </Link>
                                             .
                                         </caption>
@@ -91,12 +90,12 @@ export default function ManageClassroom(): ReactElement {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        classroomData.members.map(studentId => (
+                                        classroomData.members.map(username => (
                                             <StudentRow
-                                                studentId={studentId}
+                                                memberUsername={username}
                                                 classroomId={classroomId}
                                                 setClassroomUpdater={setClassroomUpdater}
-                                                key={studentId}
+                                                key={username}
                                             />
                                         ))
                                     }

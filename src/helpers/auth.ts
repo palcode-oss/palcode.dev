@@ -29,6 +29,33 @@ export function useUser(userId?: string): [User | null, boolean] {
     return [user, loading];
 }
 
+export function useUserByUsername(username?: string): [User | null, boolean] {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!username) return;
+
+        setLoading(true);
+        firebase.firestore()
+            .collection('users')
+            .where('username', '==', username)
+            .get()
+            .then(response => {
+                setLoading(false);
+
+                if (!response.empty) {
+                    setUser({
+                        ...response.docs[0].data() as UserDoc,
+                        uid: response.docs[0].id,
+                    });
+                }
+            });
+    }, [username]);
+
+    return [user, loading];
+}
+
 export function useAuth(): [firebase.User | null, boolean, User | null] {
     const [user, setUser] = useState<firebase.User | null>(null);
     const [loading, setLoading] = useState(true);
@@ -61,24 +88,4 @@ export function useAuth(): [firebase.User | null, boolean, User | null] {
     }, []);
 
     return [user, loading, userDoc];
-}
-
-export function useStudent(studentId: string) {
-    const [student, setStudent] = useState<User | null>(null);
-    useEffect(() => {
-        firebase
-            .firestore()
-            .collection('users')
-            .doc(studentId)
-            .get()
-            .then(doc => {
-                const data = {
-                    ...doc.data() as UserDoc,
-                    uid: doc.id,
-                } as User;
-                setStudent(data);
-            });
-    }, [studentId]);
-
-    return student;
 }

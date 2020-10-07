@@ -9,6 +9,7 @@ export enum Perms {
 export interface User {
     email: string;
     displayName: string;
+    username: string;
     perms: Perms;
     uid: string;
 }
@@ -64,7 +65,6 @@ export interface Classroom {
     members: string[];
     owner: string;
     tasks: string[];
-    code: string;
     id: string;
 }
 

@@ -4,15 +4,14 @@ import { createBrowserHistory } from 'history';
 import Dashboard from './Dashboard';
 import Task from './Task';
 import Navbar from './ui/Navbar';
-import CodePage from './CodePage';
 import ManageClassroom from './ManageClassroom';
 import ViewClassroom from './ViewClassroom';
-import JoinClassroom from './JoinClassroom';
 import { useAuth } from './helpers/auth';
 import { Perms } from './helpers/types';
 import firebase from 'firebase/app';
 import { useSnackbar } from 'notistack';
 import ReviewTask from './ReviewTask';
+import AddStudents from './AddStudents';
 
 const history = createBrowserHistory();
 
@@ -128,15 +127,6 @@ export default function Navigation(): ReactElement {
             <Navbar />
 
             <Switch>
-                <Route path='/classroom/join'>
-                    <RedirectUnauthed />
-                    <JoinClassroom />
-                </Route>
-                <Route path='/classroom/:classroomId/view_code'>
-                    <RedirectUnauthed onlyTeachers />
-                    <EnsureClassroomExists />
-                    <CodePage/>
-                </Route>
                 <Route path='/classroom/:classroomId/manage'>
                     <RedirectUnauthed onlyTeachers />
                     <EnsureClassroomExists />
@@ -146,6 +136,11 @@ export default function Navigation(): ReactElement {
                     <RedirectUnauthed />
                     <EnsureClassroomExists />
                     <ViewClassroom />
+                </Route>
+                <Route path='/classroom/:classroomId/add_students'>
+                    <RedirectUnauthed onlyTeachers />
+                    <EnsureClassroomExists />
+                    <AddStudents />
                 </Route>
                 <Route path='/task/:taskId/review'>
                     <RedirectUnauthed onlyTeachers />

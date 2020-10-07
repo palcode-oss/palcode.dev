@@ -56,26 +56,26 @@ export default function LogInForm(
             .doc(userCredential.user.uid)
             .get();
 
+        // for students, displayName is always their MGS username. not a nice, real name.
+        // we default to displayName, but the additionalUserInfo object almost always contains the user's actual name
+        let displayName = userCredential.user.displayName;
         let givenName = userCredential.user.displayName;
-        if (!existingUserResponse.exists) {
-            // for students, displayName is always their MGS username. not a nice, real name.
-            // we default to displayName, but the additionalUserInfo object almost always contains the user's actual name
-            let displayName = userCredential.user.displayName;
-
-            if (userCredential.additionalUserInfo?.profile) {
-                const profile = userCredential.additionalUserInfo.profile as MicrosoftProfile;
-                if (profile.givenName && profile.surname) {
-                    displayName = profile.givenName + ' ' + profile.surname;
-                    givenName = profile.givenName;
-                }
+        if (userCredential.additionalUserInfo?.profile) {
+            const profile = userCredential.additionalUserInfo.profile as MicrosoftProfile;
+            if (profile.givenName && profile.surname) {
+                displayName = profile.givenName + ' ' + profile.surname;
+                givenName = profile.givenName;
             }
+        }
 
+        if (!existingUserResponse.exists) {
             await firebase.firestore()
                 .collection('users')
                 .doc(userCredential.user.uid)
                 .set({
                     email: userCredential.user.email,
                     displayName,
+                    username: userCredential.user.email?.split('@mgs.org')[0],
                     perms: Perms.Student,
                 } as UserDoc);
         }

@@ -9,21 +9,6 @@
   }
 }
 
-.joinClassroom {
-  padding: 30px;
-  width: 60%;
-  margin: 0 auto;
-
-  p {
-    margin-top: 5px;
-    font-size: 1.2rem;
-  }
-
-  .textInput {
-    font-size: 22px !important;
-  }
-}
-
 .form {
   .label {
     display: block;
@@ -79,5 +64,25 @@
   svg {
     display: inline-block;
     margin-right: 5px;
+  }
+}
+
+.addStudents {
+  padding: 30px;
+  width: 60%;
+  margin: 0 auto;
+
+  .textInput {
+    color: black;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+
+    min-height: 100px;
+    max-height: 500px;
+  }
+
+  h1, p {
+    margin-bottom: 10px;
   }
 }
