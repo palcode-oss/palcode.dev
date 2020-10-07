@@ -26,13 +26,6 @@ export default function Navbar(): ReactElement {
     const [showSignInModal, setShowSignInModal] = useState(false);
     const signIn = useCallback(() => {
         setShowSignInModal(true);
-        setShowSignUpModal(false);
-    }, []);
-
-    const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const signUp = useCallback(() => {
-        setShowSignUpModal(true);
-        setShowSignInModal(false);
     }, []);
 
     return (
@@ -72,13 +65,6 @@ export default function Navbar(): ReactElement {
                             >
                                 Sign in
                             </button>
-
-                            <button
-                                className={styles.option}
-                                onClick={signUp}
-                            >
-                                Sign up
-                            </button>
                         </>
                     )
                 }
@@ -100,15 +86,6 @@ export default function Navbar(): ReactElement {
                 showSignInModal && (
                     <SignInModal
                         closeModal={() => setShowSignInModal(false)}
-                    />
-                )
-            }
-
-            {
-                showSignUpModal && (
-                    <SignInModal
-                        forceSignUp
-                        closeModal={() => setShowSignUpModal(false)}
                     />
                 )
             }

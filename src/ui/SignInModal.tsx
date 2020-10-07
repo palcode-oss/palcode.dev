@@ -1,31 +1,25 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import modal from '../styles/modal.module.scss';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 
-import LogInForm, { Page } from './LogInForm';
+import LogInForm from './LogInForm';
 
 interface Props {
-    forceSignUp?: boolean;
     closeModal: () => void;
 }
 
 export default function SignInModal(
     {
-        forceSignUp,
         closeModal,
     }: Props,
 ): ReactElement {
-    const [page, setPage] = useState(forceSignUp ? Page.SignUp : Page.SignIn);
-
     return (
         <div className={modal.modal}>
             <div className={modal.content}>
                 <div className={modal.head}>
                     <span className={modal.title}>
-                        {
-                            page === Page.SignIn ? 'Sign in' : 'Sign up'
-                        }
+                        Sign in
                     </span>
 
                     <button
@@ -39,8 +33,6 @@ export default function SignInModal(
                 <div className={modal.body}>
                     <LogInForm
                         callback={closeModal}
-                        page={page}
-                        setPage={setPage}
                     />
                 </div>
             </div>

@@ -1,30 +1,27 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { useAuth } from './helpers/auth';
 import Loader from 'react-loader-spinner';
 import { Perms } from './helpers/types';
 import StudentDashboard from './StudentDashboard';
 import TeacherDashboard from './TeacherDashboard';
-import LogInForm, { Page } from './ui/LogInForm';
+import LogInForm from './ui/LogInForm';
 import form from './styles/form.module.scss';
 import loader from './styles/loader.module.scss';
 
 export default function Dashboard(): ReactElement {
     const [, loading, userDoc] = useAuth();
-    const [page, setPage] = useState(Page.SignUp);
 
     if (!loading && !userDoc) {
         return (
             <div className={form.loginPrompt}>
                 <h1>
-                    Sign up to get started.
+                    Welcome to PalCode! 👋
                 </h1>
                 <p>
-                    You'll be able to join your classrooms after sign-up.
+                    To get started, click the button below to sign in with your MGS account. You won't need to provide any other details.
                 </p>
                 <LogInForm
-                    callback={() => window.location.reload()}
-                    page={page}
-                    setPage={setPage}
+                    callback={() => {}}
                 />
             </div>
         );
