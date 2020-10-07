@@ -6,6 +6,14 @@ import { Perms, UserDoc } from '../helpers/types';
 import Loader from 'react-loader-spinner';
 import form from '../styles/form.module.scss';
 import modal from '../styles/modal.module.scss';
+import * as msal from '@azure/msal-browser';
+
+const msalInstance = new msal.PublicClientApplication({
+    auth: {
+        clientId: 'e177588e-b1f9-472a-bbc3-a4bd093aadf7',
+        authority: 'https://login.microsoftonline.com/common/',
+    }
+});
 
 interface Props {
     callback: () => void;
@@ -42,6 +50,19 @@ export default function LogInForm(
     }, []);
 
     const {enqueueSnackbar} = useSnackbar();
+    const msalLogin = useCallback(() => {
+        msalInstance.loginRedirect({
+            scopes: ['user.read'],
+            redirectUri: window.location.protocol + '//' + window.location.host + '/login'
+        })
+            .then(data => {
+                console.log(data);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }, []);
+
     const handleSignIn = useCallback(async () => {
         if (!EmailValidator.validate(email)) {
             enqueueSnackbar('Enter a valid email address.', {
@@ -183,6 +204,12 @@ export default function LogInForm(
 
     return (
         <>
+            <button
+                onClick={msalLogin}
+            >
+                Sign in
+            </button>
+
             <form
                 className={form.form}
                 onSubmit={(e) => {
