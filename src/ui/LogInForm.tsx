@@ -20,6 +20,11 @@ interface Props {
     callback: () => void;
 }
 
+interface MicrosoftProfile {
+    givenName?: string;
+    surname?: string;
+}
+
 export default function LogInForm(
     {
         callback,
@@ -46,20 +51,38 @@ export default function LogInForm(
             return;
         }
 
-        await firebase
-            .firestore()
+        const existingUserResponse = await firebase.firestore()
             .collection('users')
-            .doc(userCredential.user?.uid)
-            .set({
-                email: userCredential.user.email,
-                displayName: userCredential.user.displayName,
-                perms: Perms.Student,
-            } as UserDoc);
+            .doc(userCredential.user.uid)
+            .get();
 
-        enqueueSnackbar(`Welcome back! Signed in successfully.`, {
+        let givenName = userCredential.user.displayName;
+        if (!existingUserResponse.exists) {
+            // for students, displayName is always their MGS username. not a nice, real name.
+            // we default to displayName, but the additionalUserInfo object almost always contains the user's actual name
+            let displayName = userCredential.user.displayName;
+
+            if (userCredential.additionalUserInfo?.profile) {
+                const profile = userCredential.additionalUserInfo.profile as MicrosoftProfile;
+                if (profile.givenName && profile.surname) {
+                    displayName = profile.givenName + ' ' + profile.surname;
+                    givenName = profile.givenName;
+                }
+            }
+
+            await firebase.firestore()
+                .collection('users')
+                .doc(userCredential.user.uid)
+                .set({
+                    email: userCredential.user.email,
+                    displayName,
+                    perms: Perms.Student,
+                } as UserDoc);
+        }
+
+        enqueueSnackbar(`Hi ${givenName}! Signed in successfully.`, {
             variant: 'success',
         });
-
         callback();
     }, []);
 
