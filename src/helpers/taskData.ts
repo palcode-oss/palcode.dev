@@ -51,19 +51,20 @@ export function useTasks(taskIds: string[]): [Task[], boolean] {
     return [tasks, tasksLoading];
 }
 
-export function useSubmissions(taskId: string): [SubmissionTask[], boolean] {
+export function useSubmissions(taskId?: string): [SubmissionTask[], boolean] {
     const [submissions, setSubmissions] = useState<SubmissionTask[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if(!taskId) return;
         setLoading(true);
 
-        firebase
+        return firebase
             .firestore()
             .collection('tasks')
             .where('parentTask', '==', taskId)
-            .get()
-            .then(tasks => {
+            .orderBy('created', 'desc')
+            .onSnapshot(tasks => {
                 setLoading(false);
                 setSubmissions(
                     tasks.docs.map(task => ({
@@ -71,7 +72,7 @@ export function useSubmissions(taskId: string): [SubmissionTask[], boolean] {
                         id: task.id,
                     } as SubmissionTask))
                 )
-            })
+            });
     }, [taskId]);
 
     return [submissions, loading];

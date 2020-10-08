@@ -14,6 +14,7 @@ import TaskStatusIndicator from './TaskStatus';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import loader from '../styles/loader.module.scss';
+import table from '../styles/table.module.scss';
 
 interface Props {
     task: SubmissionTask;
@@ -46,7 +47,11 @@ export default function StudentSubmissionRow(
 
 
     return (
-        <TableRow>
+        <TableRow
+            component={Link}
+            to={`/task/${task.id}/feedback`}
+            className={table.link}
+        >
             <TableCell>
                 {
                     creatorLoading || !creator ? (
@@ -86,16 +91,6 @@ export default function StudentSubmissionRow(
                         </>
                     )
                 }
-            </TableCell>
-            <TableCell align='center'>
-                <DropdownMenu>
-                    <Link to={`/task/${task.id}/feedback`}>
-                        <MenuItem>
-                            <FontAwesomeIcon icon={faGraduationCap}/>
-                            &nbsp;Review submission
-                        </MenuItem>
-                    </Link>
-                </DropdownMenu>
             </TableCell>
         </TableRow>
     );

@@ -9,7 +9,7 @@ import Briefing from './task-components/Briefing';
 import Controls from './task-components/Controls';
 import { useTask } from './helpers/taskData';
 import Feedback from './task-components/Feedback';
-import { TaskType } from './helpers/types';
+import { isSubmissionTask, TaskStatus, TaskType } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from './helpers/auth';
 
@@ -71,7 +71,7 @@ export default function Task(
             return user.perms === 0;
         }
 
-        return false;
+        return task.status !== TaskStatus.Unsubmitted;
     }, [task, teacherView, user]);
 
     return (
@@ -117,7 +117,7 @@ export default function Task(
                     </>
                 }
                 {
-                    teacherView && <Feedback
+                    teacherView && isSubmissionTask(task) && <Feedback
                         taskId={taskId}
                         task={task}
                     />

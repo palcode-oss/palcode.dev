@@ -51,8 +51,8 @@ export type Task<T extends TaskType = any> = T extends TaskType.Submission ? Sub
 
 export type TaskDoc<T extends TaskType = any> = Omit<Task<T>, 'id'>;
 
-export function isSubmissionTask(task: Task): task is SubmissionTask {
-    return task.type === TaskType.Submission
+export function isSubmissionTask(task?: Task | null): task is SubmissionTask {
+    return task?.type === TaskType.Submission
 }
 
 export function isTemplateTask(task: Task): task is TemplateTask {

@@ -1,5 +1,5 @@
-import { isSubmissionTask, Task } from '../helpers/types';
-import React, { FormEvent, ReactElement, useCallback, useEffect, useState } from 'react';
+import { isSubmissionTask, SubmissionTask, Task } from '../helpers/types';
+import React, { FormEvent, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import form from '../styles/form.module.scss';
 import editor from '../styles/editor.module.scss';
 import loader from '../styles/loader.module.scss';
@@ -14,6 +14,8 @@ import VoiceFeedbackUpload from './VoiceFeedbackUpload';
 import { completeTaskFeedback } from '../helpers/taskFeedback';
 import { useUser } from '../helpers/auth';
 import { Shimmer } from 'react-shimmer';
+import { useSubmissions } from '../helpers/taskData';
+import { Link } from 'react-router-dom';
 
 export default function Feedback(
     {
@@ -21,7 +23,7 @@ export default function Feedback(
         task,
     }: {
         taskId: string,
-        task: Task | null,
+        task: SubmissionTask | null,
     }
 ): ReactElement {
     const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ export default function Feedback(
     const [user, userLoading] = useUser(task?.createdBy);
 
     useEffect(() => {
-        if (task && isSubmissionTask(task) && task.feedback) {
+        if (task?.feedback) {
             setFeedback(task.feedback);
         }
     }, [task]);
@@ -68,12 +70,70 @@ export default function Feedback(
             });
     }, [feedback, taskId]);
 
+    const parentTaskId = task?.parentTask;
+    const [submissions, submissionsLoading] = useSubmissions(parentTaskId);
+    const [previousSubmissionId, nextSubmissionId] = useMemo<[string | null, string | null]>(() => {
+        const submissionIds = submissions.map(e => e.id);
+        const thisSubmissionIndex = submissionIds.indexOf(taskId);
+
+        if (thisSubmissionIndex === -1 || submissionIds.length === 0) {
+            return [null, null];
+        }
+
+        if (thisSubmissionIndex === 0) {
+            return [
+                null,
+                submissionIds[thisSubmissionIndex + 1]
+            ];
+        }
+
+        if (thisSubmissionIndex === submissionIds.length - 1) {
+            return [
+                submissionIds[thisSubmissionIndex - 1],
+                null
+            ];
+        }
+
+        return [
+            submissionIds[thisSubmissionIndex - 1],
+            submissionIds[thisSubmissionIndex + 1],
+        ];
+    }, [submissions, taskId]);
+
     return (
         <>
             <form
                 className={form.form}
                 onSubmit={saveFeedback}
             >
+                {
+                    previousSubmissionId && (
+                        <Link
+                            to={`/task/${previousSubmissionId}/feedback`}
+                        >
+                            <button
+                                className={form.button}
+                            >
+                                Previous
+                            </button>
+                        </Link>
+                    )
+                }
+
+                {
+                    nextSubmissionId && (
+                        <Link
+                            to={`/task/${nextSubmissionId}/feedback`}
+                        >
+                            <button
+                                className={form.button}
+                            >
+                                Next
+                            </button>
+                        </Link>
+                    )
+                }
+
                 <h1 className={editor.feedbackHeader}>
                     Feedback
                 </h1>
