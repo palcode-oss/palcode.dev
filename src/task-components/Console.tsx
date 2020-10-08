@@ -18,15 +18,15 @@ export default function Console(
 
     const run = useCallback(() => {
         runCode(socket, taskId);
-    }, []);
+    }, [taskId]);
 
     const kill = useCallback(() => {
         killCode(socket, taskId);
-    }, []);
+    }, [taskId]);
 
     const onKey = useCallback((key: string) => {
         stdin(socket, taskId, key);
-    }, [running]);
+    }, [running, taskId]);
 
     return (
         <div className={editor.console}>

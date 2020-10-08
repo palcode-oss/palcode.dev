@@ -63,7 +63,7 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
         setInitialDownloadComplete(false);
         setFileContent('');
         setLoading(true);
-    }, [fileName]);
+    }, [fileName, taskId]);
 
     useEffect(() => {
         if (timeout.current) {

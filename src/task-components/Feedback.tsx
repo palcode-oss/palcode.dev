@@ -71,7 +71,7 @@ export default function Feedback(
     }, [feedback, taskId]);
 
     const parentTaskId = task?.parentTask;
-    const [submissions, submissionsLoading] = useSubmissions(parentTaskId);
+    const [submissions] = useSubmissions(parentTaskId);
     const [previousSubmissionId, nextSubmissionId] = useMemo<[string | null, string | null]>(() => {
         const submissionIds = submissions.map(e => e.id);
         const thisSubmissionIndex = submissionIds.indexOf(taskId);
@@ -110,6 +110,7 @@ export default function Feedback(
                     previousSubmissionId && (
                         <Link
                             to={`/task/${previousSubmissionId}/feedback`}
+                            className={editor.feedbackPaginationButton}
                         >
                             <button
                                 className={form.button}
@@ -124,6 +125,7 @@ export default function Feedback(
                     nextSubmissionId && (
                         <Link
                             to={`/task/${nextSubmissionId}/feedback`}
+                            className={editor.feedbackPaginationButton}
                         >
                             <button
                                 className={form.button}
