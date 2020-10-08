@@ -34,7 +34,7 @@ export default function TaskRow(
 ): ReactElement {
     const [task] = useTask(taskId);
 
-    const [tasks, tasksLoading] = useTasks(classroom.tasks);
+    const [tasks, tasksLoading] = useTasks(classroom.id);
 
     const {enqueueSnackbar} = useSnackbar();
     const deleteTask = useCallback(() => {

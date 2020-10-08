@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { deleteRemoteFile, useTaskFiles } from './helpers/taskContent';
 import Files from './task-components/Files';
@@ -12,6 +12,7 @@ import Feedback from './task-components/Feedback';
 import { isSubmissionTask, TaskStatus, TaskType } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from './helpers/auth';
+import Sidebar from './task-components/Sidebar';
 
 interface Params {
     taskId: string;
@@ -74,9 +75,16 @@ export default function Task(
         return task.status !== TaskStatus.Unsubmitted;
     }, [task, teacherView, user]);
 
+    const [showPopOver, setShowPopOver] = useState(true);
+    useEffect(() => {
+        if (task?.type === TaskType.Template) {
+            setShowPopOver(false);
+        }
+    }, [task]);
+
     return (
         <div className={editor.editor}>
-            <div className={editor.interactive}>
+            <div className={`${editor.editorHalf} ${teacherView ? editor.editorHalfFeedback : ''}`}>
                 {!filesLoading &&
                     <Files
                         files={files}
@@ -98,31 +106,49 @@ export default function Task(
                     fileName={currentTab}
                     readOnly={readOnly}
                 />
+            </div>
 
+            <div className={`${editor.consoleHalf} ${teacherView ? editor.consoleHalfFeedback : ''}`}>
                 <Console taskId={taskId} />
             </div>
 
-            <div className={editor.sidebar}>
-                {
-                    !teacherView && <>
+            {
+                !teacherView && (
+                    <div className={editor.sidebar}>
+                        <Sidebar
+                            onInfoClick={() => setShowPopOver(!showPopOver)}
+                        />
+                    </div>
+                )
+            }
+
+            {
+                !teacherView && (
+                    <div className={`${editor.popOver} ${(showPopOver) ? editor.popOverActive : ''}`}>
                         <Controls
                             task={task}
                             taskId={taskId}
+                            onClosePress={() => setShowPopOver(false)}
                         />
                         <Briefing
                             taskId={taskId}
                             task={task}
                             taskLoading={taskLoading}
                         />
-                    </>
-                }
-                {
-                    teacherView && isSubmissionTask(task) && <Feedback
-                        taskId={taskId}
-                        task={task}
-                    />
-                }
-            </div>
+                    </div>
+                )
+            }
+
+            {
+                teacherView && isSubmissionTask(task) && (
+                    <div className={editor.feedbackSection}>
+                        <Feedback
+                            taskId={taskId}
+                            task={task}
+                        />
+                    </div>
+                )
+            }
         </div>
     )
 }

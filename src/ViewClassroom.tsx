@@ -49,7 +49,7 @@ export default function ViewClassroom(): ReactElement {
         }
     }, [sort, sortDirection]);
 
-    const [tasksData, tasksLoading] = useTasks(classroom?.tasks || []);
+    const [tasksData, tasksLoading] = useTasks(classroom?.id, true);
 
     if (!classroom || tasksLoading) {
         return (

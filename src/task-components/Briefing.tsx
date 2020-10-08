@@ -52,6 +52,7 @@ export default function Briefing(
 
             <ReactMarkdown
                 source={briefing}
+                escapeHtml={false}
                 renderers={{
                     code: BriefingSyntaxHighlighter,
                     image: BriefingImage,

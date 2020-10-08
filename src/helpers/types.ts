@@ -32,6 +32,7 @@ export interface TaskProps {
     created: firebase.firestore.Timestamp;
     createdBy: string;
     id: string;
+    classroomId: string;
 }
 
 export interface TemplateTask extends TaskProps {
@@ -64,7 +65,6 @@ export interface Classroom {
     name: string;
     members: string[];
     owner: string;
-    tasks: string[];
     id: string;
 }
 

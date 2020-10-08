@@ -2,7 +2,7 @@ import React, { FormEvent, useCallback, useMemo } from 'react';
 import { isSubmissionTask, Task, TaskStatus } from '../helpers/types';
 import form from '../styles/form.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEject, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faEject, faPaperPlane, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
@@ -10,9 +10,11 @@ export default function Controls(
     {
         taskId,
         task,
+        onClosePress,
     }: {
         taskId: string,
         task: Task | null,
+        onClosePress(): void,
     }
 ) {
     const submissionStatus = useMemo<TaskStatus | null>(() => {
@@ -50,8 +52,28 @@ export default function Controls(
             });
     }, [submissionStatus, taskId]);
 
+    const CloseBriefing = useMemo(() => () => {
+        return (
+            <button
+                className={form.button}
+                type='button'
+                onClick={onClosePress}
+            >
+                <FontAwesomeIcon icon={faTimesCircle} />
+                Close briefing
+            </button>
+        );
+    }, [onClosePress]);
+
     if (submissionStatus === null) {
-        return null;
+        return (
+            <form
+                className={form.form}
+                onSubmit={() => {}}
+            >
+                <CloseBriefing />
+            </form>
+        );
     }
 
     return (
@@ -59,8 +81,11 @@ export default function Controls(
             className={form.form}
             onSubmit={onButtonPress}
         >
+            <CloseBriefing />
+
             <button
                 className={form.button}
+                type='submit'
             >
                 {
                     submissionStatus === TaskStatus.Unsubmitted && <>

@@ -1,4 +1,4 @@
-import { SubmissionTask, Task, TaskDoc } from './types';
+import { SubmissionTask, Task, TaskDoc, TaskType } from './types';
 import { ReactElement, useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -28,25 +28,32 @@ export function useTask(taskId: string): [Task | null, boolean] {
     return [task, loading];
 }
 
-export function useTasks(taskIds: string[]): [Task[], boolean] {
+export function useTasks(classroomId?: string, onlyTemplates = false): [Task[], boolean] {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [tasksLoading, setTasksLoading] = useState(false);
 
     useEffect(() => {
-        if (taskIds.length === 0) return;
+        if (!classroomId) return;
 
         setTasksLoading(true);
-        return firebase.firestore()
+
+        let baseQuery = firebase.firestore()
             .collection('tasks')
-            .where(firebase.firestore.FieldPath.documentId(), 'in', taskIds)
+            .where('classroomId', '==', classroomId)
+
+        if (onlyTemplates) {
+            baseQuery = baseQuery.where('type', '==', TaskType.Template);
+        }
+
+        return baseQuery
             .onSnapshot(snapshot => {
                 setTasksLoading(false);
                 setTasks(snapshot.docs.map(e => ({
                     id: e.id,
                     ...e.data() as TaskDoc,
                 } as Task)));
-            });
-    }, [taskIds]);
+            }, e => console.log('EEE', e));
+    }, [classroomId, onlyTemplates]);
 
     return [tasks, tasksLoading];
 }

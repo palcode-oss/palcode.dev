@@ -1,6 +1,13 @@
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TableCell } from '@material-ui/core';
-import { Classroom, isSubmissionTask, SubmissionTask, Task, TaskStatus, TaskType } from '../helpers/types';
+import {
+    Classroom,
+    isSubmissionTask,
+    SubmissionTask,
+    TaskStatus,
+    TaskType,
+    TemplateTask,
+} from '../helpers/types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +16,6 @@ import { useAuth } from '../helpers/auth';
 import { Shimmer } from 'react-shimmer';
 import moment from 'moment';
 import { faEdit } from '@fortawesome/free-regular-svg-icons/faEdit';
-import { useTasks } from '../helpers/taskData';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useHistory } from 'react-router-dom';
@@ -18,9 +24,10 @@ import axios from 'axios';
 import TaskStatusIndicator from './TaskStatus';
 import { faAward } from '@fortawesome/free-solid-svg-icons/faAward';
 import StudentFeedbackPreview from './StudentFeedbackPreview';
+import { useSnackbar } from 'notistack';
 
 interface Props {
-    task: Task;
+    task: TemplateTask;
     classroom: Classroom;
 }
 
@@ -31,18 +38,31 @@ export default function TaskSubmissionRow(
     }: Props,
 ): ReactElement {
     const [user] = useAuth();
-    const [tasks, tasksLoading] = useTasks(classroom.tasks);
-    const submission = useMemo<SubmissionTask>(() => {
-        return tasks.filter(newTask =>
-            isSubmissionTask(newTask)
-            && newTask.parentTask === task.id
-            && newTask.createdBy === user?.uid,
-        )[0] as SubmissionTask;
-    }, [tasks, user]);
+    const [submission, setSubmission] = useState<SubmissionTask | undefined>(undefined);
+    useEffect(() => {
+        if (!task || !user) return;
+
+        firebase.firestore()
+            .collection('tasks')
+            .where('parentTask', '==', task.id)
+            .where('createdBy', '==', user.uid)
+            .get()
+            .then(response => {
+                if (!response.empty) {
+                    const document = response.docs[0];
+
+                    setSubmission({
+                        ...document.data() as SubmissionTask,
+                        id: document.id,
+                    });
+                }
+            });
+    }, [task, user]);
 
     const history = useHistory();
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const openSubmission = useCallback(async () => {
-        if (!user) return;
+        if (!user || !classroom) return;
 
         const existingTaskResponse = await firebase
             .firestore()
@@ -55,6 +75,11 @@ export default function TaskSubmissionRow(
             history.push(`/task/${existingTaskResponse.docs[0].id}`);
             return;
         }
+
+        enqueueSnackbar('Cloning task...', {
+            variant: 'info',
+            key: 'task-clone'
+        });
 
         const taskDoc = firebase
             .firestore()
@@ -70,15 +95,8 @@ export default function TaskSubmissionRow(
                 id: taskDoc.id,
                 created: firebase.firestore.Timestamp.now(),
                 parentTask: task.id,
+                classroomId: classroom.id,
             } as SubmissionTask);
-
-        await firebase
-            .firestore()
-            .collection('classrooms')
-            .doc(classroom.id)
-            .update({
-                tasks: firebase.firestore.FieldValue.arrayUnion(taskDoc.id),
-            });
 
         await axios.post(
             process.env.REACT_APP_API + '/clone',
@@ -88,6 +106,7 @@ export default function TaskSubmissionRow(
             },
         );
 
+        closeSnackbar('task-clone');
         history.push(`/task/${taskDoc.id}`);
     }, [task, classroom, user]);
 
@@ -105,7 +124,7 @@ export default function TaskSubmissionRow(
             </TableCell>
             <TableCell align='right'>
                 {
-                    user && !tasksLoading ? (
+                    user ? (
                         <TaskStatusIndicator task={submission}/>
                     ) : (
                         <Shimmer

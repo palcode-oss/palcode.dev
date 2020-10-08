@@ -31,7 +31,7 @@ export default function StudentRow(
     const [student, studentLoading] = useUserByUsername(memberUsername);
     const classroom = useClassroom(classroomId);
 
-    const [tasks, tasksLoading] = useTasks(classroom?.tasks || []);
+    const [tasks, tasksLoading] = useTasks(classroom?.id);
     const userTasks = useMemo<SubmissionTask[] | null>(() => {
         if (!classroom || tasksLoading) return null;
 

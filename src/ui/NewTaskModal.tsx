@@ -54,29 +54,14 @@ export default function NewTaskModal(
                 status: TaskStatus.Unsubmitted,
                 type: TaskType.Template,
                 created: firebase.firestore.Timestamp.now(),
+                classroomId,
             } as TaskDoc<TaskType.Template>)
             .then(() => {
-                firebase
-                    .firestore()
-                    .collection('classrooms')
-                    .doc(classroomId)
-                    .get()
-                    .then((snapshot) => {
-                        firebase
-                            .firestore()
-                            .collection('classrooms')
-                            .doc(classroomId)
-                            .update({
-                                tasks: (snapshot.data() as Classroom).tasks.concat(doc.id),
-                            } as Partial<Classroom>)
-                            .then(() => {
-                                enqueueSnackbar('Task created successfully!', {
-                                    variant: 'success',
-                                });
-                                setLoading(false);
-                                history.push(`/task/${doc.id}`);
-                            });
-                    });
+                enqueueSnackbar('Task created successfully!', {
+                    variant: 'success',
+                });
+                setLoading(false);
+                history.push(`/task/${doc.id}`);
             });
     }, [classroomId, title, user]);
 

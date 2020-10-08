@@ -8,7 +8,7 @@ import VoiceFeedbackPreview from '../task-components/VoiceFeedbackPreview';
 
 interface Props {
     showFeedback: boolean;
-    submission: SubmissionTask;
+    submission?: SubmissionTask;
     onClose(): void;
 }
 
@@ -19,7 +19,7 @@ export default function StudentFeedbackPreview(
         onClose,
     }: Props
 ) {
-    if (!showFeedback || !submission.feedback) {
+    if (!showFeedback || !submission || !submission.feedback) {
         return <></>;
     }
 

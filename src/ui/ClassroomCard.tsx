@@ -16,7 +16,7 @@ export default function ClassroomCard(
     }: Props,
 ): ReactElement {
     const [owner, loading] = useUser(classroom.owner);
-    const [tasks, tasksLoading] = useTasks(classroom.tasks);
+    const [tasks, tasksLoading] = useTasks(classroom.id, true);
     const taskCount = tasks
         .filter(task => task.type === TaskType.Template)
         .length;

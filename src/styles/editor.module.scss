@@ -5,13 +5,19 @@
   height: calc(100vh - #{$navbar-height});
   overflow-y: hidden;
 
-  $interactive-width: 65%;
-  .interactive {
-    width: $interactive-width;
+  $editor-width: 65%;
+  $sidebar-width: 60px;
+  $feedback-width: 30vw;
+  .editorHalf {
+    width: $editor-width;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    &.editorHalfFeedback {
+      width: calc(#{$editor-width} - #{$feedback-width});
+    }
 
     $files-height: 40px;
     .filesLoading {
@@ -88,23 +94,31 @@
       width: 100%;
       flex: 1;
     }
+  }
 
-    $console-height: 250px;
+  .consoleHalf {
+    width: calc(#{100% - $editor-width} - #{$sidebar-width});
+
+    &.consoleHalfFeedback {
+      width: calc(#{100% - $editor-width});
+    }
+
+    background-color: $bg-dark;
+
     .console {
       flex: 1;
-      height: $console-height;
-      max-height: $console-height;
-      min-height: $console-height;
+      height: 100%;
 
       width: 100%;
       background-color: black;
 
       $run-color: #263b26;
       $kill-color: #452323;
-      $button-height: 25px;
+      $button-height: 35px;
       .runButton, .killButton {
         width: 100%;
-        height: $button-height;
+        margin-top: 10px;
+        height: $button-height - 10px;
 
         display: flex;
         justify-content: center;
@@ -112,6 +126,8 @@
         @include miriam;
 
         transition: background-color 100ms ease-in-out;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
       }
 
       .runButton {
@@ -134,15 +150,62 @@
 
       .xtermContainer {
         width: 100%;
-        height: $console-height - $button-height;
+        height: calc(100% - #{$button-height / 2});
       }
     }
   }
 
   .sidebar {
-    @include bg-dark;
-    height: 100%;
-    width: 100% - $interactive-width;
+    width: $sidebar-width;
+    background-color: $bg-dark;
+
+    padding-top: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    .sidebarButton {
+      $dimensions: $sidebar-width - 20px;
+
+      width: $dimensions;
+      height: $dimensions;
+
+      background-color: $bg-light;
+      border-radius: 10px;
+
+      color: lighten($bg-light, 60%);
+      transition: color 100ms ease-in-out;
+
+      margin-bottom: 10px;
+
+      &:hover {
+        color: lighten($bg-light, 80%);
+      }
+    }
+  }
+
+  .popOver {
+    @include bg-light;
+    width: 30vw;
+
+    position: fixed;
+    z-index: 10;
+    right: 0;
+    bottom: 10px;
+    top: $navbar-height;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+
+    transform: translateX(100%);
+    transition: transform 250ms ease-in-out;
+    &.popOverActive {
+      transform: translateX(0);
+    }
+
+    box-shadow: 0 0 30px 1px adjust-color($bg-light, $alpha: 0.5, $saturation: 0.8);
+
     display: flex;
     flex-direction: column;
 
@@ -159,6 +222,13 @@
         margin: 10px 0;
       }
     }
+  }
+
+  .feedbackSection {
+    @include bg-dark;
+    width: $feedback-width;
+    padding-left: 20px;
+    padding-right: 20px;
 
     .feedbackHeader {
       color: white;

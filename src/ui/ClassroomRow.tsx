@@ -25,7 +25,7 @@ export default function ClassroomRow(
         handleDelete,
     }: Props
 ): ReactElement {
-    const [tasks, tasksLoading] = useTasks(classroom.tasks);
+    const [tasks, tasksLoading] = useTasks(classroom.id);
 
     return (
         <TableRow>
