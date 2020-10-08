@@ -34,7 +34,8 @@ export default function LogInForm(
     const msalLogin = useCallback(async () => {
         const userCredential = await firebase.auth()
             .signInWithPopup(provider)
-            .catch(() => {
+            .catch((e) => {
+                console.log(e);
                 enqueueSnackbar('We couldn\'t sign you in. Please ensure popups are enabled, and try again.', {
                     variant: 'warning',
                 });
