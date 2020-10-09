@@ -42,14 +42,16 @@ export default function FileEditor(
             });
     }, [themeName]);
 
-    const language = useMemo(() => {
+    const extension = useMemo(() => {
         const splitFilename = fileName.split('.');
         if (splitFilename.length === 1) {
             return 'python';
         }
 
-        const extension = last(splitFilename);
+        return last(splitFilename);
+    }, [fileName]);
 
+    const language = useMemo(() => {
         switch (extension) {
             case 'md': return 'markdown';
             case 'txt': return 'plain';
@@ -58,7 +60,7 @@ export default function FileEditor(
             case 'py': return 'python';
             default: return 'plaintext';
         }
-    }, [fileName]);
+    }, [extension]);
 
     if (loading) {
         return <div className={styles.monacoLoading} />;
@@ -77,6 +79,7 @@ export default function FileEditor(
                 height='100%'
                 options={{
                     readOnly,
+                    wordWrap: ['txt', 'md'].includes(extension || '') ? 'on': 'off'
                 }}
             />
         </div>

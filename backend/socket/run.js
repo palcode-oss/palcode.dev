@@ -30,10 +30,19 @@ async function execPython(projectId, socket, io) {
         Entrypoint: ["python", "index.py"],
         OpenStdin: true,
         Tty: true,
-        PidsLimit: 50,
-        Memory: 104857600,
-        DiskQuota: 52428800,
-        CpuShares: 0.05,
+        // Maximum concurrent process IDs (PIDs) allowed within container
+        // essential to preventing forkbomb/DDoS attacks
+        // https://github.com/aaronryank/fork-bomb/blob/master/fork-bomb.py
+        PidsLimit: 25,
+        // Maximum RAM consumption of container in bytes
+        // written as megabytes * 1048576
+        Memory: 100 * 1048576,
+        // Maximum disk size of container in bytes
+        // written as megabytes * 1048576
+        DiskQuota: 50 * 1048576,
+        // CPU quota in units of 10^-9 CPUs/vCPUs
+        // written as cores * 10^-9
+        NanoCPUs: 0.2 * Math.pow(10, 9),
     }, (err, container) => {
         if (err) {
             io.to(projectId).emit('run', {

@@ -35,23 +35,50 @@ export default function TeacherDashboard(
     const [classroomData, classroomDataLoading] = useOwnedClassroom(user.uid, classroomDataUpdater);
 
     const {enqueueSnackbar} = useSnackbar();
-    const handleDelete = useCallback((classroomId: string) => {
-        firebase
-            .firestore()
-            .collection('classrooms')
-            .doc(classroomId)
-            .delete()
-            .then(() => {
-                enqueueSnackbar('Classroom deleted successfully!', {
-                    variant: 'success',
-                });
-                setClassroomDataUpdater(Math.random());
-            })
-            .catch(() => {
-                enqueueSnackbar('Something went wrong while attempting to delete that classroom. Try again.', {
-                    variant: 'error',
-                });
+    const handleDelete = useCallback(async (classroomId: string) => {
+        try {
+            await firebase.firestore()
+                .collection('classrooms')
+                .doc(classroomId)
+                .delete();
+        } catch (e) {
+            enqueueSnackbar('Something went wrong while attempting to delete that classroom. Try again.', {
+                variant: 'error',
             });
+            return;
+        }
+
+        const tasks = await firebase.firestore()
+            .collection('tasks')
+            .where('classroomId', '==', classroomId)
+            .get()
+            .catch(() => {
+                enqueueSnackbar('Something went wrong while attempting to delete the class tasks. The classroom was still deleted. No action is required', {
+                    variant: 'info',
+                });
+                return null;
+            });
+
+        if (!tasks) return;
+
+        const batch = firebase.firestore().batch();
+        tasks.docs.forEach(task => {
+            batch.delete(task.ref);
+        });
+
+        try {
+            await batch.commit();
+        } catch (e) {
+            enqueueSnackbar('Something went wrong while attempting to delete the class tasks. The classroom was still deleted. No action is required.', {
+                variant: 'info',
+            });
+            return;
+        }
+
+        enqueueSnackbar('Classroom deleted successfully!', {
+            variant: 'success',
+        });
+        setClassroomDataUpdater(Math.random());
     }, []);
 
     const [showModal, setShowModal] = useState(false);
