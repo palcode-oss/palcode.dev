@@ -1,13 +1,6 @@
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { TableCell } from '@material-ui/core';
-import {
-    Classroom,
-    isSubmissionTask,
-    SubmissionTask,
-    TaskStatus,
-    TaskType,
-    TemplateTask,
-} from '../helpers/types';
+import { Classroom, SubmissionTask, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,6 +18,7 @@ import TaskStatusIndicator from './TaskStatus';
 import { faAward } from '@fortawesome/free-solid-svg-icons/faAward';
 import StudentFeedbackPreview from './StudentFeedbackPreview';
 import { useSnackbar } from 'notistack';
+import form from '../styles/form.module.scss';
 
 interface Props {
     task: TemplateTask;
@@ -141,20 +135,36 @@ export default function TaskSubmissionRow(
                 }
             </TableCell>
             <TableCell align='center'>
-                <DropdownMenu>
-                    <MenuItem onClick={openSubmission}>
-                        <FontAwesomeIcon icon={faEdit}/>
-                        &nbsp;Edit submission
-                    </MenuItem>
-                    {
-                        submission?.status === TaskStatus.HasFeedback && (
-                            <MenuItem onClick={displayFeedback}>
-                                <FontAwesomeIcon icon={faAward}/>
-                                &nbsp;View feedback
+                {
+                    submission?.status !== TaskStatus.HasFeedback && (
+                        <button
+                            className={form.button}
+                            onClick={openSubmission}
+                        >
+                            <FontAwesomeIcon icon={faEdit}/>
+                            Open
+                        </button>
+                    )
+                }
+
+                {
+                    submission?.status === TaskStatus.HasFeedback && (
+                        <DropdownMenu>
+                            <MenuItem onClick={openSubmission}>
+                                <FontAwesomeIcon icon={faEdit}/>
+                                &nbsp;Open
                             </MenuItem>
-                        )
-                    }
-                </DropdownMenu>
+                            {
+                                submission?.status === TaskStatus.HasFeedback && (
+                                    <MenuItem onClick={displayFeedback}>
+                                        <FontAwesomeIcon icon={faAward}/>
+                                        &nbsp;View feedback
+                                    </MenuItem>
+                                )
+                            }
+                        </DropdownMenu>
+                    )
+                }
             </TableCell>
 
             <StudentFeedbackPreview
