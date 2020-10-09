@@ -12,9 +12,6 @@ Node.js is run by PM2. When backend changes have been pulled, run `pm2 restart p
 
 You may need to run `yarn run install` to update packages.
 
-## Running on your own server
-
-
 ## Development
 To run PalCode locally, first set some environment variables:
 
