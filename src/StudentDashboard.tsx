@@ -4,7 +4,6 @@ import Loader from 'react-loader-spinner';
 import ClassroomCard from './ui/ClassroomCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-import { Link } from 'react-router-dom';
 import { useClassrooms } from './helpers/classroom';
 import studentDashboard from './styles/studentDashboard.module.scss';
 import loader from './styles/loader.module.scss';
