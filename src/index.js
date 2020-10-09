@@ -10,7 +10,6 @@ firebase.initializeApp({
     databaseURL: "https://palcode-ba70e.firebaseio.com",
     projectId: "palcode-ba70e",
     storageBucket: "palcode-ba70e.appspot.com",
-    messagingSenderId: "1066769258920",
     appId: "1:1066769258920:web:472b48d2d97f99f99fa59d",
 });
 

@@ -52,7 +52,7 @@ export function useTasks(classroomId?: string, onlyTemplates = false): [Task[], 
                     id: e.id,
                     ...e.data() as TaskDoc,
                 } as Task)));
-            }, e => console.log('EEE', e));
+            });
     }, [classroomId, onlyTemplates]);
 
     return [tasks, tasksLoading];

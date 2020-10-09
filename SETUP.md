@@ -2,13 +2,13 @@
 
 ## Minimum server specifications
 - Linux (Ubuntu 20.04 LTS recommended)
-    - PalCode uses cross-platform software that can run on Windows and Mac servers, but Ubuntu Server is recommended for efficiency.
+    - PalCode uses cross-platform software that can run on Windows and Mac servers, but Ubuntu Server is recommended for best performance.
 - 1GB RAM
 - 10GB high-speed storage (SSD recommended)
-- High-speed internet connection.
+- High-speed internet connection
 
 ## Installing prerequisites
-All the following commands assume you use root.
+All the following commands assume you are root.
 
 ### Docker
 ```shell script
@@ -155,3 +155,19 @@ pm2 logs
 ```
 
 You should now be able to access PalCode.
+
+## Configuring a firewall
+On a pristine Ubuntu server, there's no firewall, and all connections are allowed in and out by default. Fixing this is easy.
+
+Ubuntu comes bundled with `ufw` (Uncomplicated Firewall). PalCode only needs one port in production (443). Here's how to set it up.
+
+```shell script
+ufw enable
+ufw allow https
+```
+
+To ensure it's worked, run:
+
+```shell script
+ufw status
+```
