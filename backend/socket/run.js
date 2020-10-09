@@ -19,7 +19,6 @@ async function execPython(projectId, socket, io) {
         status: 200,
         message: 'Starting...'
     });
-
     docker.createContainer({
         Image: 'python:' + getPythonTag(),
         name: projectId,
@@ -31,6 +30,10 @@ async function execPython(projectId, socket, io) {
         Entrypoint: ["python", "index.py"],
         OpenStdin: true,
         Tty: true,
+        PidsLimit: 50,
+        Memory: 104857600,
+        DiskQuota: 52428800,
+        CpuShares: 0.05,
     }, (err, container) => {
         if (err) {
             io.to(projectId).emit('run', {
