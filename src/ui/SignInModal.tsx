@@ -31,9 +31,7 @@ export default function SignInModal(
                 </div>
 
                 <div className={modal.body}>
-                    <LogInForm
-                        callback={closeModal}
-                    />
+                    <LogInForm />
                 </div>
             </div>
         </div>

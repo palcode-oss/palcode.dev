@@ -1,0 +1,12 @@
+@import "importables.scss";
+
+.container {
+  @include center-container;
+}
+
+.status {
+  @include miriam;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 15px;
+}
