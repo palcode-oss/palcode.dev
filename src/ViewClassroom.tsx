@@ -68,7 +68,9 @@ export default function ViewClassroom(): ReactElement {
 
     return (
         <div className={table.tablePage}>
-            <h1>
+            <h1
+                className={table.header}
+            >
                 {
                     classroom.name
                 }

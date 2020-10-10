@@ -88,7 +88,7 @@ export default function TeacherDashboard(
             {
                 !classroomDataLoading ? (
                     <>
-                        <h1>
+                        <h1 className={table.header}>
                             My dashboard
                         </h1>
                         <TableContainer className={table.tableContainer}>

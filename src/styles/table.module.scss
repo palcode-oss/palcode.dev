@@ -3,6 +3,10 @@
 .tablePage {
     padding: 30px;
 
+    .header {
+        @include miriam;
+    }
+
     .tableContainer {
         $border: 1px solid lighten($bg-light, 60);
 
