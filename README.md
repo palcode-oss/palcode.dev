@@ -19,6 +19,8 @@ To run PalCode locally, first set some environment variables:
 - `PAL_PORT` - the port to run the server on. Make sure this is different to your React development port (3000 by default)
 - `REACT_APP_API` - set this to `http://localhost:<your server port>/api`
 - `REACT_APP_SOCKET` - set this to `http://localhost:<your server port>`
+- `REACT_APP_TENANT` - the Azure AD tenant ID to allow users from. [This website](https://www.whatismytenantid.com/) is very helpful for finding this. No admin access is required to find this ID, and using it poses no security risk to the institution to which the ID belongs. It's merely a frontend-only OAuth identifier that Microsoft uses to customise and filter the login page. Sign-ins from accounts not belonging to this tenant ID will be rejected by Microsoft.
+- `REACT_APP_F_*` - a few variables to configure the frontend Firebase connection. An example is available in [`.github/workflows/main.yml`](https://github.com/palkerecsenyi/palcode/blob/master/.github/workflows/main.yml#L31). Same as the variables in the `firebase.initializeApp()` call in [`src/index.js`](https://github.com/palkerecsenyi/palcode/blob/master/src/index.js#L7) but in an uppercase, underscore-delimited form, with `REACT_APP_F_` prepended to each.
 
 Next, [download Docker CE](https://docs.docker.com/get-docker/) for your computer. It's available for all operating systems.
 
