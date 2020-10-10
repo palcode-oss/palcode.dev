@@ -5,12 +5,12 @@ import './styles/reset.scss';
 import firebase from "firebase/app";
 
 firebase.initializeApp({
-    apiKey: "AIzaSyDvtCpVfSv_WyqODPmPlrYvGqCmlZZlbk8",
-    authDomain: "palcode-ba70e.firebaseapp.com",
-    databaseURL: "https://palcode-ba70e.firebaseio.com",
-    projectId: "palcode-ba70e",
-    storageBucket: "palcode-ba70e.appspot.com",
-    appId: "1:1066769258920:web:472b48d2d97f99f99fa59d",
+    apiKey: process.env.REACT_APP_F_API_KEY,
+    authDomain: process.env.REACT_APP_F_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_F_DATABASE_URL,
+    projectId: process.env.REACT_APP_F_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_F_STORAGE_BUCKET,
+    appId: process.env.REACT_APP_F_APP_ID,
 });
 
 ReactDOM.render(
