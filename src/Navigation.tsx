@@ -12,6 +12,7 @@ import firebase from 'firebase/app';
 import { useSnackbar } from 'notistack';
 import ReviewTask from './ReviewTask';
 import AddStudents from './AddStudents';
+import About from './About';
 
 const history = createBrowserHistory();
 
@@ -156,6 +157,9 @@ export default function Navigation(): ReactElement {
                     <RedirectUnauthed />
                     <EnsureTaskExists />
                     <Task />
+                </Route>
+                <Route path='/about'>
+                    <About />
                 </Route>
                 <Route path='/'>
                     <Dashboard />

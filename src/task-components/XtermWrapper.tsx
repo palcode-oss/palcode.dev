@@ -34,6 +34,9 @@ export default function XtermWrapper(
         const fitAddon = new FitAddon();
         terminal.loadAddon(fitAddon);
         terminal.loadAddon(new WebLinksAddon());
+        terminal.setOption('theme', {
+            background: '#030027',
+        });
         terminal.open(terminalContainer.current);
         fitAddon.fit();
     }, [terminalContainer]);

@@ -11,9 +11,7 @@ import { Perms, UserDoc } from '../helpers/types';
 
 const provider = new firebase.auth.OAuthProvider('microsoft.com');
 provider.setCustomParameters({
-    // the mgs.org tenant ID
     // https://www.whatismytenantid.com/
-    //
     // see https://firebase.google.com/docs/auth/web/microsoft-oauth for details on how to use
     tenant: process.env.REACT_APP_TENANT,
 });
