@@ -80,11 +80,13 @@ yarn install --frozen-lockfile
 ```
 
 ## Installing the frontend build
-This process must be done manually every time you want to update the frontend. To make it easier, it's best to save a Shell script to do it for you. This isn't bundled with the repository as it needs to contain a GitHub user access key.
+This process must be done manually every time you want to update the frontend. To make it easier, it's best to save a Shell script to do it for you. This isn't bundled with the repository, as it needs to contain a sensitive GitHub user access key.
 
 Here's a template:
 
 ```shell script
+# install-build.sh
+
 rm build.zip
 read -p "Enter artifact ID: " artifactid
 curl -s -I -H "Accept: application/vnd.github.v3+json" -H "Authorization: token <INSERT YOUR GITHUB TOKEN HERE>" https://api.github.com/repos/palkerecsenyi/palcode/actions/artifacts/$artifactid/zip | grep -Fi Location: | sed -e "s/^Location: //" | xargs wget -O build.zip
@@ -132,6 +134,13 @@ PalCode uses a few backend environment variables that you need to set.
 
 The best place to set these variables is at the bottom of `~/.bashrc`. Remember to run `source ~/.bashrc` after modifying the file.
 
+PalCode also accepts a few other **optional** variables to configure resource quotas for Docker containers. To assume the default values, just leave these variables unset. The default values can be found in [`backend/socket/run.js`](https://github.com/palkerecsenyi/palcode/blob/master/backend/socket/run.js#L36) – these numbers are the result of over an hour of tweaking to balance stability with performance. However, feel free to configure them if you have limited or additional server capacity. You can find more details in the [Docker API reference](https://docs.docker.com/engine/api/v1.40/#operation/ContainerCreate).
+
+- `PAL_PID_LIMIT` - the maximum number of processes that can be run inside the container concurrently. Protects against [fork bomb](https://en.wikipedia.org/wiki/Fork_bomb) attacks, which can be done with a [1-line Python script](https://gist.github.com/palkerecsenyi/694d45d5f5cf30fdd65de79257bd1859). *Default: 25*
+- `PAL_MEMORY_QUOTA` - the maximum amount of RAM the container can consume, in bytes. Note that this is not a reservation, just a hard limit. *Default: 104857600* (100 megabytes)
+- `PAL_DISK_QUOTA` - the maximum amount of disk space the container can consume, in bytes. Again, this is not a reservation. *Default: 52428800* (50 megabytes)
+- `PAL_CPU_QUOTA` - the maximum amount of CPU cores the container can use, in units of 10^-9 cores. Again, this is not a reservation. *Default: 200000000* (0.2 cores)
+
 ## TLS
 PalCode's original implementation uses two-way strict TLS encryption. This involves a Cloudflare Origin CA certificate being used on the server. Cloudflare uses this to verify the server's identity, but uses a different certificate to serve the page to the public.
 
@@ -160,6 +169,19 @@ pm2 logs
 ```
 
 You should now be able to access PalCode.
+
+## Restarting
+You can restart PalCode with a single command:
+
+```shell script
+pm2 restart palcode
+```
+
+To propagate environment variable updates, add the `--update-env` flag:
+
+```shell script
+pm2 restart palcode --update-env
+```
 
 ## Configuring a firewall
 On a pristine Ubuntu server, there's no firewall, and all connections are allowed in and out by default. Fixing this is easy.

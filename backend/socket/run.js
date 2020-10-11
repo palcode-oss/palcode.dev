@@ -33,16 +33,16 @@ async function execPython(projectId, socket, io) {
         // Maximum concurrent process IDs (PIDs) allowed within container
         // essential to preventing forkbomb/DDoS attacks
         // https://github.com/aaronryank/fork-bomb/blob/master/fork-bomb.py
-        PidsLimit: 25,
+        PidsLimit: parseInt(process.env.PAL_PID_LIMIT || 25),
         // Maximum RAM consumption of container in bytes
         // written as megabytes * 1048576
-        Memory: 100 * 1048576,
+        Memory: parseInt(process.env.PAL_MEMORY_QUOTA || 100 * 1048576),
         // Maximum disk size of container in bytes
         // written as megabytes * 1048576
-        DiskQuota: 50 * 1048576,
+        DiskQuota: parseInt(process.env.PAL_DISK_QUOTA || 50 * 1048576),
         // CPU quota in units of 10^-9 CPUs/vCPUs
         // written as cores * 10^-9
-        NanoCPUs: 0.2 * Math.pow(10, 9),
+        NanoCPUs: parseInt(process.env.PAL_CPU_QUOTA || 0.2 * Math.pow(10, 9)),
     }, (err, container) => {
         if (err) {
             io.to(projectId).emit('run', {
