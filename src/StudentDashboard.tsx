@@ -41,9 +41,8 @@ export default function StudentDashboard(
                         {
                             !classrooms.length && (
                                 <p>
-                                    You're not a part of any classrooms yet. Click the&nbsp;
-                                    <FontAwesomeIcon icon={faPlus}/>
-                                    &nbsp;button above to get started.
+                                    You're not a part of any classrooms yet. They'll appear here once your teacher
+                                    adds you to a classroom.
                                 </p>
                             )
                         }

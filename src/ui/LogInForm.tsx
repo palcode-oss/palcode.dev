@@ -36,6 +36,7 @@ export default function LogInForm(
             .catch(() => {
                 enqueueSnackbar('We couldn\'t sign you in. Please ensure popups are enabled, and try again.', {
                     variant: 'warning',
+                    preventDuplicate: true,
                 });
 
                 return null;
@@ -43,7 +44,7 @@ export default function LogInForm(
     }, []);
 
     useEffect(() => {
-        (async() => {
+        (async () => {
             if (!redirectResult || !redirectResult.user) {
                 setSigningIn(false);
                 return;
