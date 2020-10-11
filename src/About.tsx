@@ -149,7 +149,60 @@ export default function About(): ReactElement {
                     </a>
                     &nbsp;is an incredibly popular frontend JavaScript library created by Facebook in 2013. Today, its
                     used by practically every website – and that's hardly an exaggeration. PalCode's codebase is completely
-                    written using React. It really helps
+                    written using React. It allows a website's contents to be entirely controlled by JavaScript code, and allows
+                    for rendering dynamic data rapidly and in a memory-efficient way.
+                </p>
+
+                <h2>
+                    Docker
+                </h2>
+                <p>
+                    <a
+                        href='https://www.docker.com/'
+                        target='_blank'
+                    >
+                        Docker
+                    </a>
+                    's slightly more complicated to understand than the other libraries mentioned on this page.
+                    Whenever you press 'Run' on your Python script, your project's files are cloned into a so-called
+                    'container'. This container is a stripped-down version of the Linux operating system, containing
+                    the minimum software necessary to run the Python 3 interpreter.
+                </p>
+                <p>
+                    Basically, an entire operating system is span up in a matter of milliseconds, to guarantee that
+                    your code is completely unable to interact with the rest of the server, protecting its integrity
+                    and security. This containerisation is powered by Docker.
+                </p>
+                <p>
+                    PalCode's server-side code plugs into this container as a spectator to receive its output and give
+                    it your input. Each container has memory, CPU, storage, and process quotas to protect against all
+                    sorts of DOS attacks.
+                </p>
+
+                <h2>
+                    Firebase
+                </h2>
+                <p>
+                    <a
+                        href='https://firebase.google.com/'
+                        target='_blank'
+                    >
+                        Firebase
+                    </a>
+                    &nbsp;is an increasingly popular integrated cloud platform, made by Google. It includes a variety of
+                    features, with the core aim of reducing the amount of server-side code you need to write; it acts as
+                    a pre-written server.
+                </p>
+                <p>
+                    For example, Firebase Cloud Firestore is the cloud-hosted NoSQL database that PalCode uses for storing
+                    all your data. It offers insanely fast performance and highly-effective indexing, guaranteeing PalCode's
+                    scalability.
+                </p>
+                <p>
+                    PalCode uses Firebase Authentication to manage users and sign-ins. It hooks directly into the Microsoft
+                    Azure OAuth API, allowing PalCode to authenticate with MGS's existing Active Directory. Since the majority
+                    of schools in the UK use Active Directory for managing student authentication, all it takes to port
+                    PalCode for another school is to change a single ID number.
                 </p>
             </div>
         </>
