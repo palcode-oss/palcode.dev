@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useCallback, useState } from 'react';
+import React, { ReactElement, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import Menu from '@material-ui/core/Menu';
@@ -6,21 +6,39 @@ import table from '../styles/table.module.scss';
 
 interface Props {
     children: ReactNode;
+    open?: boolean;
+    onChange?(opened: boolean): void;
 }
 
 export default function DropdownMenu(
     {
         children,
+        open,
+        onChange,
     }: Props,
 ): ReactElement {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openMenu = useCallback((e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);
+
+        if (onChange) {
+            onChange(true);
+        }
     }, []);
 
     const handleClose = useCallback(() => {
         setAnchorEl(null);
+
+        if (onChange) {
+            onChange(false);
+        }
     }, []);
+
+    useEffect(() => {
+        if (open === false) {
+            setAnchorEl(null);
+        }
+    }, [open]);
 
     return (
         <>
@@ -34,10 +52,6 @@ export default function DropdownMenu(
             <Menu
                 className={table.tableMenu}
                 anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
                 keepMounted
                 transformOrigin={{
                     vertical: 'top',

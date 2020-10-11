@@ -66,7 +66,7 @@ router.post('/clone-classroom', async (req, res) => {
 
     try {
         await batch.commit();
-        res.sendStatus(200);
+        res.send(newClassroom.id);
     } catch (e) {
         res.sendStatus(500);
     }

@@ -35,6 +35,10 @@
     @include miriam;
 
     margin-bottom: 8px;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
 
   .loginPrompt &, .joinClassroom & {

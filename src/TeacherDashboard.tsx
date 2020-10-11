@@ -19,7 +19,7 @@ import Loader from 'react-loader-spinner';
 import IconButton from '@material-ui/core/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import Tooltip from '@material-ui/core/Tooltip';
-import NewClassroomModal from './ui/NewClassroomModal';
+import NewClassroomModal, { NewClassroomAction } from './ui/NewClassroomModal';
 import ClassroomRow from './ui/ClassroomRow';
 
 interface Props {
@@ -36,6 +36,10 @@ export default function TeacherDashboard(
 
     const {enqueueSnackbar} = useSnackbar();
     const handleDelete = useCallback(async (classroomId: string) => {
+        if (!window.confirm('Are you sure you want to delete this classroom? This action is irreversible.')) {
+            return;
+        }
+
         try {
             await firebase.firestore()
                 .collection('classrooms')
@@ -82,6 +86,19 @@ export default function TeacherDashboard(
     }, []);
 
     const [showModal, setShowModal] = useState(false);
+    const [modalAction, setModalAction] = useState<NewClassroomAction>(NewClassroomAction.New);
+    const [cloneClassroomId, setCloneClassroomId] = useState('');
+
+    const openNewModal = useCallback(() => {
+        setShowModal(true);
+        setModalAction(NewClassroomAction.New);
+    }, []);
+
+    const openCloneModal = useCallback((classroomId: string) => {
+        setShowModal(true);
+        setModalAction(NewClassroomAction.Clone);
+        setCloneClassroomId(classroomId);
+    }, []);
 
     return (
         <div className={table.tablePage}>
@@ -103,7 +120,7 @@ export default function TeacherDashboard(
                                     title='Create new classroom'
                                     className={table.button}
                                 >
-                                    <IconButton onClick={() => setShowModal(true)}>
+                                    <IconButton onClick={openNewModal}>
                                         <FontAwesomeIcon icon={faPlus}/>
                                     </IconButton>
                                 </Tooltip>
@@ -133,6 +150,7 @@ export default function TeacherDashboard(
                                             <ClassroomRow
                                                 classroom={classroom}
                                                 handleDelete={handleDelete}
+                                                openCloneModal={openCloneModal}
                                                 key={classroom.id}
                                             />
                                         ))
@@ -142,7 +160,11 @@ export default function TeacherDashboard(
                         </TableContainer>
                         {
                             showModal && (
-                                <NewClassroomModal closeModal={() => setShowModal(false)}/>
+                                <NewClassroomModal
+                                    closeModal={() => setShowModal(false)}
+                                    modalAction={modalAction}
+                                    classroomId={cloneClassroomId}
+                                />
                             )
                         }
                     </>

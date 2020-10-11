@@ -10,16 +10,30 @@ import 'firebase/firestore';
 import { ClassroomDoc } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+
+export enum NewClassroomAction {
+    New,
+    Clone,
+}
 
 interface Props {
     closeModal: () => void;
+    modalAction: NewClassroomAction;
 }
 
-export default function NewClassroomModal(
-    {
-        closeModal,
-    }: Props,
-): ReactElement {
+interface NewProps extends Props {
+    modalAction: NewClassroomAction.New;
+}
+
+interface CloneProps extends Props {
+    classroomId: string;
+    modalAction: NewClassroomAction.Clone;
+}
+
+export default function NewClassroomModal(props: NewProps | CloneProps): ReactElement {
+    const {modalAction, closeModal} = props;
+
     const [name, setName] = useState('');
     const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
@@ -29,14 +43,20 @@ export default function NewClassroomModal(
     const {enqueueSnackbar} = useSnackbar();
     const [user] = useAuth();
     const history = useHistory();
-    const createClassroom = useCallback(async () => {
+
+    const validateClassroom = useCallback(() => {
         if (name.length <= 3) {
             enqueueSnackbar('Enter a classroom name at least 4 characters in length.', {
                 variant: 'warning',
             });
-            return;
+            return false;
+        } else {
+            return true;
         }
+    }, [name]);
 
+    const createClassroom = useCallback(async () => {
+        if(!validateClassroom()) return;
         if (!user) return;
 
         setLoading(true);
@@ -62,12 +82,27 @@ export default function NewClassroomModal(
             });
     }, [name, user]);
 
+    const cloneClassroom = useCallback(async () => {
+        if(!validateClassroom()) return;
+        if (!('classroomId' in props)) return;
+
+        setLoading(true);
+        axios.post(process.env.REACT_APP_API + '/clone-classroom', {
+            classroomId: props.classroomId,
+            classroomName: name,
+        })
+            .then(response => {
+                setLoading(false);
+                history.push(`/classroom/${response.data}/manage`);
+            });
+    }, [props, name]);
+
     return (
         <div className={modal.modal}>
             <div className={modal.content}>
                 <div className={modal.head}>
                     <span className={modal.title}>
-                        New classroom
+                        {modalAction === NewClassroomAction.New ? 'New' : 'Clone'} classroom
                     </span>
 
                     <button
@@ -83,7 +118,11 @@ export default function NewClassroomModal(
                         className={form.form}
                         onSubmit={(e) => {
                             e.preventDefault();
-                            createClassroom();
+                            if (modalAction === NewClassroomAction.New) {
+                                createClassroom();
+                            } else if (modalAction === NewClassroomAction.Clone) {
+                                cloneClassroom();
+                            }
                         }}
                     >
                         <label
@@ -104,6 +143,10 @@ export default function NewClassroomModal(
                         <p>
                             You'll be able to paste a list of usernames once the classroom has been created.
                         </p>
+
+                        {modalAction === NewClassroomAction.Clone && <p>
+                            Task submissions and class members won't be cloned.
+                        </p>}
 
                         <button
                             type='submit'

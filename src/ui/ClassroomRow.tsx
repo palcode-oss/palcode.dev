@@ -1,11 +1,10 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { TableCell } from '@material-ui/core';
 import moment from 'moment';
 import DropdownMenu from './DropdownMenu';
 import { Link } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard';
 import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import TableRow from '@material-ui/core/TableRow';
@@ -13,21 +12,30 @@ import { Classroom, isTemplateTask } from '../helpers/types';
 import { useTasks } from '../helpers/taskData';
 import studentDashboard from '../styles/studentDashboard.module.scss';
 import { Shimmer } from 'react-shimmer';
+import { faClone } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
     classroom: Classroom;
-    handleDelete: (id: string) => void;
+    handleDelete(classroomId: string): void;
+    openCloneModal(classroomId: string): void;
 }
 
 export default function ClassroomRow(
     {
         classroom,
         handleDelete,
+        openCloneModal,
     }: Props
 ): ReactElement {
     const [tasks, tasksLoading] = useTasks(classroom.id);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    return (
+    const onCloneClick = useCallback(() => {
+        setDropdownOpen(false);
+        openCloneModal(classroom.id);
+    }, [openCloneModal, classroom]);
+
+    return <>
         <TableRow>
             <TableCell>{classroom.name}</TableCell>
             <TableCell align='right'>{classroom.members.length}</TableCell>
@@ -52,19 +60,32 @@ export default function ClassroomRow(
                 }
             </TableCell>
             <TableCell align='center'>
-                <DropdownMenu>
+                <DropdownMenu
+                    open={dropdownOpen}
+                    onChange={setDropdownOpen}
+                >
                     <Link to={`/classroom/${classroom.id}/manage`}>
                         <MenuItem>
                             <FontAwesomeIcon icon={faEdit}/>
                             &nbsp;Manage classroom
                         </MenuItem>
                     </Link>
-                    <MenuItem onClick={() => handleDelete(classroom.id)}>
+                    <MenuItem
+                        title='Clone the classroom and all of its tasks. Does not clone members and submissions.'
+                        onClick={onCloneClick}
+                    >
+                        <FontAwesomeIcon icon={faClone} />
+                        &nbsp;Clone
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => handleDelete(classroom.id)}
+                        title='Delete the classroom, its tasks, and all task submissions permanently.'
+                    >
                         <FontAwesomeIcon icon={faTrashAlt}/>
                         &nbsp;Delete
                     </MenuItem>
                 </DropdownMenu>
             </TableCell>
         </TableRow>
-    );
+    </>;
 }
