@@ -53,12 +53,6 @@ export default function ClassroomRow(
             </TableCell>
             <TableCell align='center'>
                 <DropdownMenu>
-                    <Link to={`/classroom/${classroom.id}/view_code`}>
-                        <MenuItem>
-                            <FontAwesomeIcon icon={faKeyboard}/>
-                            &nbsp;View code page
-                        </MenuItem>
-                    </Link>
                     <Link to={`/classroom/${classroom.id}/manage`}>
                         <MenuItem>
                             <FontAwesomeIcon icon={faEdit}/>

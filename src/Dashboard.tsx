@@ -37,6 +37,9 @@ export default function Dashboard(): ReactElement {
                     <p>
                         To get started, click the button below to sign in with your MGS account. You won't need to provide any other details.
                     </p>
+                    <p>
+                        Signing you in for the first time may take a few seconds.
+                    </p>
                 </>}
 
                 <LogInForm

@@ -139,6 +139,11 @@ Using Cloudflare with this configuration is highly secure, and completely free o
 
 Whatever certificate configuration you use, the `key.pem` and `cert.pem` files must be placed directly in the PalCode install directory (in this case `/opt/palcode`). These files are in `.gitignore`, so they'll never be committed by accident.
 
+## Firebase service account
+PalCode's backend needs a Firebase service account certificate, primarily for handling large database operations like cloning a classroom. You can [generate one online](https://firebase.google.com/docs/admin/setup#initialize-sdk).
+
+There's no need to set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable – instead, place the service account file directly in the `/opt/palcode` directory, with the name `serviceAccount.json`. This is in the `.gitignore` list.
+
 ## Running PalCode
 Finally, you get to run PalCode. This is really easy:
 

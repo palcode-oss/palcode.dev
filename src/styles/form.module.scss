@@ -7,6 +7,10 @@
   p {
     margin-top: 5px;
   }
+
+  h1 {
+    @include miriam;
+  }
 }
 
 .form {

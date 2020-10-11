@@ -3,8 +3,9 @@ const router = express.Router();
 const fs = require("fs-extra");
 const path = require("path");
 const sanitize = require("sanitize-filename");
+const {getStorageRoot} = require("../helpers");
 
-const storageRoot = process.env.PAL_STORAGE_ROOT;
+const storageRoot = getStorageRoot();
 
 router.post('/save', (req, res) => {
     const projectId = sanitize(req.body.projectId);
