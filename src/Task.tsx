@@ -13,7 +13,7 @@ import { isSubmissionTask, TaskStatus, TaskType } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from './helpers/auth';
 import Sidebar from './task-components/Sidebar';
-import { availableThemes, ThemeMetadata } from './helpers/monaco-themes';
+import { availableThemes, ThemeMetadata } from './helpers/monacoThemes';
 
 interface Params {
     taskId: string;

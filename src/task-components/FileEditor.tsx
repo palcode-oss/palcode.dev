@@ -4,7 +4,7 @@ import { useFileContent } from '../helpers/taskContent';
 import {editor} from 'monaco-editor';
 import styles from '../styles/editor.module.scss';
 import last from 'lodash/last';
-import { availableThemes, ThemeMetadata } from '../helpers/monaco-themes';
+import { availableThemes, ThemeMetadata } from '../helpers/monacoThemes';
 
 export default function FileEditor(
     {

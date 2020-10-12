@@ -41,6 +41,21 @@ export const availableThemes: ThemeMetadata[] = [
         light: false,
     },
     {
+        displayName: 'Tomorrow-Night-Bright',
+        normalisedName: 'tomorrow-night-bright',
+        light: false,
+    },
+    {
+        displayName: 'Tomorrow-Night-Blue',
+        normalisedName: 'tomorrow-night-blue',
+        light: false,
+    },
+    {
+        displayName: 'Tomorrow-Night-Eighties',
+        normalisedName: 'tomorrow-night-eighties',
+        light: false,
+    },
+    {
         displayName: 'Monokai',
         normalisedName: 'monokai',
         light: false,
@@ -69,5 +84,15 @@ export const availableThemes: ThemeMetadata[] = [
         displayName: 'IDLE',
         normalisedName: 'idle',
         light: true,
-    }
+    },
+    {
+        displayName: 'Katzenmilch',
+        normalisedName: 'katzenmilch',
+        light: true,
+    },
+    {
+        displayName: 'Eiffel',
+        normalisedName: 'eiffel',
+        light: true,
+    },
 ];

@@ -139,7 +139,7 @@ PalCode also accepts a few other **optional** variables to configure resource qu
 - `PAL_PID_LIMIT` - the maximum number of processes that can be run inside the container concurrently. Protects against [fork bomb](https://en.wikipedia.org/wiki/Fork_bomb) attacks, which can be done with a [1-line Python script](https://gist.github.com/palkerecsenyi/694d45d5f5cf30fdd65de79257bd1859). *Default: 25*
 - `PAL_MEMORY_QUOTA` - the maximum amount of RAM the container can consume, in bytes. Note that this is not a reservation, just a hard limit. *Default: 104857600* (100 megabytes)
 - `PAL_DISK_QUOTA` - the maximum amount of disk space the container can consume, in bytes. Again, this is not a reservation. *Default: 52428800* (50 megabytes)
-- `PAL_CPU_QUOTA` - the maximum amount of CPU cores the container can use, in units of 10^-9 cores. Again, this is not a reservation. *Default: 200000000* (0.2 cores)
+- `PAL_CPU_QUOTA` - the maximum amount of CPU cores the container can use, in units of 10^-9 cores. Again, this is not a reservation. This [Python Pi calculator](https://gist.github.com/palkerecsenyi/ec4642f28c7cba9f2dac613b62a6adb2) is useful for testing this (try >10000 digits). *Default: 150000000* (0.15 cores)
 
 ## TLS
 PalCode's original implementation uses two-way strict TLS encryption. This involves a Cloudflare Origin CA certificate being used on the server. Cloudflare uses this to verify the server's identity, but uses a different certificate to serve the page to the public.

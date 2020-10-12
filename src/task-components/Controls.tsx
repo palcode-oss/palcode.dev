@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEject, faPaperPlane, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { availableThemes } from '../helpers/monaco-themes';
+import { availableThemes } from '../helpers/monacoThemes';
 import { partition } from 'lodash';
 
 const groupedThemes = partition(availableThemes, 'light')
