@@ -13,6 +13,7 @@ import { isSubmissionTask, TaskStatus, TaskType } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from './helpers/auth';
 import Sidebar from './task-components/Sidebar';
+import { availableThemes, ThemeNamePair } from './helpers/monaco-themes';
 
 interface Params {
     taskId: string;
@@ -82,6 +83,35 @@ export default function Task(
         }
     }, [task]);
 
+    const [theme, setTheme] = useState<ThemeNamePair | undefined>();
+    const onThemeChange = useCallback((themeDisplayName: string) => {
+        const themePair = availableThemes.find(e => e.displayName === themeDisplayName);
+        if (!themePair) return;
+
+        setTheme(themePair);
+    }, []);
+
+    useEffect(() => {
+        const themeDisplayName = localStorage.getItem('PalCode-Theme');
+        if (themeDisplayName) {
+            const themePair = availableThemes.find(e => e.displayName === themeDisplayName);
+            if (!themePair) {
+                localStorage.removeItem('PalCode-Theme');
+                setTheme(availableThemes[0]);
+                return;
+            }
+
+            setTheme(themePair);
+        } else {
+            setTheme(availableThemes[0]);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!theme) return;
+        localStorage.setItem('PalCode-Theme', theme.displayName);
+    }, [theme]);
+
     return (
         <div className={editor.editor}>
             <div className={`${editor.editorHalf} ${teacherView ? editor.editorHalfFeedback : ''}`}>
@@ -101,11 +131,14 @@ export default function Task(
                     <div className={editor.filesLoading} />
                 }
 
-                <FileEditor
-                    taskId={taskId}
-                    fileName={currentTab}
-                    readOnly={readOnly}
-                />
+                {theme && (
+                    <FileEditor
+                        taskId={taskId}
+                        fileName={currentTab}
+                        readOnly={readOnly}
+                        themePair={theme}
+                    />
+                )}
             </div>
 
             <div className={`${editor.consoleHalf} ${teacherView ? editor.consoleHalfFeedback : ''}`}>
@@ -125,11 +158,16 @@ export default function Task(
             {
                 !teacherView && (
                     <div className={`${editor.popOver} ${(showPopOver) ? editor.popOverActive : ''}`}>
-                        <Controls
-                            task={task}
-                            taskId={taskId}
-                            onClosePress={() => setShowPopOver(false)}
-                        />
+                        {theme && (
+                            <Controls
+                                task={task}
+                                taskId={taskId}
+                                onClosePress={() => setShowPopOver(false)}
+                                themeDisplayName={theme.displayName}
+                                onThemeChange={onThemeChange}
+                            />
+                        )}
+
                         <Briefing
                             taskId={taskId}
                             task={task}

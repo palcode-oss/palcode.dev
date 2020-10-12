@@ -4,43 +4,33 @@ import { useFileContent } from '../helpers/taskContent';
 import {editor} from 'monaco-editor';
 import styles from '../styles/editor.module.scss';
 import last from 'lodash/last';
-
-interface ThemeNamePair {
-    displayName: string;
-    normalisedName: string;
-}
-
-const availableThemes: ThemeNamePair[] = [
-    {
-        displayName: 'Blackboard',
-        normalisedName: 'blackboard',
-    }
-];
+import { availableThemes, ThemeNamePair } from '../helpers/monaco-themes';
 
 export default function FileEditor(
     {
         taskId,
         fileName,
         readOnly,
+        themePair,
     }: {
         taskId: string,
         fileName: string,
         readOnly: boolean,
+        themePair: ThemeNamePair,
     }
 ) {
     const [loading, fileContent, setFileContent] = useFileContent(taskId, fileName);
-    const [themeName, setThemeName] = useState<ThemeNamePair>(availableThemes[0]);
     const [currentThemeDownloaded, setCurrentThemeDownloaded] = useState(false);
 
     useEffect(() => {
         setCurrentThemeDownloaded(false);
-        fetch('https://cdn.jsdelivr.net/npm/monaco-themes@latest/themes/' + themeName.displayName + '.json')
+        fetch('https://cdn.jsdelivr.net/npm/monaco-themes@latest/themes/' + themePair.displayName + '.json')
             .then(res => res.json())
             .then(data => {
-                editor.defineTheme(themeName.normalisedName, data);
+                editor.defineTheme(themePair.normalisedName, data);
                 setCurrentThemeDownloaded(true);
             });
-    }, [themeName]);
+    }, [themePair]);
 
     const extension = useMemo(() => {
         const splitFilename = fileName.split('.');
@@ -72,7 +62,7 @@ export default function FileEditor(
         >
             <MonacoEditor
                 language={language}
-                theme={currentThemeDownloaded ? themeName.normalisedName : 'vs-dark'}
+                theme={currentThemeDownloaded ? themePair.normalisedName : 'vs-dark'}
                 value={fileContent}
                 onChange={setFileContent}
                 width='100%'

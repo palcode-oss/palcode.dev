@@ -1,20 +1,26 @@
 import React, { FormEvent, useCallback, useMemo } from 'react';
 import { isSubmissionTask, Task, TaskStatus } from '../helpers/types';
 import form from '../styles/form.module.scss';
+import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEject, faPaperPlane, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { availableThemes } from '../helpers/monaco-themes';
 
 export default function Controls(
     {
         taskId,
         task,
         onClosePress,
+        themeDisplayName,
+        onThemeChange,
     }: {
         taskId: string,
         task: Task | null,
         onClosePress(): void,
+        themeDisplayName: string,
+        onThemeChange(themeDisplayName: string): void,
     }
 ) {
     const submissionStatus = useMemo<TaskStatus | null>(() => {
@@ -76,7 +82,7 @@ export default function Controls(
         );
     }
 
-    return (
+    return <>
         <form
             className={form.form}
             onSubmit={onButtonPress}
@@ -101,5 +107,20 @@ export default function Controls(
                 }
             </button>
         </form>
-    );
+
+        <select
+            value={themeDisplayName}
+            onChange={(e) => onThemeChange(e.target.value)}
+            className={editor.themeSelector}
+        >
+            {availableThemes.map(themePair => (
+                <option
+                    key={themePair.normalisedName}
+                    value={themePair.displayName}
+                >
+                    {themePair.displayName}
+                </option>
+            ))}
+        </select>
+    </>;
 }

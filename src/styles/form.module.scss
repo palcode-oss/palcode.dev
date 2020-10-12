@@ -1,5 +1,20 @@
 @import "importables";
 
+@mixin input-style {
+  display: block;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+
+  padding: 8px 10px;
+  border-radius: 10px;
+
+  outline: none;
+
+  font-size: 16px;
+  color: white;
+  @include miriam;
+}
+
 .loginPrompt {
   width: 60%;
   margin: 30px auto;
@@ -21,19 +36,7 @@
   }
 
   .textInput {
-    display: block;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.1);
-
-    padding: 8px 10px;
-    border-radius: 10px;
-
-    outline: none;
-
-    font-size: 16px;
-    color: white;
-    @include miriam;
-
+    @include input-style;
     margin-bottom: 8px;
 
     &:disabled {
