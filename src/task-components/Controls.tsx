@@ -7,6 +7,16 @@ import { faEject, faPaperPlane, faTimesCircle } from '@fortawesome/free-solid-sv
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { availableThemes } from '../helpers/monaco-themes';
+import { partition } from 'lodash';
+
+const groupedThemes = partition(availableThemes, 'light')
+    .sort((a, b) => {
+        if (a[0].light === true) {
+            return 1;
+        } else {
+            return -1;
+        }
+    });
 
 export default function Controls(
     {
@@ -113,13 +123,20 @@ export default function Controls(
             onChange={(e) => onThemeChange(e.target.value)}
             className={editor.themeSelector}
         >
-            {availableThemes.map(themePair => (
-                <option
-                    key={themePair.normalisedName}
-                    value={themePair.displayName}
+            {groupedThemes.map(themeGroup => (
+                <optgroup
+                    label={themeGroup[0].light === true ? 'Light themes': 'Dark themes'}
+                    key={themeGroup[0].light ? 'l' : 'd'}
                 >
-                    {themePair.displayName}
-                </option>
+                    {themeGroup.map(themePair => (
+                        <option
+                            key={themePair.normalisedName}
+                            value={themePair.displayName}
+                        >
+                            {themePair.displayName}
+                        </option>
+                    ))}
+                </optgroup>
             ))}
         </select>
     </>;

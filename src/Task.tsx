@@ -13,7 +13,7 @@ import { isSubmissionTask, TaskStatus, TaskType } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from './helpers/auth';
 import Sidebar from './task-components/Sidebar';
-import { availableThemes, ThemeNamePair } from './helpers/monaco-themes';
+import { availableThemes, ThemeMetadata } from './helpers/monaco-themes';
 
 interface Params {
     taskId: string;
@@ -83,7 +83,7 @@ export default function Task(
         }
     }, [task]);
 
-    const [theme, setTheme] = useState<ThemeNamePair | undefined>();
+    const [theme, setTheme] = useState<ThemeMetadata | undefined>();
     const onThemeChange = useCallback((themeDisplayName: string) => {
         const themePair = availableThemes.find(e => e.displayName === themeDisplayName);
         if (!themePair) return;

@@ -4,7 +4,7 @@ import { useFileContent } from '../helpers/taskContent';
 import {editor} from 'monaco-editor';
 import styles from '../styles/editor.module.scss';
 import last from 'lodash/last';
-import { availableThemes, ThemeNamePair } from '../helpers/monaco-themes';
+import { availableThemes, ThemeMetadata } from '../helpers/monaco-themes';
 
 export default function FileEditor(
     {
@@ -16,7 +16,7 @@ export default function FileEditor(
         taskId: string,
         fileName: string,
         readOnly: boolean,
-        themePair: ThemeNamePair,
+        themePair: ThemeMetadata,
     }
 ) {
     const [loading, fileContent, setFileContent] = useFileContent(taskId, fileName);
