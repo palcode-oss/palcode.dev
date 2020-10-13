@@ -4,7 +4,7 @@ import { useFileContent } from '../helpers/taskContent';
 import {editor} from 'monaco-editor';
 import styles from '../styles/editor.module.scss';
 import last from 'lodash/last';
-import { ThemeMetadata } from '../helpers/monacoThemes';
+import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
 
 export default function FileEditor(
     {
@@ -20,17 +20,13 @@ export default function FileEditor(
     }
 ) {
     const [loading, fileContent, setFileContent] = useFileContent(taskId, fileName);
-    const [currentThemeDownloaded, setCurrentThemeDownloaded] = useState(false);
+    const [themeData, themeLoading] = useMonacoTheme(themePair.displayName);
 
     useEffect(() => {
-        setCurrentThemeDownloaded(false);
-        fetch('https://cdn.jsdelivr.net/npm/monaco-themes@latest/themes/' + themePair.displayName + '.json')
-            .then(res => res.json())
-            .then(data => {
-                editor.defineTheme(themePair.normalisedName, data);
-                setCurrentThemeDownloaded(true);
-            });
-    }, [themePair]);
+        if (themeLoading || !themeData) return;
+        editor.defineTheme(themePair.normalisedName, themeData);
+        editor.setTheme(themePair.normalisedName);
+    }, [themeData, themeLoading]);
 
     const extension = useMemo(() => {
         const splitFilename = fileName.split('.');
@@ -62,7 +58,6 @@ export default function FileEditor(
         >
             <MonacoEditor
                 language={language}
-                theme={currentThemeDownloaded ? themePair.normalisedName : 'vs-dark'}
                 value={fileContent}
                 onChange={setFileContent}
                 width='100%'

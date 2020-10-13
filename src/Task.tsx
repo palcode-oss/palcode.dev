@@ -147,7 +147,10 @@ export default function Task(
 
             <div className={`${editor.consoleHalf} ${teacherView ? editor.consoleHalfFeedback : ''}`}>
                 <Suspense fallback={<LazyComponentFallback />}>
-                    <Console taskId={taskId} />
+                    <Console
+                        taskId={taskId}
+                        themeMetadata={theme}
+                    />
                 </Suspense>
             </div>
 

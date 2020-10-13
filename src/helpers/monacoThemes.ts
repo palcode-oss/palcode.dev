@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+import { editor } from 'monaco-editor';
+
 export interface ThemeMetadata {
     displayName: string;
     normalisedName: string;
@@ -96,3 +99,40 @@ export const availableThemes: ThemeMetadata[] = [
         light: true,
     },
 ];
+
+export function useMonacoTheme(themeDisplayName?: string): [editor.IStandaloneThemeData | undefined, boolean] {
+    const [loading, setLoading] = useState(true);
+    const [themeData, setThemeData] = useState<editor.IStandaloneThemeData | undefined>(undefined);
+
+    useEffect(() => {
+        if (!themeDisplayName) return;
+
+        setLoading(true);
+        const existingThemeString = localStorage.getItem(`Theme-${themeDisplayName}`);
+        if (existingThemeString) {
+            let parsedThemeData;
+            try {
+                parsedThemeData = JSON.parse(existingThemeString);
+                setThemeData(parsedThemeData);
+                setLoading(false);
+                return;
+            } catch (e) {
+                localStorage.removeItem(`Theme-${themeDisplayName}`);
+            }
+        }
+
+        fetch('https://cdn.jsdelivr.net/npm/monaco-themes@latest/themes/' + themeDisplayName + '.json')
+            .then(res => res.json())
+            .then(data => {
+                setThemeData(data);
+                setLoading(false);
+
+                localStorage.setItem(
+                    `Theme-${themeDisplayName}`,
+                    JSON.stringify(data),
+                );
+            });
+    }, [themeDisplayName]);
+
+    return [themeData, loading];
+}

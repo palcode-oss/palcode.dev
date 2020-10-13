@@ -81,6 +81,32 @@ export default function Controls(
         );
     }, [onClosePress]);
 
+    const ThemeSelector = useMemo(() => () => {
+        return (
+            <select
+                value={themeDisplayName}
+                onChange={(e) => onThemeChange(e.target.value)}
+                className={editor.themeSelector}
+            >
+                {groupedThemes.map(themeGroup => (
+                    <optgroup
+                        label={themeGroup[0].light === true ? 'Light themes': 'Dark themes'}
+                        key={themeGroup[0].light ? 'l' : 'd'}
+                    >
+                        {themeGroup.map(themePair => (
+                            <option
+                                key={themePair.normalisedName}
+                                value={themePair.displayName}
+                            >
+                                {themePair.displayName}
+                            </option>
+                        ))}
+                    </optgroup>
+                ))}
+            </select>
+        );
+    }, [themeDisplayName, onThemeChange]);
+
     if (submissionStatus === null) {
         return (
             <form
@@ -88,6 +114,7 @@ export default function Controls(
                 onSubmit={() => {}}
             >
                 <CloseBriefing />
+                <ThemeSelector />
             </form>
         );
     }
@@ -116,28 +143,8 @@ export default function Controls(
                     </>
                 }
             </button>
-        </form>
 
-        <select
-            value={themeDisplayName}
-            onChange={(e) => onThemeChange(e.target.value)}
-            className={editor.themeSelector}
-        >
-            {groupedThemes.map(themeGroup => (
-                <optgroup
-                    label={themeGroup[0].light === true ? 'Light themes': 'Dark themes'}
-                    key={themeGroup[0].light ? 'l' : 'd'}
-                >
-                    {themeGroup.map(themePair => (
-                        <option
-                            key={themePair.normalisedName}
-                            value={themePair.displayName}
-                        >
-                            {themePair.displayName}
-                        </option>
-                    ))}
-                </optgroup>
-            ))}
-        </select>
+            <ThemeSelector />
+        </form>
     </>;
 }

@@ -11,11 +11,15 @@ export default function XtermWrapper(
         lastStdoutID,
         enabled,
         onKey,
+        backgroundColor,
+        useBlackText,
     } : {
         lastStdout: string,
         lastStdoutID: string,
         enabled: boolean,
         onKey(key: string): void,
+        backgroundColor?: string,
+        useBlackText?: boolean,
     }
 ): ReactElement {
     const terminalContainer = useRef<HTMLDivElement | null>(null);
@@ -23,6 +27,7 @@ export default function XtermWrapper(
     const terminal = useMemo(() => {
         return new Terminal({
             cursorBlink: true,
+            allowTransparency: true,
         });
     }, []);
 
@@ -40,6 +45,18 @@ export default function XtermWrapper(
         terminal.open(terminalContainer.current);
         fitAddon.fit();
     }, [terminalContainer]);
+
+    useEffect(() => {
+        if (backgroundColor) {
+            const foregroundColor = useBlackText === true ? '#000000' : '#ffffff';
+
+            terminal.setOption('theme', {
+                background: backgroundColor,
+                foreground: foregroundColor,
+                cursor: foregroundColor,
+            });
+        }
+    }, [backgroundColor, useBlackText]);
 
     useEffect(() => {
         terminal.onData(data => {
