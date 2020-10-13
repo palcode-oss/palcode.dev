@@ -1,16 +1,18 @@
-import React, { ReactElement } from 'react';
+import React, { lazy, ReactElement, Suspense } from 'react';
 import useBriefing from '../helpers/taskBriefing';
-import ReactMarkdown from 'react-markdown';
 import editor from '../styles/editor.module.scss';
-import BriefingSyntaxHighlighter from './briefing-renderers/BriefingSyntaxHighlighter';
-import BriefingImage from './briefing-renderers/BriefingImage';
 import { BriefingTable, BriefingTableCell } from './briefing-renderers/BriefingTable';
 import { Shimmer } from 'react-shimmer';
 import loader from '../styles/loader.module.scss';
 import briefingRenderer from '../styles/briefing-renderer.module.scss';
 import { Task } from '../helpers/types';
-import BriefingLink from './briefing-renderers/BriefingLink';
-import BriefingListItem from './briefing-renderers/BriefingListItem';
+import LazyComponentFallback from '../ui/LazyComponentFallback';
+
+const ReactMarkdown = lazy(() => import('react-markdown'));
+const BriefingSyntaxHighlighter = lazy(() => import('./briefing-renderers/BriefingSyntaxHighlighter'));
+const BriefingImage = lazy(() => import('./briefing-renderers/BriefingImage'));
+const BriefingLink = lazy(() => import('./briefing-renderers/BriefingLink'));
+const BriefingListItem = lazy(() => import('./briefing-renderers/BriefingListItem'));
 
 export default function Briefing(
     {
@@ -50,18 +52,20 @@ export default function Briefing(
                 )
             }
 
-            <ReactMarkdown
-                source={briefing}
-                escapeHtml={false}
-                renderers={{
-                    code: BriefingSyntaxHighlighter,
-                    image: BriefingImage,
-                    table: BriefingTable,
-                    tableCell: BriefingTableCell,
-                    link: BriefingLink,
-                    listItem: BriefingListItem,
-                }}
-            />
+            <Suspense fallback={<LazyComponentFallback />}>
+                <ReactMarkdown
+                    source={briefing}
+                    escapeHtml={false}
+                    renderers={{
+                        code: BriefingSyntaxHighlighter,
+                        image: BriefingImage,
+                        table: BriefingTable,
+                        tableCell: BriefingTableCell,
+                        link: BriefingLink,
+                        listItem: BriefingListItem,
+                    }}
+                />
+            </Suspense>
         </div>
     )
 }

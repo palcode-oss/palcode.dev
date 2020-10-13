@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from 'react';
+import React, { lazy, ReactElement, Suspense, useCallback, useState } from 'react';
 import { User } from './helpers/types';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
@@ -20,7 +20,9 @@ import IconButton from '@material-ui/core/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import Tooltip from '@material-ui/core/Tooltip';
 import NewClassroomModal, { NewClassroomAction } from './ui/NewClassroomModal';
-import ClassroomRow from './ui/ClassroomRow';
+import LazyComponentFallback from './ui/LazyComponentFallback';
+
+const ClassroomRow = lazy(() => import('./ui/ClassroomRow'));
 
 interface Props {
     user: User
@@ -145,16 +147,17 @@ export default function TeacherDashboard(
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {
-                                        classroomData.map(classroom => (
-                                            <ClassroomRow
-                                                classroom={classroom}
-                                                handleDelete={handleDelete}
-                                                openCloneModal={openCloneModal}
-                                                key={classroom.id}
-                                            />
-                                        ))
-                                    }
+                                    <Suspense fallback={<LazyComponentFallback />}>
+                                        {
+                                            classroomData.map(classroom => (
+                                                <ClassroomRow
+                                                    classroom={classroom}
+                                                    handleDelete={handleDelete}
+                                                    openCloneModal={openCloneModal}
+                                                />
+                                            ))
+                                        }
+                                    </Suspense>
                                 </TableBody>
                             </Table>
                         </TableContainer>

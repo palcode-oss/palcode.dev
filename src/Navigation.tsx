@@ -1,18 +1,20 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { lazy, ReactElement, Suspense, useCallback, useEffect, useState } from 'react';
 import { Redirect, Route, Router, Switch, useParams } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-import Dashboard from './Dashboard';
-import Task from './Task';
 import Navbar from './ui/Navbar';
-import ManageClassroom from './ManageClassroom';
-import ViewClassroom from './ViewClassroom';
 import { useAuth } from './helpers/auth';
 import { Perms } from './helpers/types';
 import firebase from 'firebase/app';
 import { useSnackbar } from 'notistack';
-import ReviewTask from './ReviewTask';
-import AddStudents from './AddStudents';
-import About from './About';
+import LazyComponentFallback from './ui/LazyComponentFallback';
+import Dashboard from './Dashboard';
+
+const About = lazy(() => import('./About'));
+const Task = lazy(() => import('./Task'));
+const ManageClassroom = lazy(() => import('./ManageClassroom'));
+const ViewClassroom = lazy(() => import('./ViewClassroom'));
+const ReviewTask = lazy(() => import('./ReviewTask'));
+const AddStudents = lazy(() => import('./AddStudents'));
 
 const history = createBrowserHistory();
 
@@ -127,44 +129,46 @@ export default function Navigation(): ReactElement {
         <Router history={history}>
             <Navbar />
 
-            <Switch>
-                <Route path='/classroom/:classroomId/manage'>
-                    <RedirectUnauthed onlyTeachers />
-                    <EnsureClassroomExists />
-                    <ManageClassroom />
-                </Route>
-                <Route path='/classroom/:classroomId/view'>
-                    <RedirectUnauthed />
-                    <EnsureClassroomExists />
-                    <ViewClassroom />
-                </Route>
-                <Route path='/classroom/:classroomId/add_students'>
-                    <RedirectUnauthed onlyTeachers />
-                    <EnsureClassroomExists />
-                    <AddStudents />
-                </Route>
-                <Route path='/task/:taskId/review'>
-                    <RedirectUnauthed onlyTeachers />
-                    <EnsureTaskExists />
-                    <ReviewTask />
-                </Route>
-                <Route path='/task/:taskId/feedback'>
-                    <RedirectUnauthed onlyTeachers />
-                    <EnsureTaskExists />
-                    <Task teacherView />
-                </Route>
-                <Route path='/task/:taskId'>
-                    <RedirectUnauthed />
-                    <EnsureTaskExists />
-                    <Task />
-                </Route>
-                <Route path='/about'>
-                    <About />
-                </Route>
-                <Route path='/'>
-                    <Dashboard />
-                </Route>
-            </Switch>
+            <Suspense fallback={<LazyComponentFallback />}>
+                <Switch>
+                    <Route path='/classroom/:classroomId/manage'>
+                        <RedirectUnauthed onlyTeachers />
+                        <EnsureClassroomExists />
+                        <ManageClassroom />
+                    </Route>
+                    <Route path='/classroom/:classroomId/view'>
+                        <RedirectUnauthed />
+                        <EnsureClassroomExists />
+                        <ViewClassroom />
+                    </Route>
+                    <Route path='/classroom/:classroomId/add_students'>
+                        <RedirectUnauthed onlyTeachers />
+                        <EnsureClassroomExists />
+                        <AddStudents />
+                    </Route>
+                    <Route path='/task/:taskId/review'>
+                        <RedirectUnauthed onlyTeachers />
+                        <EnsureTaskExists />
+                        <ReviewTask />
+                    </Route>
+                    <Route path='/task/:taskId/feedback'>
+                        <RedirectUnauthed onlyTeachers />
+                        <EnsureTaskExists />
+                        <Task teacherView />
+                    </Route>
+                    <Route path='/task/:taskId'>
+                        <RedirectUnauthed />
+                        <EnsureTaskExists />
+                        <Task />
+                    </Route>
+                    <Route path='/about'>
+                        <About />
+                    </Route>
+                    <Route path='/'>
+                        <Dashboard />
+                    </Route>
+                </Switch>
+            </Suspense>
         </Router>
     );
 }

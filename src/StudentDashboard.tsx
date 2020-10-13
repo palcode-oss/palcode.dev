@@ -1,12 +1,12 @@
-import React, { ReactElement } from 'react';
+import React, { lazy, ReactElement, Suspense } from 'react';
 import { User } from './helpers/types';
 import Loader from 'react-loader-spinner';
-import ClassroomCard from './ui/ClassroomCard';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { useClassrooms } from './helpers/classroom';
 import studentDashboard from './styles/studentDashboard.module.scss';
 import loader from './styles/loader.module.scss';
+import LazyComponentFallback from './ui/LazyComponentFallback';
+
+const ClassroomCard = lazy(() => import('./ui/ClassroomCard'));
 
 interface Props {
     user: User
@@ -46,14 +46,16 @@ export default function StudentDashboard(
                                 </p>
                             )
                         }
-                        {
-                            classrooms.map(classroom => (
-                                <ClassroomCard
-                                    classroom={classroom}
-                                    key={classroom.id}
-                                />
-                            ))
-                        }
+                        <Suspense fallback={<LazyComponentFallback />}>
+                            {
+                                classrooms.map(classroom => (
+                                    <ClassroomCard
+                                        classroom={classroom}
+                                        key={classroom.id}
+                                    />
+                                ))
+                            }
+                        </Suspense>
                     </div>
                 )
             }

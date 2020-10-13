@@ -1,15 +1,13 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { lazy, ReactElement, Suspense, useEffect, useState } from 'react';
 import { useAuth } from './helpers/auth';
 import Loader from 'react-loader-spinner';
 import { Perms } from './helpers/types';
-import StudentDashboard from './StudentDashboard';
-import TeacherDashboard from './TeacherDashboard';
-import LogInForm from './ui/LogInForm';
 import form from './styles/form.module.scss';
 import loader from './styles/loader.module.scss';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import loginRedirect from './styles/login-redirect.module.scss';
+import LazyComponentFallback from './ui/LazyComponentFallback';
 
 export default function Dashboard(): ReactElement {
     const [, loading, userDoc] = useAuth();
@@ -28,6 +26,7 @@ export default function Dashboard(): ReactElement {
     }, []);
 
     if ((!loading && !userDoc) || forceShowLogin) {
+        const LogInForm = lazy(() => import('./ui/LogInForm'));
         return (
             <div className={form.loginPrompt}>
                 {!forceShowLogin && <>
@@ -42,9 +41,11 @@ export default function Dashboard(): ReactElement {
                     </p>
                 </>}
 
-                <LogInForm
-                    redirectResult={redirectResult}
-                />
+                <Suspense fallback={<LazyComponentFallback />}>
+                    <LogInForm
+                        redirectResult={redirectResult}
+                    />
+                </Suspense>
             </div>
         );
     }
@@ -67,8 +68,14 @@ export default function Dashboard(): ReactElement {
     }
 
     if (userDoc.perms !== Perms.Student) {
-        return <TeacherDashboard user={userDoc}/>;
+        const TeacherDashboard = lazy(() => import('./TeacherDashboard'));
+        return <Suspense fallback={<LazyComponentFallback />}>
+            <TeacherDashboard user={userDoc}/>
+        </Suspense>
     }
 
-    return <StudentDashboard user={userDoc}/>;
+    const StudentDashboard = lazy(() => import('./StudentDashboard'));
+    return <Suspense fallback={<LazyComponentFallback />}>
+        <StudentDashboard user={userDoc}/>
+    </Suspense>;
 }

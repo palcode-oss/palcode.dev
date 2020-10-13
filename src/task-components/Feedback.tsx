@@ -1,4 +1,4 @@
-import { isSubmissionTask, SubmissionTask, Task } from '../helpers/types';
+import { isSubmissionTask, SubmissionTask } from '../helpers/types';
 import React, { FormEvent, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import form from '../styles/form.module.scss';
 import editor from '../styles/editor.module.scss';

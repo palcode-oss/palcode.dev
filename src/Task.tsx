@@ -1,19 +1,21 @@
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { lazy, ReactElement, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { deleteRemoteFile, useTaskFiles } from './helpers/taskContent';
 import Files from './task-components/Files';
-import FileEditor from './task-components/FileEditor';
-import Console from './task-components/Console';
 import editor from './styles/editor.module.scss';
 import Briefing from './task-components/Briefing';
 import Controls from './task-components/Controls';
 import { useTask } from './helpers/taskData';
-import Feedback from './task-components/Feedback';
 import { isSubmissionTask, TaskStatus, TaskType } from './helpers/types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from './helpers/auth';
 import Sidebar from './task-components/Sidebar';
 import { availableThemes, ThemeMetadata } from './helpers/monacoThemes';
+import LazyComponentFallback from './ui/LazyComponentFallback';
+
+const FileEditor = lazy(() => import('./task-components/FileEditor'));
+const Console = lazy(() => import('./task-components/Console'));
+const Feedback = lazy(() => import('./task-components/Feedback'));
 
 interface Params {
     taskId: string;
@@ -131,18 +133,22 @@ export default function Task(
                     <div className={editor.filesLoading} />
                 }
 
-                {theme && (
-                    <FileEditor
-                        taskId={taskId}
-                        fileName={currentTab}
-                        readOnly={readOnly}
-                        themePair={theme}
-                    />
-                )}
+                <Suspense fallback={<LazyComponentFallback />}>
+                    {theme && (
+                        <FileEditor
+                            taskId={taskId}
+                            fileName={currentTab}
+                            readOnly={readOnly}
+                            themePair={theme}
+                        />
+                    )}
+                </Suspense>
             </div>
 
             <div className={`${editor.consoleHalf} ${teacherView ? editor.consoleHalfFeedback : ''}`}>
-                <Console taskId={taskId} />
+                <Suspense fallback={<LazyComponentFallback />}>
+                    <Console taskId={taskId} />
+                </Suspense>
             </div>
 
             {
@@ -177,16 +183,18 @@ export default function Task(
                 )
             }
 
-            {
-                teacherView && isSubmissionTask(task) && (
-                    <div className={editor.feedbackSection}>
-                        <Feedback
-                            taskId={taskId}
-                            task={task}
-                        />
-                    </div>
-                )
-            }
+            <Suspense fallback={<LazyComponentFallback />}>
+                {
+                    teacherView && isSubmissionTask(task) && (
+                        <div className={editor.feedbackSection}>
+                            <Feedback
+                                taskId={taskId}
+                                task={task}
+                            />
+                        </div>
+                    )
+                }
+            </Suspense>
         </div>
     )
 }
