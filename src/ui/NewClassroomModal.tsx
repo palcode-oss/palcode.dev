@@ -7,10 +7,10 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 import { ClassroomDoc } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 
 export enum NewClassroomAction {
     New,
@@ -87,13 +87,30 @@ export default function NewClassroomModal(props: NewProps | CloneProps): ReactEl
         if (!('classroomId' in props)) return;
 
         setLoading(true);
+
+        const token = await firebase.auth().currentUser?.getIdToken(true);
+
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
+        const {default: axios} = await import('axios');
         axios.post(process.env.REACT_APP_API + '/clone-classroom', {
             classroomId: props.classroomId,
             classroomName: name,
+            token,
         })
             .then(response => {
                 setLoading(false);
                 history.push(`/classroom/${response.data}/manage`);
+            })
+            .catch(() => {
+                setLoading(false);
+                enqueueSnackbar('Something went wrong. Please try again later.', {
+                    variant: 'error',
+                    preventDuplicate: true,
+                });
             });
     }, [props, name]);
 

@@ -154,6 +154,7 @@ export default function TeacherDashboard(
                                                     classroom={classroom}
                                                     handleDelete={handleDelete}
                                                     openCloneModal={openCloneModal}
+                                                    key={classroom.id}
                                                 />
                                             ))
                                         }

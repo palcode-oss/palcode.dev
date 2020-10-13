@@ -12,9 +12,29 @@ const storageRoot = getStorageRoot();
 router.post('/clone-classroom', async (req, res) => {
     const classroomId = sanitize(req.body.classroomId);
     const newClassroomName = sanitize(req.body.classroomName);
+    const token = req.body.token;
 
-    if (!classroomId || !newClassroomName) {
+    if (!classroomId || !newClassroomName || !token) {
         res.sendStatus(400);
+        return;
+    }
+
+    let uid;
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(token, true);
+        uid = decodedToken.uid;
+    } catch (e) {
+        res.sendStatus(403);
+        return;
+    }
+
+    const userDataResponse = await admin.firestore()
+        .collection('users')
+        .doc(uid)
+        .get();
+
+    if (!userDataResponse.exists || userDataResponse.data().perms === 0) {
+        res.sendStatus(403);
         return;
     }
 
