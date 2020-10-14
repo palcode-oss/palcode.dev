@@ -20,10 +20,11 @@ function launch (socket) {
 }
 
 module.exports = {
-    init() {
+    init(server) {
         const wss = new ws.Server({
-            port: 442,
+            server,
             perMessageDeflate: false,
+            path: '/lsp',
         });
 
         wss.on('connection', (client) => {
