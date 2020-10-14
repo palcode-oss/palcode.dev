@@ -13,13 +13,16 @@ Node.js is run by PM2. When backend changes have been pulled, run `pm2 restart p
 You may need to run `yarn run install` to update packages.
 
 ## Development
-To run PalCode locally, first set some environment variables:
+To run PalCode locally, first add a DNS alias for `palcode.local` to `127.0.0.1`.
 
+Then, set some environment variables:
+
+- `HOST` - `palcode.local`
 - `PAL_STORAGE_ROOT` - a read/writeable directory to store user code and files in
 - `PAL_PORT` - the port to run the server on. Make sure this is different to your React development port (3000 by default)
-- `REACT_APP_API` - set this to `http://localhost:<your server port>/api`. Defines the base URL for frontend API requests.
-- `REACT_APP_XTERM` - set this to `http://localhost:<your server port>`. Defines the base URL for Xterm's stdin/stdout container management.
-- `REACT_APP_LSP` - set this to `ws://localhost:442`. Defines the base URL for WebSocket language server requests.
+- `REACT_APP_API` - set this to `http://palcode.local:<your server port>/api`. Defines the base URL for frontend API requests.
+- `REACT_APP_XTERM` - set this to `http://palcode.local:<your server port>`. Defines the base URL for Xterm's stdin/stdout container management.
+- `REACT_APP_LSP` - set this to `ws://lsp.palcode.local:442`. Defines the base URL for WebSocket language server requests.
 - `REACT_APP_TENANT` - the Azure AD tenant ID to allow users from. [This website](https://www.whatismytenantid.com/) is very helpful for finding this. No admin access is required to find this ID, and using it poses no security risk to the institution to which the ID belongs. It's merely a frontend-only OAuth identifier that Microsoft uses to customise and filter the login page. Sign-ins from accounts not belonging to this tenant ID will be rejected by Microsoft.
 - `REACT_APP_F_*` - a few variables to configure the frontend Firebase connection. An example is available in [`.github/workflows/main.yml`](https://github.com/palkerecsenyi/palcode/blob/master/.github/workflows/main.yml#L31). Same as the variables in the `firebase.initializeApp()` call in [`src/index.js`](https://github.com/palkerecsenyi/palcode/blob/master/src/index.js#L7) but in an uppercase, underscore-delimited form, with `REACT_APP_F_` prepended to each.
 

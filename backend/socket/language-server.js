@@ -26,7 +26,7 @@ module.exports = {
             perMessageDeflate: false,
         });
 
-        wss.on('connection', client => {
+        wss.on('connection', (client) => {
             const iWebSocket = {
                 send: content => client.send(content),
                 onMessage: cb => client.onmessage = event => cb(event.data),

@@ -32,8 +32,9 @@ These settings ensure the maximum available security and integrity of PalCode, a
 #### DNS
 | Type | Name            | Content                            | TTL  | Proxied |
 |------|-----------------|------------------------------------|------|---------|
-| A    | @ (palcode.dev) | DigitalOcean server IPv4 or IPv6 | Auto | Yes     |
-| A    | www             | DigitalOcean server IPv4 or IPv6 | Auto | Yes     |
+| A    | @ (palcode.dev) | <DigitalOcean server IPv4 or IPv6> | Auto | Yes     |
+| A    | www             | <DigitalOcean server IPv4 or IPv6> | Auto | Yes     |
+| A    | lsp             | <DigitalOcean server IPv4 or IPv6> | Auto | No      |
 
 - DNSSEC: Enabled (requires adding a DS record to Namecheap)
     - Important for ensuring DNS requests cannot be forged

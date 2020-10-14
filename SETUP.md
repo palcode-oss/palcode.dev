@@ -130,6 +130,7 @@ PalCode uses a few backend environment variables that you need to set.
 - `PAL_PYTHON_VERSION` - the [tag of Python](https://hub.docker.com/_/python?tab=tags) to install and use. Will automatically install if not already present on system.
 - `PAL_STORAGE_ROOT` - the directory to store user data. Cannot be a relative path. Must have read-write access for the `root` user.
 - `PAL_PORT` - the port to run PalCode's HTTPS server on. Must be [`443`](https://www.grc.com/port_443.htm) in a production environment.
+- `PAL_HOST` - the FQDN of the only valid URL from which PalCode can be accessed. All other requests will be redirected.
 - `NODE_ENV` - the environment being used. Must be `production` or `development`. To enable HTTPS, this must be `production`.
 
 The best place to set these variables is at the bottom of `~/.bashrc`. Remember to run `source ~/.bashrc` after modifying the file.
@@ -186,11 +187,12 @@ pm2 restart palcode --update-env
 ## Configuring a firewall
 On a pristine Ubuntu server, there's no firewall, and all connections are allowed in and out by default. Fixing this is easy.
 
-Ubuntu comes bundled with `ufw` (Uncomplicated Firewall). PalCode only needs one port in production (443). Here's how to set it up.
+Ubuntu comes bundled with `ufw` (Uncomplicated Firewall). PalCode only needs two ports in production (443 and 442). 443 is the standard used for HTTPS, and 442 is a non-standard port used for separating WebSocket requests without additional servers. Here's how to set it up.
 
 ```shell script
 ufw enable
 ufw allow https
+ufw allow 442
 ```
 
 To ensure it's worked, run:

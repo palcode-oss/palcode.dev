@@ -13,6 +13,16 @@ if (process.env.NODE_ENV !== 'production') {
     app.use(cors());
 }
 
+if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+        if (req.hostname !== process.env.PAL_HOST) {
+            res.redirect("https://" + process.env.PAL_HOST);
+        } else {
+            next();
+        }
+    });
+}
+
 app.use("/api", api);
 
 app.get('/*', (req, res) => {
