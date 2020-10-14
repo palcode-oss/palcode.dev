@@ -1,10 +1,11 @@
 import MonacoEditor from 'react-monaco-editor';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useFileContent } from '../helpers/taskContent';
-import {editor} from 'monaco-editor';
+import { editor } from 'monaco-editor';
 import styles from '../styles/editor.module.scss';
 import last from 'lodash/last';
 import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
+import connectToLanguageServer from '../helpers/languageServer';
 
 export default function FileEditor(
     {
@@ -26,6 +27,8 @@ export default function FileEditor(
         if (themeLoading || !themeData) return;
         editor.defineTheme(themePair.normalisedName, themeData);
         editor.setTheme(themePair.normalisedName);
+
+        connectToLanguageServer();
     }, [themeData, themeLoading]);
 
     const extension = useMemo(() => {

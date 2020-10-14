@@ -19,11 +19,11 @@ interface RunMessage {
 
 export function useSocket(): SocketIOClient.Socket {
     return useMemo(() => {
-        if (!process.env.REACT_APP_SOCKET) {
-            throw new TypeError('Socket URL is undefined');
+        if (!process.env.REACT_APP_XTERM) {
+            throw new TypeError('Xterm socket URL is undefined');
         }
 
-        return io(process.env.REACT_APP_SOCKET)
+        return io(process.env.REACT_APP_XTERM);
     }, []);
 }
 
