@@ -61,3 +61,61 @@ These settings ensure the maximum available security and integrity of PalCode, a
 - Caching Level: Standard
 - Browser Cache TTL: 1 month
     - All frontend assets have MD5 hash strings in their file names, so a relatively long caching policy can be used, as any changes to files will reliably cause the cache to be 'reset'.
+    
+## Firebase
+Firebase powers three core components of PalCode:
+- User, classroom, and task data storage (Firestore)
+- User authentication, security, and OAuth (Authentication)
+- Audio feedback storage (Storage)
+
+Here's how to set it up:
+
+### Firestore
+1. Use this instead of Realtime Database - they're not the same thing. Firestore is the new and improved version of Realtime Database.
+2. When creating the database, select `europe-west2` as the server location. This is in [London](https://cloud.google.com/compute/docs/regions-zones). 
+3. Set the default suggestion for security rules; we'll customise this in the next step.
+4. In the 'Rules' tab, paste in the following security rules: https://gist.github.com/palkerecsenyi/90fec16d5f403ae30c63dea49e738020
+5. Click 'Publish' to put the new rules into action.
+
+### Authentication
+1. Open the 'Sign-in Method' tab.
+2. Ensure all methods are disabled.
+3. Follow this guide to [create an Azure App Registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app). If setting up within your school's Azure directory, select Single Tenant mode. If setting up with a different Azure account, use Multitenant mode, with personal accounts **disabled**. This service is free of charge.
+4. Enable Microsoft as an authentication method in Firebase, and add your Application Id and Application Secret.
+5. In Azure, visit the 'Authentication' tab of your App Registration.
+6. Click 'Add a platform', select 'Web', and paste the redirect URI provided by Firebase. This is **not** your PalCode domain.
+7. Add the domain you're using to host PalCode to the 'Authorized domains' list
+8. Keep the advanced settings as default.
+
+### Storage
+1. When creating the storage bucket, set `europe-west2` as the server location. 
+2. After creating the bucket, open the 'Rules' tab, and paste the following security rules:
+
+```
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /feedback/{taskId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
+
+These rules are published here as they are unlikely ever to be changed.
+
+### Retrieving keys
+There are two different types of key you need to integrate Firebase with PalCode:
+
+1. An app key for frontend, public use.
+2. A service account key for backend, encrypted use.
+
+#### Creating an app key
+1. Click Settings > Project settings
+2. In the 'General' tab, scroll to 'Your apps' and click 'Add app'.
+3. Select 'Web', ensure Firebase Hosting is unticked, enter a nickname, and click 'Register app'
+4. Click 'Continue to console', and store the JSON `firebaseConfig` away for later use. Setting these variables up for frontend builds is detailed in `README.md`.
+
+#### Creating a service account key
+1. Click Settings > Project settings
+2. In the 'Service accounts' tab, click 'Generate new private key', and store this away for later use in `SETUP.md`
