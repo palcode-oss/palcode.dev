@@ -6,7 +6,6 @@ const path = require("path");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const WebSocket = require("ws");
 
 app.use(bodyParser.json());
 

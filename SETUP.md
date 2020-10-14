@@ -10,7 +10,26 @@
 ## Installing prerequisites
 All the following commands assume you are root.
 
+### Python
+Error-checking, auto-completion, and syntax parsing for Python code happens on the backend, using [Python Language Server](https://github.com/palantir/python-language-server). This allows for some insanely advanced functionality in the code editor, far superseding the code intelligence Repl.it is capable of. It creates a coding experience similar to a proper IDE like PyCharm.
+
+Python should come preinstalled on Ubuntu 20.04 and many similar distros. However, we need `pip` to install packages.
+
+```shell script
+apt install -y python3-pip
+```
+
+The only essential package is `python-language-server`, which adds the core syntax parsing functionality. Some other packages are optional. You can see what they do in pyls's [README](https://github.com/palantir/python-language-server/blob/develop/README.rst#installation). The command below includes the best combination of packages to install, according to Pal.
+
+`yapf` and `pycodestyle` are both responsible for detecting and fixing code formatting, which can help get students into the habit of writing well-structured, readable code.
+
+```shell script
+pip3 install python-language-server rope pyflakes mccabe pycodestyle yapf 
+```
+
 ### Docker
+Docker is responsible for running Python instances in containers that have hard resource limits and fully secure system isolation.
+
 ```shell script
 apt install apt-transport-https ca-certificates curl software-properties-common
 
