@@ -28,7 +28,13 @@ export default function FileEditor(
         editor.defineTheme(themePair.normalisedName, themeData);
         editor.setTheme(themePair.normalisedName);
 
-        connectToLanguageServer();
+        const dispose = connectToLanguageServer();
+
+        if (dispose) {
+            return () => {
+                dispose();
+            }
+        }
     }, [themeData, themeLoading]);
 
     const extension = useMemo(() => {

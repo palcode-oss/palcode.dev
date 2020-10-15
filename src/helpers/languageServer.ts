@@ -30,12 +30,18 @@ function createLanguageClient(connection: MessageConnection) {
     })
 }
 
-export default function connectToLanguageServer() {
+type DisposeFunction = () => void;
+export default function connectToLanguageServer(): undefined | DisposeFunction {
     if (!process.env.REACT_APP_LSP) {
         return;
     }
 
-    MonacoServices.install(editor);
+    try {
+        MonacoServices.get();
+    } catch (e) {
+        MonacoServices.install(editor);
+    }
+
     const webSocket = new WebSocket(process.env.REACT_APP_LSP);
     listen({
         webSocket,
@@ -46,4 +52,8 @@ export default function connectToLanguageServer() {
             connection.onError((e) => console.log(e));
         }
     });
+
+    return () => {
+        webSocket.close();
+    };
 }
