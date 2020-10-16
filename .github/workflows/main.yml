@@ -25,7 +25,7 @@ jobs:
           # Base URL for socket.io
           REACT_APP_XTERM: https://palcode.dev
           # URL for language server requests
-          REACT_APP_LSP: wss://palcode.dev/lsp
+          REACT_APP_LSP: wss://lsp.palcode.dev
 
           # Azure AD tenant ID to allow users from
           REACT_APP_TENANT: 391f633c-b9ba-4cd1-b446-168fe408c462
