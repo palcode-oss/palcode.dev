@@ -1,5 +1,19 @@
 import firebase from 'firebase/app';
 
+export type SchoolAuthService = 'azure.com';
+
+export interface SchoolAuth {
+    domain: string;
+    service: SchoolAuthService;
+    tenant: string;
+}
+
+export interface School {
+    id: string;
+    name: string;
+    auth: SchoolAuth;
+}
+
 export enum Perms {
     Student,
     Teacher,

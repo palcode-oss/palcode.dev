@@ -8,7 +8,7 @@ admin.initializeApp({
 
 module.exports = {
     getPythonTag() {
-        return process.env.PAL_PYTHON_VERSION || '3.8.2';
+        return process.env.PAL_PYTHON_VERSION || '3.9.0';
     },
     getStorageRoot() {
         return process.env.PAL_STORAGE_ROOT;
