@@ -21,6 +21,7 @@ export default function About(): ReactElement {
                 </h1>
 
                 <p>
+                    {/* yes, the month count really _is_ dynamically generated */}
                     {moment('2020-06-30').fromNow()}, Repl.it&nbsp;
                     <a
                         href='https://blog.repl.it/teams-for-education'
@@ -59,6 +60,15 @@ export default function About(): ReactElement {
                     Each task/submission has a specific folder on the server's filesystem, where all the file contents
                     of it are stored. The server just has to read and write to those files, exchanging data with some simple
                     JavaScript running on the frontend, via HTTP requests.
+                </p>
+
+                <h1 className={styles.header}>
+                    Design
+
+                </h1>
+
+                <p>
+                    This website's design was made to be as simple as necessary.
                 </p>
 
                 <h1 className={styles.header}>

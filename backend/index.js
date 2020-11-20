@@ -60,9 +60,6 @@ if (process.env.NODE_ENV !== 'production') {
 const io = require("socket.io")(server);
 socket(io);
 
-const languageServer = require("./socket/language-server");
-languageServer.init(server);
-
 server.listen(process.env.PAL_PORT, () => {
     console.log("Ready on port " + process.env.PAL_PORT);
 });

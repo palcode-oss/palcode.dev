@@ -15,6 +15,7 @@ function createLanguageClient(connection: MessageConnection) {
             documentSelector: ['python'],
             errorHandler: {
                 error: () => ErrorAction.Continue,
+                // when we close the WebSocket (primarily through webSocket.close()) make sure to stop pyls
                 closed: () => CloseAction.DoNotRestart,
             }
         },

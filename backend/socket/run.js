@@ -27,7 +27,13 @@ async function execPython(projectId, socket, io) {
             '/var/run/docker.sock:/var/run/docker.sock',
             path.resolve(getStorageRoot(), sanitize(projectId)) + ':/usr/src/app',
         ],
-        Entrypoint: ["python", "index.py"],
+        Entrypoint: [
+            // Maximum run time for Python script (ensures infinite loops aren't left running)
+            // written in seconds as a string
+            // see https://linux.die.net/man/1/timeout
+            "timeout", parseInt(process.env.PAL_TIMEOUT || 3).toString(),
+            "python", "index.py"
+        ],
         OpenStdin: true,
         Tty: true,
         // Maximum concurrent process IDs (PIDs) allowed within container
@@ -77,6 +83,8 @@ async function execPython(projectId, socket, io) {
             });
 
             stream.on('end', () => {
+                // ensure we fully delete the container once it has stopped
+                containerStop(projectId);
                 io.to(projectId).emit('run', {
                     status: 200,
                     running: false,
