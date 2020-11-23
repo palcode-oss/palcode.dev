@@ -29,9 +29,9 @@ async function execPython(projectId, socket, io) {
         ],
         Entrypoint: [
             // Maximum run time for Python script (ensures infinite loops aren't left running)
-            // written in seconds as a string
+            // written in minutes as a string
             // see https://linux.die.net/man/1/timeout
-            "timeout", parseInt(process.env.PAL_TIMEOUT || 3).toString(),
+            "timeout", parseInt(process.env.PAL_TIMEOUT || 15).toString() + "m",
             "python", "index.py"
         ],
         OpenStdin: true,
@@ -101,9 +101,11 @@ async function containerStdin(projectId, stdin) {
         stdin: true,
         hijack: true,
     }, (err, stream) => {
-        stream.write(stdin, () => {
-            stream.end();
-        });
+        if (stream) {
+            stream.write(stdin, () => {
+                stream.end();
+            });
+        }
         return container.wait();
     });
 }

@@ -160,7 +160,7 @@ PalCode also accepts a few other **optional** variables to configure resource qu
 - `PAL_MEMORY_QUOTA` - the maximum amount of RAM the container can consume, in bytes. Note that this is not a reservation, just a hard limit. *Default: 104857600* (100 megabytes)
 - `PAL_DISK_QUOTA` - the maximum amount of disk space the container can consume, in bytes. Again, this is not a reservation. Docker doesn't fully support this feature yet, so disk quota limiting may not work in practice. *Default: 52428800* (50 megabytes)
 - `PAL_CPU_QUOTA` - the maximum amount of CPU cores the container can use, in units of 10^-9 cores. Again, this is not a reservation. This [Python Pi calculator](https://gist.github.com/palkerecsenyi/ec4642f28c7cba9f2dac613b62a6adb2) is useful for testing this (try >10000 digits). *Default: 150000000* (0.15 cores)
-- `PAL_TIMEOUT` - the maximum amount of time a Python script can run for, in seconds. Protects against [infinite loop](https://cwe.mitre.org/data/definitions/835.html) attacks. *Default: 3*
+- `PAL_TIMEOUT` - the maximum amount of time a Python script can run for, in integer minutes. Protects against [infinite loop](https://cwe.mitre.org/data/definitions/835.html) attacks. Note that this refers to running time in general, not just processing time. If an `input()` is called, and the user does nothing for this amount of time, the script will stop abruptly. *Default: 15*
 
 ## TLS
 PalCode's original implementation uses two-way strict TLS encryption. This involves a Cloudflare Origin CA certificate being used on the server. Cloudflare uses this to verify the server's identity, but uses a different certificate to serve the page to the public.
