@@ -1,5 +1,5 @@
 import MonacoEditor from 'react-monaco-editor';
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFileContent } from '../helpers/taskContent';
 import { editor } from 'monaco-editor';
 import styles from '../styles/editor.module.scss';
@@ -37,6 +37,15 @@ export default function FileEditor(
         }
     }, [themeData, themeLoading]);
 
+    const initResizeListener = useCallback((e: editor.IStandaloneCodeEditor) => {
+        const resizeEvent = () => e.layout();
+
+        window.addEventListener('resize', resizeEvent);
+        return () => {
+            window.removeEventListener('resize', resizeEvent);
+        }
+    }, []);
+
     const extension = useMemo(() => {
         const splitFilename = fileName.split('.');
         if (splitFilename.length === 1) {
@@ -69,6 +78,7 @@ export default function FileEditor(
                 language={language}
                 value={fileContent}
                 onChange={setFileContent}
+                editorDidMount={initResizeListener}
                 width='100%'
                 height='100%'
                 options={{

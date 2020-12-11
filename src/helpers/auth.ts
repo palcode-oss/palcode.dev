@@ -62,7 +62,7 @@ export function useAuth(): [firebase.User | null, boolean, User | null] {
     const [userDoc, setUserDoc] = useState<User | null>(null);
 
     useEffect(() => {
-        firebase
+        return firebase
             .auth()
             .onAuthStateChanged(authUser => {
                 if (authUser) {

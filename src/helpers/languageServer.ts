@@ -55,6 +55,8 @@ export default function connectToLanguageServer(): undefined | DisposeFunction {
     });
 
     return () => {
-        webSocket.close();
+        try {
+            webSocket.close();
+        } catch (e) {}
     };
 }

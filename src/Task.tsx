@@ -75,7 +75,11 @@ export default function Task(
             return user.perms === 0;
         }
 
-        return task.status !== TaskStatus.Unsubmitted;
+        if (task.type === TaskType.Submission) {
+            return task.status !== TaskStatus.Unsubmitted;
+        }
+
+        return false;
     }, [task, teacherView, user]);
 
     const [showPopOver, setShowPopOver] = useState(true);
@@ -125,7 +129,7 @@ export default function Task(
                         onNewFile={addFile}
                         onFileDelete={deleteFile}
                         readOnly={readOnly}
-                        showReadme={task?.type === TaskType.Template}
+                        showReadme={task?.type !== TaskType.Submission}
                     />
                 }
 

@@ -1,7 +1,8 @@
-import { SubmissionTask, Task, TaskDoc, TaskType } from './types';
+import { PrivateTask, SubmissionTask, Task, TaskDoc, TaskType } from './types';
 import { ReactElement, useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { useAuth } from './auth';
 
 export function useTask(taskId: string): [Task | null, boolean] {
     const [task, setTask] = useState<Task | null>(null);
@@ -83,4 +84,36 @@ export function useSubmissions(taskId?: string): [SubmissionTask[], boolean] {
     }, [taskId]);
 
     return [submissions, loading];
+}
+
+export function usePrivateTasks(): [PrivateTask[], boolean] {
+    const [tasks, setTasks] = useState<PrivateTask[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const [user] = useAuth();
+
+    useEffect(() => {
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
+        return firebase.firestore()
+            .collection('tasks')
+            .where('type', '==', TaskType.Private)
+            .where('createdBy', '==', user.uid)
+            .orderBy('created', 'desc')
+            .onSnapshot(snapshot => {
+                setLoading(false);
+
+                setTasks(snapshot.docs.map(e => {
+                    return {
+                        ...e.data() as PrivateTask,
+                        id: e.id,
+                    }
+                }));
+            });
+    }, [user]);
+
+    return [tasks, loading];
 }

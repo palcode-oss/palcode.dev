@@ -7,20 +7,25 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { TaskDoc, TaskStatus, TaskType } from '../helpers/types';
+import { PrivateTask, TaskDoc, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 
 interface Props {
-    classroomId: string;
     closeModal: () => void;
 }
 
+interface ClassroomProps extends Props {
+    classroomId: string;
+    privateTask: false;
+}
+
+interface PrivateProps extends Props {
+    privateTask: true;
+}
+
 export default function NewTaskModal(
-    {
-        classroomId,
-        closeModal,
-    }: Props,
+    props: PrivateProps | ClassroomProps,
 ): ReactElement {
     const [title, setTitle] = useState('');
     const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,15 +52,21 @@ export default function NewTaskModal(
             .collection('tasks')
             .doc();
 
+        const type = props.privateTask ? TaskType.Private : TaskType.Template;
+        const documentData = {
+            createdBy: user.uid,
+            name: title,
+            type,
+            created: firebase.firestore.Timestamp.now(),
+        } as any;
+
+        if (!props.privateTask)  {
+            documentData.status = TaskStatus.Unsubmitted;
+            documentData.classroomId = props.classroomId;
+        }
+
         doc
-            .set({
-                createdBy: user.uid,
-                name: title,
-                status: TaskStatus.Unsubmitted,
-                type: TaskType.Template,
-                created: firebase.firestore.Timestamp.now(),
-                classroomId,
-            } as TaskDoc<TaskType.Template>)
+            .set(documentData)
             .then(() => {
                 enqueueSnackbar('Task created successfully!', {
                     variant: 'success',
@@ -63,19 +74,21 @@ export default function NewTaskModal(
                 setLoading(false);
                 history.push(`/task/${doc.id}`);
             });
-    }, [classroomId, title, user]);
+    }, [props, title, user]);
+
+    const objectName = props.privateTask ? 'Project' : 'Task';
 
     return (
         <div className={modal.modal}>
             <div className={modal.content}>
                 <div className={modal.head}>
                     <span className={modal.title}>
-                        New task
+                        New {objectName.toLowerCase()}
                     </span>
 
                     <button
                         className={modal.close}
-                        onClick={closeModal}
+                        onClick={props.closeModal}
                     >
                         <FontAwesomeIcon icon={faTimesCircle}/>
                     </button>
@@ -93,7 +106,7 @@ export default function NewTaskModal(
                             className={form.label}
                             htmlFor='title-input'
                         >
-                            Task title
+                            {objectName} title
                         </label>
                         <input
                             type='text'
@@ -104,9 +117,11 @@ export default function NewTaskModal(
                             className={form.textInput}
                         />
 
-                        <p>
-                            You'll be able to set instructions in the Markdown editor after creating the task.
-                        </p>
+                        {!props.privateTask && (
+                            <p>
+                                You'll be able to set instructions in the Markdown editor after creating the task.
+                            </p>
+                        )}
 
                         <button
                             type='submit'
@@ -122,7 +137,7 @@ export default function NewTaskModal(
                                             height={14}
                                             color='white'
                                         />
-                                    ) : 'Create task'
+                                    ) : 'Create ' + objectName.toLowerCase()
                             }
                         </button>
                     </form>

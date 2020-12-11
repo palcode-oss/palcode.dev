@@ -5,6 +5,7 @@ import { useClassrooms } from './helpers/classroom';
 import studentDashboard from './styles/studentDashboard.module.scss';
 import loader from './styles/loader.module.scss';
 import LazyComponentFallback from './ui/LazyComponentFallback';
+import PrivateTasks from './ui/PrivateTasks';
 
 const ClassroomCard = lazy(() => import('./ui/ClassroomCard'));
 
@@ -59,6 +60,7 @@ export default function StudentDashboard(
                     </div>
                 )
             }
+            <PrivateTasks />
         </div>
     );
 }

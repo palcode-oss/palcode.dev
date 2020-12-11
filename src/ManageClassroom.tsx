@@ -160,6 +160,7 @@ export default function ManageClassroom(): ReactElement {
                         {
                             showModal && (
                                 <NewTaskModal
+                                    privateTask={false}
                                     classroomId={classroomId}
                                     closeModal={() => setShowModal(false)}
                                 />

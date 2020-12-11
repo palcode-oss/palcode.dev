@@ -1,0 +1,17 @@
+@import "importables";
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 20px;
+
+  h1 {
+    @include miriam;
+  }
+}
+
+.button svg {
+  color: black;
+}

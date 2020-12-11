@@ -39,6 +39,7 @@ export enum TaskStatus {
 export enum TaskType {
     Template,
     Submission,
+    Private,
 }
 
 export interface TaskProps {
@@ -46,11 +47,11 @@ export interface TaskProps {
     created: firebase.firestore.Timestamp;
     createdBy: string;
     id: string;
-    classroomId: string;
 }
 
 export interface TemplateTask extends TaskProps {
     type: TaskType.Template;
+    classroomId: string;
 }
 
 export interface SubmissionTask extends TaskProps {
@@ -58,11 +59,17 @@ export interface SubmissionTask extends TaskProps {
     status: TaskStatus;
     parentTask: string;
     feedback?: string;
+    classroomId: string;
+}
+
+export interface PrivateTask extends TaskProps {
+    type: TaskType.Private;
 }
 
 export type Task<T extends TaskType = any> = T extends TaskType.Submission ? SubmissionTask
     : T extends TaskType.Template ? TemplateTask
-        : never
+        : T extends TaskType.Private ? PrivateTask
+            : never;
 
 export type TaskDoc<T extends TaskType = any> = Omit<Task<T>, 'id'>;
 

@@ -44,6 +44,12 @@ export default function XtermWrapper(
         });
         terminal.open(terminalContainer.current);
         fitAddon.fit();
+
+        const resizeEvent = () => fitAddon.fit();
+        window.addEventListener('resize', resizeEvent);
+        return () => {
+            window.removeEventListener('resize', resizeEvent);
+        }
     }, [terminalContainer]);
 
     useEffect(() => {

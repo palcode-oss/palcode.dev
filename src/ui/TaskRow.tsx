@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback } from 'react';
-import { Classroom, isSubmissionTask, isTemplateTask, TaskStatus } from '../helpers/types';
+import { Classroom, isSubmissionTask, TaskStatus } from '../helpers/types';
 import { TableCell } from '@material-ui/core';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -42,7 +42,7 @@ export default function TaskRow(
 
         Promise.all(
             tasks
-                .filter(t => t.id === taskId || (!isTemplateTask(t) && t.parentTask === taskId))
+                .filter(t => t.id === taskId || (isSubmissionTask(t) && t.parentTask === taskId))
                 .map(t =>
                     firebase
                         .firestore()
@@ -52,30 +52,10 @@ export default function TaskRow(
                 )
         )
             .then(() => {
-                firebase
-                    .firestore()
-                    .collection('classrooms')
-                    .doc(classroomId)
-                    .update(
-                        {
-                            tasks: tasks
-                                .filter(
-                                    t => t.id !== taskId && (isTemplateTask(t) || t.parentTask !== taskId),
-                                )
-                                .map(t => t.id),
-                        } as Partial<Classroom>,
-                    )
-                    .then(() => {
-                        enqueueSnackbar('Task & submissions removed successfully!', {
-                            variant: 'success',
-                        });
-                        setClassroomUpdater(Math.random());
-                    })
-                    .catch(() => {
-                        enqueueSnackbar('Something went wrong while attempting to delete that task. Try again.', {
-                            variant: 'error',
-                        });
-                    });
+                enqueueSnackbar('Task & submissions removed successfully!', {
+                    variant: 'success',
+                });
+                setClassroomUpdater(Math.random());
             })
     }, [classroomId, classroom, taskId, tasks]);
 

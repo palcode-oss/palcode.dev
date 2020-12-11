@@ -1,11 +1,10 @@
-import React, { ReactElement, useCallback, useState } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { useAuth } from '../helpers/auth';
 import { Link } from 'react-router-dom';
 import { Shimmer } from 'react-shimmer';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { useSnackbar } from 'notistack';
-import SignInModal from './SignInModal';
 import styles from '../styles/navbar.module.scss';
 
 export default function Navbar(): ReactElement {
@@ -21,11 +20,6 @@ export default function Navbar(): ReactElement {
                     variant: 'info',
                 });
             });
-    }, []);
-
-    const [showSignInModal, setShowSignInModal] = useState(false);
-    const signIn = useCallback(() => {
-        setShowSignInModal(true);
     }, []);
 
     return (
@@ -68,19 +62,6 @@ export default function Navbar(): ReactElement {
                 }
 
                 {
-                    !authLoading && !authUser && (
-                        <>
-                            <button
-                                className={styles.option}
-                                onClick={signIn}
-                            >
-                                Sign in
-                            </button>
-                        </>
-                    )
-                }
-
-                {
                     authLoading && (
                         <button className='option loading'>
                             <Shimmer
@@ -92,14 +73,6 @@ export default function Navbar(): ReactElement {
                     )
                 }
             </div>
-
-            {
-                showSignInModal && (
-                    <SignInModal
-                        closeModal={() => setShowSignInModal(false)}
-                    />
-                )
-            }
         </nav>
     );
 }
