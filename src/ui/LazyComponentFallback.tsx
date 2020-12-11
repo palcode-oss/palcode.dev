@@ -21,8 +21,7 @@ export default function LazyComponentFallback(): ReactElement {
     return (
         <div
             style={{
-                margin: 10,
-                width: '100%',
+                margin: 20,
                 display: 'flex',
                 justifyContent: 'center',
             }}
