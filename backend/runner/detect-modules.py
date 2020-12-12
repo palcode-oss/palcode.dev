@@ -45,6 +45,10 @@ for module_name in imports:
 #   b) Making network requests on every single run would be slow and consume bandwidth
 with open('/usr/src/app/requirements.txt', 'w') as f:
   for module_name in remote_imports:
+    # when importing some modules, you can destructure the import using a .
+    # this won't resolve when installing via pip, so we need to find the first part of the string
+    if '.' in module_name:
+      module_name = module_name.split('.')[0]
     f.write(module_name + "\n")
 
 # this is how we tell our shell script whether to create/keep the environment, or to destroy it
