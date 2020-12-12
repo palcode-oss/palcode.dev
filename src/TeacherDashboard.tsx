@@ -21,6 +21,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import Tooltip from '@material-ui/core/Tooltip';
 import NewClassroomModal, { NewClassroomAction } from './ui/NewClassroomModal';
 import LazyComponentFallback from './ui/LazyComponentFallback';
+import PrivateTasks from './ui/PrivateTasks';
 
 const ClassroomRow = lazy(() => import('./ui/ClassroomRow'));
 
@@ -162,6 +163,9 @@ export default function TeacherDashboard(
                                 </TableBody>
                             </Table>
                         </TableContainer>
+
+                        <PrivateTasks />
+
                         {
                             showModal && (
                                 <NewClassroomModal

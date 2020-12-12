@@ -8,6 +8,7 @@ import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import styles from '../styles/login-redirect.module.scss';
 import Loader from 'react-loader-spinner';
 import { Perms, UserDoc } from '../helpers/types';
+import { Link } from 'react-router-dom';
 
 const provider = new firebase.auth.OAuthProvider('microsoft.com');
 provider.setCustomParameters({
@@ -42,6 +43,13 @@ export default function LogInForm(
                 return null;
             });
     }, []);
+
+    useEffect(() => {
+        if (!signingIn) {
+            document.body.classList.add('login-form');
+            return () => document.body.classList.remove('login-form');
+        }
+    }, [signingIn]);
 
     useEffect(() => {
         (async () => {
@@ -119,17 +127,77 @@ export default function LogInForm(
     }
 
     return (
-        <form
-            onSubmit={(e) => e.preventDefault()}
-            className={form.form}
-        >
-            <button
-                onClick={msalLogin}
-                className={form.button}
-            >
-                <FontAwesomeIcon icon={faMicrosoft} />
-                Sign in with MGS
-            </button>
-        </form>
+        <div className={styles.authPageContainer}>
+            <div className={styles.authPageElement}>
+                <h1>
+                    Welcome to PalCode! 👋
+                </h1>
+                <p>
+                    Signing you in for the first time may take a few seconds.
+                </p>
+
+                <form
+                    onSubmit={(e) => e.preventDefault()}
+                    className={form.form}
+                >
+                    <button
+                        onClick={msalLogin}
+                        className={form.button}
+                    >
+                        <FontAwesomeIcon icon={faMicrosoft} />
+                        Sign in with MGS
+                    </button>
+                </form>
+            </div>
+
+            <div className={styles.authPageElement}>
+                <h1>
+                    Help
+                </h1>
+                <p>
+                    If you need any help using PalCode, here are some things you can do:
+                </p>
+
+                <ul>
+                    <li>
+                        Visit <Link to='/help'>PalCode's help page</Link>.
+                    </li>
+                    <li>
+                        Ask your Computing teacher
+                    </li>
+                    <li>
+                        Take a look at&nbsp;
+                        <a
+                            href='https://docs.python.org/3/'
+                            target='_blank'
+                            rel='noreferrer'
+                        >
+                            Python's docs.
+                        </a>
+                    </li>
+                </ul>
+
+                <p>
+                    Got feature suggestions, bugs, or general feedback? Please send an email to kerecsenyip-y15@mgs.org.
+                </p>
+            </div>
+
+            <div className={styles.authPageElement}>
+                <p>
+                    PalCode stores some essential cookies on your browser, which you can't turn off. Other than that,
+                    this website operates under The Manchester Grammar School's&nbsp;
+                    <a
+                        href='https://bit.ly/3mdnm3k'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        Privacy Notice.
+                    </a>
+                </p>
+                <p>
+                    PalCode is a closed-source project, distributed under the MIT license.
+                </p>
+            </div>
+        </div>
     );
 }

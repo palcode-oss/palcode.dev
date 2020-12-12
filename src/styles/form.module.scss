@@ -15,19 +15,6 @@
   @include miriam;
 }
 
-.loginPrompt {
-  width: 60%;
-  margin: 30px auto;
-
-  p {
-    margin-top: 5px;
-  }
-
-  h1 {
-    @include miriam;
-  }
-}
-
 .form {
   .label {
     display: block;
@@ -44,7 +31,7 @@
     }
   }
 
-  .loginPrompt &, .joinClassroom & {
+  .authPageElement &, .joinClassroom & {
     margin: 20px auto;
 
     .textInput {

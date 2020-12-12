@@ -33,8 +33,7 @@ export default function ManageClassroom(): ReactElement {
     const [classroomUpdater, setClassroomUpdater] = useState(0);
     const classroomData = useClassroom(classroomId, classroomUpdater);
 
-    const [tasks, loading] = useTasks(classroomData?.id);
-    const templateTasks = tasks.filter(task => isTemplateTask(task));
+    const [templateTasks, loading] = useTasks(classroomData?.id, true);
 
     const [showModal, setShowModal] = useState(false);
 

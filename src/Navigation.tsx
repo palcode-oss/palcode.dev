@@ -10,6 +10,7 @@ import LazyComponentFallback from './ui/LazyComponentFallback';
 import Dashboard from './Dashboard';
 
 const About = lazy(() => import('./About'));
+const Help = lazy(() => import('./Help'));
 const Task = lazy(() => import('./Task'));
 const ManageClassroom = lazy(() => import('./ManageClassroom'));
 const ViewClassroom = lazy(() => import('./ViewClassroom'));
@@ -163,6 +164,9 @@ export default function Navigation(): ReactElement {
                     </Route>
                     <Route path='/about'>
                         <About />
+                    </Route>
+                    <Route path='/help'>
+                        <Help />
                     </Route>
                     <Route path='/'>
                         <Dashboard />

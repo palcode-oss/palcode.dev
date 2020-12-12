@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import styles from './styles/about.module.scss';
+import styles from './styles/info.module.scss';
 import moment from 'moment';
 
 export default function About(): ReactElement {
@@ -60,15 +60,6 @@ export default function About(): ReactElement {
                     Each task/submission has a specific folder on the server's filesystem, where all the file contents
                     of it are stored. The server just has to read and write to those files, exchanging data with some simple
                     JavaScript running on the frontend, via HTTP requests.
-                </p>
-
-                <h1 className={styles.header}>
-                    Design
-
-                </h1>
-
-                <p>
-                    This website's design was made to be as simple as necessary.
                 </p>
 
                 <h1 className={styles.header}>

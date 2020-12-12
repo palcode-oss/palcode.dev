@@ -41,6 +41,7 @@ export function useTasks(classroomId?: string, onlyTemplates = false): [Task[], 
         let baseQuery = firebase.firestore()
             .collection('tasks')
             .where('classroomId', '==', classroomId)
+            .orderBy('created', 'desc')
 
         if (onlyTemplates) {
             baseQuery = baseQuery.where('type', '==', TaskType.Template);

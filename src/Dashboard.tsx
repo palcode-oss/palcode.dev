@@ -2,7 +2,6 @@ import React, { lazy, ReactElement, Suspense, useEffect, useState } from 'react'
 import { useAuth } from './helpers/auth';
 import Loader from 'react-loader-spinner';
 import { Perms } from './helpers/types';
-import form from './styles/form.module.scss';
 import loader from './styles/loader.module.scss';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -28,25 +27,11 @@ export default function Dashboard(): ReactElement {
     if ((!loading && !userDoc) || forceShowLogin) {
         const LogInForm = lazy(() => import('./ui/LogInForm'));
         return (
-            <div className={form.loginPrompt}>
-                {!forceShowLogin && <>
-                    <h1>
-                        Welcome to PalCode! 👋
-                    </h1>
-                    <p>
-                        To get started, click the button below to sign in with your MGS account. You won't need to provide any other details.
-                    </p>
-                    <p>
-                        Signing you in for the first time may take a few seconds.
-                    </p>
-                </>}
-
-                <Suspense fallback={<LazyComponentFallback />}>
-                    <LogInForm
-                        redirectResult={redirectResult}
-                    />
-                </Suspense>
-            </div>
+            <Suspense fallback={<LazyComponentFallback />}>
+                <LogInForm
+                    redirectResult={redirectResult}
+                />
+            </Suspense>
         );
     }
 
