@@ -2,6 +2,7 @@ from os import listdir
 from os.path import isfile, join
 import ast
 import sys
+import importlib
 
 files = [f for f in listdir('/usr/src/app') if isfile(join('/usr/src/app', f))]
 imports = []

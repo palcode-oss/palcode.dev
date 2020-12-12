@@ -37,7 +37,7 @@ if [[ $USING_IMPORTS == 'YES' ]] ; then
     echo "It looks like you're trying to use modules."
     echo "This is either because you have an 'import' statement or a requirements.txt file."
     echo "I'll detect and install any modules for you now — please be patient."
-    echo "If you aren't actually using modules, don't worry — installation will fail silently."
+    echo "If you aren't actually using modules, this will probably make you annoyed. Please let Pal know."
     echo && echo
   else
     echo "Checking for new/updated modules..."
