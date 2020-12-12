@@ -9,6 +9,18 @@ TIMEOUT=$1
 cd /usr/src/app || exit
 clear
 
+delete_env () {
+  if [ -d "env" ] ; then
+    echo "No modules found!"
+    echo "It looks like your project no longer uses modules."
+    echo "I'll delete your venv to minimise your storage footprint."
+    echo
+  fi
+
+  # to keep storage space efficiently packed, remove the entire environment
+  rm -rf env requirements.old.txt requirements.txt .module_info_lock 2>/dev/null
+}
+
 # we use two ways to check _if_ modules are being used (not which ones)
 # if this regex returns any results, or if there's a requirements.txt file, we'll just assume that we need to install modules
 # worst case scenario, pipreqs doesn't find anything to install
@@ -48,25 +60,21 @@ if grep -Eqri --include=\*.py --exclude-dir=env '(from)?.*(import)\s( ?\w+,?)*' 
   if [ -z "$(diff requirements.txt requirements.old.txt 2>/dev/null)" ] && [ -f "requirements.old.txt" ] ; then
     clear
   else
-    echo "Installing new modules. One moment..."
-    pip install -r requirements.txt 2>/dev/null
-    # save this version of requirements.txt so we can compare it on the next run
-    cp requirements.txt requirements.old.txt >/dev/null 2>/dev/null || true
+    if grep -q '[^[:space:]]' < requirements.txt ; then
+      echo "Installing new modules. One moment..."
+      pip install -r requirements.txt 2>/dev/null
+      # save this version of requirements.txt so we can compare it on the next run
+      cp requirements.txt requirements.old.txt >/dev/null 2>/dev/null || true
 
-    clear
-    echo "Module installation complete! Refresh PalCode to see the updated requirements.txt file."
-    echo
+      clear
+      echo "Module installation complete! Refresh PalCode to see the updated requirements.txt file."
+      echo
+    else
+      delete_env
+    fi
   fi
 else
-  if [ -d "env" ] ; then
-    echo "No modules found!"
-    echo "It looks like your project no longer uses modules."
-    echo "I'll delete your venv to minimise your storage footprint."
-    echo
-  fi
-
-  # to keep storage space efficiently packed, remove the entire environment
-  rm -rf env requirements.old.txt .module_info_lock 2>/dev/null
+  delete_env
 fi
 
 timeout "$TIMEOUT" python index.py
