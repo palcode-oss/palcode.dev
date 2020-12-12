@@ -19,15 +19,19 @@ for file_name in files:
       elif isinstance(node, ast.ImportFrom):
         imports.append(node.module)
 
-contains_remote_imports = False
+remote_imports = []
 for module_name in imports:
   if module_name + '.py' not in files:
     try:
       importlib.import_module(module_name)
     except:
-      contains_remote_imports = True
+      remote_imports.append(module_name)
 
-if contains_remote_imports:
+with open('/usr/src/app/requirements.txt', 'w') as f:
+  for module_name in remote_imports:
+    f.write(module_name + "\n")
+
+if len(remote_imports) != 0:
   print('YES')
   sys.exit(0)
 else:

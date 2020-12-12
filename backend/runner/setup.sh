@@ -28,6 +28,7 @@ syntax_err () {
 # the detect-modules.py file uses the Python AST module to browse each file and find import nodes
 # this is _guaranteed_ to work, as it uses the same Python interpreter as real python code
 # if the user's code contains syntax errors, detect-modules.py will crash, in which case we can just ignore it
+# detect-modules.py also adds any unknown modules to requirements.txt, ready for pip to install when we get there
 USING_IMPORTS=$(python /opt/runner/detect-modules.py 2>/dev/null) || syntax_err
 if [[ $USING_IMPORTS == 'YES' ]] ; then
   # intro text if modules haven't been used in the package before
@@ -39,27 +40,16 @@ if [[ $USING_IMPORTS == 'YES' ]] ; then
     echo "I'll detect and install any modules for you now — please be patient."
     echo "If you aren't actually using modules, this will probably make you annoyed. Please let Pal know."
     echo && echo
-  else
-    echo "Checking for new/updated modules..."
   fi
 
   # If the venv directory doesn't exist, create it
   if [ ! -d "env" ] ; then
     echo "Setting up environment..."
-    python -m venv /usr/src/app/env 2>/dev/null
+    python -m venv --system-site-packages /usr/src/app/env 2>/dev/null
   fi
 
   # activate venv
   source env/bin/activate 2>/dev/null || delete_env
-
-  # if pipreqs isn't installed, install it
-  if [ ! -f "env/bin/pipreqs" ] ; then
-    echo "Looking for modules..."
-    pip install pipreqs >/dev/null 2>/dev/null
-  fi
-
-  # assess what packages we need and add them to requirements.txt
-  ./env/bin/pipreqs --force /usr/src/app >/dev/null 2>/dev/null
 
   # Only install requirements if they've changed
   if [ -z "$(diff requirements.txt requirements.old.txt 2>/dev/null)" ] && [ -f "requirements.old.txt" ] ; then
