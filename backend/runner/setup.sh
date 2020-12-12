@@ -89,4 +89,7 @@ else
   delete_env
 fi
 
+PYTHON_VERSION=$(python --version)
+printf "\033[0;30mPalCode 0.3.0 — %s\033[0m \n" "$PYTHON_VERSION"
+
 timeout "$TIMEOUT" python index.py
