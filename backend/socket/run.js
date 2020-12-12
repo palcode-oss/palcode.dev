@@ -22,17 +22,17 @@ async function execPython(projectId, socket, io) {
     docker.createContainer({
         Image: 'python:' + getPythonTag(),
         name: projectId,
-        WorkingDir: '/usr/src/app',
+        WorkingDir: '/opt/runner',
         Binds: [
             '/var/run/docker.sock:/var/run/docker.sock',
             path.resolve(getStorageRoot(), sanitize(projectId)) + ':/usr/src/app',
+            path.resolve(__dirname, '../runner/') + ':/opt/runner'
         ],
         Entrypoint: [
             // Maximum run time for Python script (ensures infinite loops aren't left running)
             // written in minutes as a string
             // see https://linux.die.net/man/1/timeout
-            "timeout", parseInt(process.env.PAL_TIMEOUT || 15).toString() + "m",
-            "python", "index.py"
+            "./setup.sh", parseInt(process.env.PAL_TIMEOUT || 15).toString() + "m",
         ],
         OpenStdin: true,
         Tty: true,

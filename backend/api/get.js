@@ -5,6 +5,12 @@ const path = require("path");
 const sanitize = require("sanitize-filename");
 
 const storageRoot = process.env.PAL_STORAGE_ROOT;
+const ignoredPaths = [
+    '__pycache__',
+    'README.md',
+    'env',
+    'requirements.old.txt',
+];
 
 router.get('/get-file-list', (req, res) => {
     const projectId = sanitize(req.query.projectId);
@@ -24,7 +30,7 @@ router.get('/get-file-list', (req, res) => {
     }
 
     const filteredFiles = fileList.filter(file => {
-        return file !== '__pycache__' && file !== 'README.md' && !file.startsWith('.');
+        return !ignoredPaths.includes(file) && !file.startsWith('.');
     });
 
     res.json(filteredFiles);
