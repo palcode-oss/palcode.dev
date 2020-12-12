@@ -4,18 +4,26 @@ import ast
 import sys
 
 files = [f for f in listdir('/usr/src/app') if isfile(join('/usr/src/app', f))]
-using_imports = False
+imports = []
 
-for fileName in files:
-  if fileName.endswith('.py'):
-    f = open(join('/usr/src/app', fileName))
+for file_name in files:
+  if file_name.endswith('.py'):
+    f = open(join('/usr/src/app', file_name))
     file_contents = ast.parse(f.read())
 
     for node in ast.iter_child_nodes(file_contents):
-      if isinstance(node, ast.ImportFrom) or isinstance(node, ast.Import):
-        using_imports = True
+      if isinstance(node, ast.Import):
+        for subnode in node.names:
+          imports.append(subnode.name)
+      elif isinstance(node, ast.ImportFrom):
+        imports.append(node.module)
 
-if using_imports:
+contains_remote_imports = False
+for module_name in imports:
+  if module_name + '.py' not in files:
+    contains_remote_imports = True
+
+if contains_remote_imports:
   print('YES')
   sys.exit(0)
 else:
