@@ -10,13 +10,6 @@ cd /usr/src/app || exit
 clear
 
 delete_env () {
-  if [ -d "env" ] ; then
-    echo "No modules found!"
-    echo "It looks like your project no longer uses modules."
-    echo "I'll delete your venv to minimise your storage footprint."
-    echo
-  fi
-
   # to keep storage space efficiently packed, remove the entire environment
   rm -rf env requirements.old.txt requirements.txt .module_info_lock 2>/dev/null
 }
@@ -57,7 +50,7 @@ if [[ $USING_IMPORTS == 'YES' ]] ; then
   fi
 
   # activate venv
-  source env/bin/activate
+  source env/bin/activate 2>/dev/null || delete_env
 
   # if pipreqs isn't installed, install it
   if [ ! -f "env/bin/pipreqs" ] ; then

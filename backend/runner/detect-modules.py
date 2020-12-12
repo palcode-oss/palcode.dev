@@ -21,7 +21,10 @@ for file_name in files:
 contains_remote_imports = False
 for module_name in imports:
   if module_name + '.py' not in files:
-    contains_remote_imports = True
+    try:
+      importlib.import_module(module_name)
+    except:
+      contains_remote_imports = True
 
 if contains_remote_imports:
   print('YES')
