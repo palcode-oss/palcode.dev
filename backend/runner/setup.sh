@@ -17,11 +17,13 @@ if grep -Eqri --include=\*.py --exclude-dir=env '(from)?.*(import)\s( ?\w+,?)*' 
   if [ ! -f ".module_info_lock" ] ; then
     touch .module_info_lock
     echo "Hey PalCode user!"
-    echo "It looks like you're trying to use PyPI modules."
-    echo "This is either because you're importing an unknown module or you have a requirements.txt file."
-    echo "I'll install any modules for you now — please be patient."
+    echo "It looks like you're trying to use modules."
+    echo "This is either because you have an 'import' statement or a requirements.txt file."
+    echo "I'll detect and install any modules for you now — please be patient."
     echo "If you aren't actually using modules, don't worry — installation will fail silently."
     echo && echo
+  else
+    echo "Checking for new/updated modules..."
   fi
 
   # If the venv directory doesn't exist, create it
@@ -44,7 +46,7 @@ if grep -Eqri --include=\*.py --exclude-dir=env '(from)?.*(import)\s( ?\w+,?)*' 
 
   # Only install requirements if they've changed
   if [ -z "$(diff requirements.txt requirements.old.txt 2>/dev/null)" ] && [ -f "requirements.old.txt" ] ; then
-    echo -n ""
+    clear
   else
     echo "Installing new modules. One moment..."
     pip install -r requirements.txt 2>/dev/null
