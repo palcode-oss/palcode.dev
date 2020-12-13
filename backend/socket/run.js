@@ -18,13 +18,14 @@ async function execPython(projectId, language, socket, io) {
         Binds: [
             '/var/run/docker.sock:/var/run/docker.sock',
             path.resolve(getStorageRoot(), sanitize(projectId)) + ':/usr/src/app',
-            path.resolve(__dirname, '../runner/') + ':/opt/runner'
+            path.resolve(__dirname, '../runner/', language) + ':/opt/runner',
+            path.resolve(__dirname, '../runner/common') + ':/opt/common',
         ],
         Entrypoint: [
             // Maximum run time for Python script (ensures infinite loops aren't left running)
             // written in minutes as a string
             // see https://linux.die.net/man/1/timeout
-            `./${language}.sh`, parseInt(process.env.PAL_TIMEOUT || 15).toString() + "m",
+            `./run.sh`, parseInt(process.env.PAL_TIMEOUT || 15).toString() + "m",
         ],
         OpenStdin: true,
         Tty: true,
