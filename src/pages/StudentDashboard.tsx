@@ -1,13 +1,13 @@
 import React, { lazy, ReactElement, Suspense } from 'react';
-import { User } from './helpers/types';
+import { User } from '../helpers/types';
 import Loader from 'react-loader-spinner';
-import { useClassrooms } from './helpers/classroom';
-import studentDashboard from './styles/studentDashboard.module.scss';
-import loader from './styles/loader.module.scss';
-import LazyComponentFallback from './ui/LazyComponentFallback';
-import PrivateTasks from './ui/PrivateTasks';
+import { useClassrooms } from '../helpers/classroom';
+import studentDashboard from '../styles/studentDashboard.module.scss';
+import loader from '../styles/loader.module.scss';
+import LazyComponentFallback from '../ui/LazyComponentFallback';
+import PrivateTasks from '../ui/PrivateTasks';
 
-const ClassroomCard = lazy(() => import('./ui/ClassroomCard'));
+const ClassroomCard = lazy(() => import('../ui/ClassroomCard'));
 
 interface Props {
     user: User

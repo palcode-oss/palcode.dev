@@ -1,5 +1,5 @@
 import React from "react";
-import styles from './styles/info.module.scss';
+import styles from '../styles/info.module.scss';
 
 export default function Help() {
     return <div className={styles.textContainer}>
@@ -128,17 +128,6 @@ export default function Help() {
             Of course, don't worry if you've accidentally crashed PalCode or found a security vulnerability! It does happen,
             since this website <em>was</em> made by two people in the space of a weekend. Please make a responsible disclosure
             to kerecsenyip-y15@mgs.org if you've found a vulnerability, and don't tell any other students.
-        </p>
-
-        <h1>
-            Other
-        </h1>
-        <h2>
-            I want to look at PalCode's source code
-        </h2>
-        <p>
-            Sure! A copy of PalCode's latest source code is available in a private GitHub repo. Email kerecsenyip-y15@mgs.org
-            if you'd like read-only access.
         </p>
     </div>
 }

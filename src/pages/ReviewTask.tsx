@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import table from './styles/table.module.scss';
+import table from '../styles/table.module.scss';
 import TableContainer from '@material-ui/core/TableContainer';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -9,10 +9,10 @@ import TableRow from '@material-ui/core/TableRow';
 import { TableCell } from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import { useParams } from 'react-router-dom';
-import loader from './styles/loader.module.scss';
+import loader from '../styles/loader.module.scss';
 import Loader from 'react-loader-spinner';
-import { useSubmissions, useTask } from './helpers/taskData';
-import StudentSubmissionRow from './ui/StudentSubmissionRow';
+import { useSubmissions, useTask } from '../helpers/taskData';
+import StudentSubmissionRow from '../ui/StudentSubmissionRow';
 import { Shimmer } from 'react-shimmer';
 
 interface Params {

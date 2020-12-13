@@ -10,13 +10,13 @@ import { TableCell } from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TaskSubmissionRow from './ui/TaskSubmissionRow';
-import { TaskType, TemplateTask } from './helpers/types';
+import TaskSubmissionRow from '../ui/TaskSubmissionRow';
+import { TaskType, TemplateTask } from '../helpers/types';
 import { orderBy } from 'lodash';
-import { useClassroom } from './helpers/classroom';
-import table from './styles/table.module.scss';
-import loader from './styles/loader.module.scss';
-import { useTasks } from './helpers/taskData';
+import { useClassroom } from '../helpers/classroom';
+import table from '../styles/table.module.scss';
+import loader from '../styles/loader.module.scss';
+import { useTasks } from '../helpers/taskData';
 
 interface Params {
     classroomId: string;

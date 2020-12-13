@@ -1,12 +1,12 @@
 import React, { lazy, ReactElement, Suspense, useEffect, useState } from 'react';
-import { useAuth } from './helpers/auth';
+import { useAuth } from '../helpers/auth';
 import Loader from 'react-loader-spinner';
-import { Perms } from './helpers/types';
-import loader from './styles/loader.module.scss';
+import { Perms } from '../helpers/types';
+import loader from '../styles/loader.module.scss';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import loginRedirect from './styles/login-redirect.module.scss';
-import LazyComponentFallback from './ui/LazyComponentFallback';
+import loginRedirect from '../styles/login.module.scss';
+import LazyComponentFallback from '../ui/LazyComponentFallback';
 
 export default function Dashboard(): ReactElement {
     const [, loading, userDoc] = useAuth();
@@ -21,15 +21,19 @@ export default function Dashboard(): ReactElement {
                     setRedirectResult(data);
                 }
             })
-            .catch(() => {});
+            .catch((e) => console.warn(e));
     }, []);
 
     if ((!loading && !userDoc) || forceShowLogin) {
-        const LogInForm = lazy(() => import('./ui/LogInForm'));
+        const LogInForm = lazy(() => import('../ui/LogInForm'));
         return (
             <Suspense fallback={<LazyComponentFallback />}>
                 <LogInForm
                     redirectResult={redirectResult}
+                    onRedirectAuthorised={() => {
+                        setForceShowLogin(false);
+                        setRedirectResult(undefined);
+                    }}
                 />
             </Suspense>
         );

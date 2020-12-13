@@ -1,5 +1,5 @@
 import React, { lazy, ReactElement, Suspense, useCallback, useState } from 'react';
-import { User } from './helpers/types';
+import { User } from '../helpers/types';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -11,19 +11,19 @@ import TableBody from '@material-ui/core/TableBody';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSnackbar } from 'notistack';
 import Toolbar from '@material-ui/core/Toolbar';
-import table from './styles/table.module.scss';
-import loader from './styles/loader.module.scss';
+import table from '../styles/table.module.scss';
+import loader from '../styles/loader.module.scss';
 import Typography from '@material-ui/core/Typography';
-import { useOwnedClassroom } from './helpers/classroom';
+import { useOwnedClassroom } from '../helpers/classroom';
 import Loader from 'react-loader-spinner';
 import IconButton from '@material-ui/core/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import Tooltip from '@material-ui/core/Tooltip';
-import NewClassroomModal, { NewClassroomAction } from './ui/NewClassroomModal';
-import LazyComponentFallback from './ui/LazyComponentFallback';
-import PrivateTasks from './ui/PrivateTasks';
+import NewClassroomModal, { NewClassroomAction } from '../ui/NewClassroomModal';
+import LazyComponentFallback from '../ui/LazyComponentFallback';
+import PrivateTasks from '../ui/PrivateTasks';
 
-const ClassroomRow = lazy(() => import('./ui/ClassroomRow'));
+const ClassroomRow = lazy(() => import('../ui/ClassroomRow'));
 
 interface Props {
     user: User

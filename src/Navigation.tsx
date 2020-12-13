@@ -7,15 +7,16 @@ import { Perms } from './helpers/types';
 import firebase from 'firebase/app';
 import { useSnackbar } from 'notistack';
 import LazyComponentFallback from './ui/LazyComponentFallback';
-import Dashboard from './Dashboard';
+import Dashboard from './pages/Dashboard';
 
-const About = lazy(() => import('./About'));
-const Help = lazy(() => import('./Help'));
-const Task = lazy(() => import('./Task'));
-const ManageClassroom = lazy(() => import('./ManageClassroom'));
-const ViewClassroom = lazy(() => import('./ViewClassroom'));
-const ReviewTask = lazy(() => import('./ReviewTask'));
-const AddStudents = lazy(() => import('./AddStudents'));
+const About = lazy(() => import('./pages/About'));
+const Help = lazy(() => import('./pages/Help'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Task = lazy(() => import('./pages/Task'));
+const ManageClassroom = lazy(() => import('./pages/ManageClassroom'));
+const ViewClassroom = lazy(() => import('./pages/ViewClassroom'));
+const ReviewTask = lazy(() => import('./pages/ReviewTask'));
+const AddStudents = lazy(() => import('./pages/AddStudents'));
 
 const history = createBrowserHistory();
 
@@ -167,6 +168,9 @@ export default function Navigation(): ReactElement {
                     </Route>
                     <Route path='/help'>
                         <Help />
+                    </Route>
+                    <Route path='/privacy'>
+                        <Privacy />
                     </Route>
                     <Route path='/'>
                         <Dashboard />

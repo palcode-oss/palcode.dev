@@ -1,21 +1,21 @@
 import React, { lazy, ReactElement, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { deleteRemoteFile, useTaskFiles } from './helpers/taskContent';
-import Files from './task-components/Files';
-import editor from './styles/editor.module.scss';
-import Briefing from './task-components/Briefing';
-import Controls from './task-components/Controls';
-import { useTask } from './helpers/taskData';
-import { isSubmissionTask, TaskStatus, TaskType } from './helpers/types';
+import { deleteRemoteFile, useTaskFiles } from '../helpers/taskContent';
+import Files from '../task-components/Files';
+import editor from '../styles/editor.module.scss';
+import Briefing from '../task-components/Briefing';
+import Controls from '../task-components/Controls';
+import { useTask } from '../helpers/taskData';
+import { isSubmissionTask, TaskStatus, TaskType } from '../helpers/types';
 import { useSnackbar } from 'notistack';
-import { useAuth } from './helpers/auth';
-import Sidebar from './task-components/Sidebar';
-import { availableThemes, ThemeMetadata } from './helpers/monacoThemes';
-import LazyComponentFallback from './ui/LazyComponentFallback';
+import { useAuth } from '../helpers/auth';
+import Sidebar from '../task-components/Sidebar';
+import { availableThemes, ThemeMetadata } from '../helpers/monacoThemes';
+import LazyComponentFallback from '../ui/LazyComponentFallback';
 
-const FileEditor = lazy(() => import('./task-components/FileEditor'));
-const Console = lazy(() => import('./task-components/Console'));
-const Feedback = lazy(() => import('./task-components/Feedback'));
+const FileEditor = lazy(() => import('../task-components/FileEditor'));
+const Console = lazy(() => import('../task-components/Console'));
+const Feedback = lazy(() => import('../task-components/Feedback'));
 
 interface Params {
     taskId: string;

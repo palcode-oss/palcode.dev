@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useState } from 'react';
-import form from './styles/form.module.scss';
+import form from '../styles/form.module.scss';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useHistory, useParams } from 'react-router-dom';

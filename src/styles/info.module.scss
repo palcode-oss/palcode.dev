@@ -61,4 +61,9 @@
   img {
     max-width: 100%;
   }
+
+  ul li {
+    @extend p;
+    list-style-type: circle;
+  }
 }

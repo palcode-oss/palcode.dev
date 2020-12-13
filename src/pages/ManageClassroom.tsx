@@ -7,20 +7,20 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import { Link, useParams } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
-import StudentRow from './ui/StudentRow';
-import TaskRow from './ui/TaskRow';
+import StudentRow from '../ui/StudentRow';
+import TaskRow from '../ui/TaskRow';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import { useClassroom } from './helpers/classroom';
-import table from './styles/table.module.scss';
-import loader from './styles/loader.module.scss';
-import NewTaskModal from './ui/NewTaskModal';
-import { useTasks } from './helpers/taskData';
-import { isTemplateTask } from './helpers/types';
+import { useClassroom } from '../helpers/classroom';
+import table from '../styles/table.module.scss';
+import loader from '../styles/loader.module.scss';
+import NewTaskModal from '../ui/NewTaskModal';
+import { useTasks } from '../helpers/taskData';
+import { isTemplateTask } from '../helpers/types';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 interface Params {

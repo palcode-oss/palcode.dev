@@ -5,7 +5,7 @@ import 'firebase/auth';
 import form from '../styles/form.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import styles from '../styles/login-redirect.module.scss';
+import styles from '../styles/login.module.scss';
 import Loader from 'react-loader-spinner';
 import { Perms, UserDoc } from '../helpers/types';
 import { Link } from 'react-router-dom';
@@ -25,8 +25,10 @@ interface MicrosoftProfile {
 export default function LogInForm(
     {
         redirectResult,
+        onRedirectAuthorised,
     }: {
         redirectResult?: firebase.auth.UserCredential,
+        onRedirectAuthorised(): void,
     }
 ): ReactElement {
     const {enqueueSnackbar} = useSnackbar();
@@ -97,13 +99,12 @@ export default function LogInForm(
                     } as UserDoc);
             }
 
-            enqueueSnackbar(`Hi ${givenName}! Signed in successfully. Please wait a moment...`, {
+            enqueueSnackbar(`Hi ${givenName}! Signed in successfully.`, {
                 variant: 'success',
             });
 
-            setTimeout(() => {
-                window.location.reload();
-            }, 500);
+            onRedirectAuthorised();
+            setSigningIn(false);
         })();
     }, [redirectResult]);
 
@@ -184,18 +185,16 @@ export default function LogInForm(
 
             <div className={styles.authPageElement}>
                 <p>
-                    PalCode stores some essential cookies on your browser, which you can't turn off. Other than that,
-                    this website operates under The Manchester Grammar School's&nbsp;
-                    <a
-                        href='https://bit.ly/3mdnm3k'
-                        target='_blank'
-                        rel='noreferrer'
+                    By using PalCode, your agreement to our use of essential cookies is assumed. More details can be found
+                    in the&nbsp;
+                    <Link
+                        to='/privacy'
                     >
-                        Privacy Notice.
-                    </a>
+                        Privacy Policy.
+                    </Link>
                 </p>
                 <p>
-                    PalCode is a closed-source project, distributed under the MIT license.
+                    PalCode is a closed-source project, distributed under the MIT license. Copyright © Pal Kerecsenyi 2020.
                 </p>
             </div>
         </div>
