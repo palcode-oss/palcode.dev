@@ -1,7 +1,7 @@
 import React, { lazy, ReactElement, Suspense, useEffect, useState } from 'react';
 import { useAuth } from '../helpers/auth';
 import Loader from 'react-loader-spinner';
-import { Perms } from '../helpers/types';
+import { Perms } from '../types';
 import loader from '../styles/loader.module.scss';
 import firebase from 'firebase/app';
 import 'firebase/auth';

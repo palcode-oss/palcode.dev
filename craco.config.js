@@ -6,9 +6,10 @@ module.exports = {
             new MonacoWebpackPlugin({
                 languages: [
                     'python',
+                    'javascript',
+                    'typescript',
                     'markdown',
                     'html',
-                    'xml',
                 ]
             }),
         ],

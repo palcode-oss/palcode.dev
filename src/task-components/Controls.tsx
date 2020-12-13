@@ -1,7 +1,6 @@
 import React, { FormEvent, useCallback, useMemo } from 'react';
-import { isSubmissionTask, Task, TaskStatus } from '../helpers/types';
+import { isSubmissionTask, Task, TaskStatus } from '../types';
 import form from '../styles/form.module.scss';
-import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEject, faPaperPlane, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import firebase from 'firebase/app';
@@ -10,7 +9,7 @@ import { availableThemes } from '../helpers/monacoThemes';
 import { partition } from 'lodash';
 
 const groupedThemes = partition(availableThemes, 'light')
-    .sort((a, b) => {
+    .sort((a) => {
         if (a[0].light === true) {
             return 1;
         } else {
@@ -86,7 +85,7 @@ export default function Controls(
             <select
                 value={themeDisplayName}
                 onChange={(e) => onThemeChange(e.target.value)}
-                className={editor.themeSelector}
+                className={`${form.select} ${form.themeSelector}`}
             >
                 {groupedThemes.map(themeGroup => (
                     <optgroup

@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback } from 'react';
-import { Classroom, isSubmissionTask, TaskStatus } from '../helpers/types';
+import { Classroom, isSubmissionTask, TaskStatus } from '../types';
 import { TableCell } from '@material-ui/core';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';

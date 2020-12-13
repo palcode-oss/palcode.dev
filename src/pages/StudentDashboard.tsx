@@ -1,11 +1,12 @@
 import React, { lazy, ReactElement, Suspense } from 'react';
-import { User } from '../helpers/types';
+import { User } from '../types';
 import Loader from 'react-loader-spinner';
 import { useClassrooms } from '../helpers/classroom';
 import studentDashboard from '../styles/studentDashboard.module.scss';
 import loader from '../styles/loader.module.scss';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
 import PrivateTasks from '../ui/PrivateTasks';
+import Spinner from '../ui/Spinner';
 
 const ClassroomCard = lazy(() => import('../ui/ClassroomCard'));
 
@@ -29,14 +30,7 @@ export default function StudentDashboard(
             </div>
             {
                 classroomsLoading ? (
-                    <div className={loader.loader}>
-                        <Loader
-                            type='Oval'
-                            width={120}
-                            height={120}
-                            color='blue'
-                        />
-                    </div>
+                    <Spinner />
                 ) : (
                     <div className={studentDashboard.classroomCardContainer}>
                         {

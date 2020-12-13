@@ -1,26 +1,18 @@
 const fs = require("fs");
 const path = require("path");
-const {getPythonTag, getStorageRoot} = require("../helpers");
+const {getTag, getStorageRoot, isValidLanguage} = require("../helpers");
 const Docker = require("dockerode");
 const docker = Docker();
 const uuid = require("uuid").v4;
 const sanitize = require("sanitize-filename");
 
-docker.pull('python:' + getPythonTag(), (err, stream) => {
-    docker.modem.followProgress(stream, () => {
-        console.log('Python installed!');
-    }, (event) => {
-        console.log(event.status);
-    })
-});
-
-async function execPython(projectId, socket, io) {
+async function execPython(projectId, language, socket, io) {
     io.to(projectId).emit('run', {
         status: 200,
         message: 'Starting...'
     });
     docker.createContainer({
-        Image: 'python:' + getPythonTag(),
+        Image: getTag(language),
         name: projectId,
         WorkingDir: '/opt/runner',
         Binds: [
@@ -32,7 +24,7 @@ async function execPython(projectId, socket, io) {
             // Maximum run time for Python script (ensures infinite loops aren't left running)
             // written in minutes as a string
             // see https://linux.die.net/man/1/timeout
-            "./setup.sh", parseInt(process.env.PAL_TIMEOUT || 15).toString() + "m",
+            `./${language}.sh`, parseInt(process.env.PAL_TIMEOUT || 15).toString() + "m",
         ],
         OpenStdin: true,
         Tty: true,
@@ -51,6 +43,7 @@ async function execPython(projectId, socket, io) {
         NanoCPUs: parseInt(process.env.PAL_CPU_QUOTA || 0.15 * Math.pow(10, 9)),
     }, (err, container) => {
         if (err) {
+            console.log(err);
             io.to(projectId).emit('run', {
                 status: 500,
                 message: 'Run failed. Try again.',
@@ -121,7 +114,7 @@ async function containerStop(projectId) {
 module.exports = (io) => {
     io.on('connection', (socket) => {
         socket.on('start', async (data) => {
-            if (!data.projectId) {
+            if (!data.projectId || !isValidLanguage(data.language)) {
                 socket.emit('run', {
                     status: 400,
                 });
@@ -153,7 +146,7 @@ module.exports = (io) => {
                 stdout: '\033[2J\033[H',
                 stdoutID: 'cls',
             });
-            execPython(data.projectId, socket, io);
+            execPython(data.projectId, data.language, socket, io);
         });
 
         socket.on('stdin', (data) => {

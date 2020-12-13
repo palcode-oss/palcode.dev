@@ -307,14 +307,4 @@
       margin-right: 10px;
     }
   }
-
-  .themeSelector {
-    @include input-style;
-    margin-top: 10px;
-    padding: 5px;
-
-    optgroup, option {
-      color: black;
-    }
-  }
 }

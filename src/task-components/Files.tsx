@@ -64,7 +64,6 @@ export default function Files(
 
                         {
                             file === selectedFile
-                            && file !== 'index.py'
                             && !readOnly
                             && <a
                                 href='#'

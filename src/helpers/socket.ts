@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import { useEffect, useMemo, useState } from 'react';
 import normaliseKey from './xterm-key-mapper';
+import { TaskLanguage } from '../types';
 
 enum RunStatus {
     Failed = 500,
@@ -27,9 +28,10 @@ export function useSocket(): SocketIOClient.Socket {
     }, []);
 }
 
-export function runCode(socket: SocketIOClient.Socket, taskId: string): void {
+export function runCode(socket: SocketIOClient.Socket, taskId: string, language: TaskLanguage): void {
     socket.emit('start', {
         projectId: taskId,
+        language,
     });
 }
 

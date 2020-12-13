@@ -1,4 +1,4 @@
-import { PrivateTask, SubmissionTask, Task, TaskDoc, TaskType } from './types';
+import { PrivateTask, SubmissionTask, Task, TaskDoc, TaskType } from '../types';
 import { ReactElement, useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -99,6 +99,7 @@ export function usePrivateTasks(): [PrivateTask[], boolean] {
             return;
         }
 
+        setLoading(true);
         return firebase.firestore()
             .collection('tasks')
             .where('type', '==', TaskType.Private)

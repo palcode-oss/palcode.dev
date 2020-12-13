@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 import form from '../styles/form.module.scss';
 import React from 'react';
-import { SubmissionTask } from '../helpers/types';
+import { SubmissionTask } from '../types';
 import VoiceFeedbackPreview from '../task-components/VoiceFeedbackPreview';
 
 interface Props {

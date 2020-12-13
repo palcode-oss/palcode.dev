@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
-import { isSubmissionTask, SubmissionTask, TaskStatus, User } from '../helpers/types';
+import { isSubmissionTask, SubmissionTask, TaskStatus, User } from '../types';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';

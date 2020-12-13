@@ -1,5 +1,5 @@
 import React, { lazy, ReactElement, Suspense, useCallback, useState } from 'react';
-import { User } from '../helpers/types';
+import { User } from '../types';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -22,6 +22,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import NewClassroomModal, { NewClassroomAction } from '../ui/NewClassroomModal';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
 import PrivateTasks from '../ui/PrivateTasks';
+import Spinner from '../ui/Spinner';
 
 const ClassroomRow = lazy(() => import('../ui/ClassroomRow'));
 
@@ -177,14 +178,7 @@ export default function TeacherDashboard(
                         }
                     </>
                 ) : (
-                    <div className={loader.loader}>
-                        <Loader
-                            type='Oval'
-                            width={120}
-                            height={120}
-                            color='blue'
-                        />
-                    </div>
+                    <Spinner />
                 )
             }
         </div>

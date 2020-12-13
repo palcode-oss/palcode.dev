@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/firestore';
-import { TaskStatus } from './types';
+import { TaskStatus } from '../types';
 
 export function uploadVoiceFeedback(taskId: string, audio: Blob): firebase.storage.UploadTask {
     return firebase.storage()

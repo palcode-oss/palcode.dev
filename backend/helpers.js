@@ -7,8 +7,24 @@ admin.initializeApp({
 });
 
 module.exports = {
-    getPythonTag() {
-        return process.env.PAL_PYTHON_VERSION || '3.9.1-slim';
+    getTag(language) {
+        switch(language) {
+            case 'python':
+                return 'python:' + (process.env.PAL_PYTHON_VERSION || '3.9.1');
+            case 'nodejs':
+                return 'node:' + (process.env.PAL_NODEJS_VERSION || '14.15.1');
+        }
+    },
+    getLanguageDefaultFile(language) {
+        switch (language) {
+            case 'python':
+                return 'index.py';
+            case 'nodejs':
+                return 'index.js';
+        }
+    },
+    isValidLanguage(language) {
+        return ['python', 'nodejs'].includes(language);
     },
     getStorageRoot() {
         return process.env.PAL_STORAGE_ROOT;

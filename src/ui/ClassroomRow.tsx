@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import TableRow from '@material-ui/core/TableRow';
-import { Classroom, isTemplateTask } from '../helpers/types';
+import { Classroom, isTemplateTask } from '../types';
 import { useTasks } from '../helpers/taskData';
 import studentDashboard from '../styles/studentDashboard.module.scss';
 import { Shimmer } from 'react-shimmer';

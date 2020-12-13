@@ -42,10 +42,13 @@ export enum TaskType {
     Private,
 }
 
+export type TaskLanguage = 'python' | 'nodejs';
+
 export interface TaskProps {
     name: string;
     created: firebase.firestore.Timestamp;
     createdBy: string;
+    language: TaskLanguage;
     id: string;
 }
 

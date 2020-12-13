@@ -43,6 +43,21 @@
   .button {
     margin-right: 10px;
   }
+
+  .select {
+    @include input-style;
+    margin-bottom: 8px;
+    padding: 5px;
+
+    optgroup, option {
+      color: black;
+    }
+
+    &.themeSelector {
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+  }
 }
 
 .button {

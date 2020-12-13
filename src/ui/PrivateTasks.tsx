@@ -10,6 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import NewTaskModal from './NewTaskModal';
 import { useHistory } from 'react-router-dom';
 import table from '../styles/table.module.scss';
+import Spinner from './Spinner';
 
 export default function PrivateTasks() {
     const [tasks, loading] = usePrivateTasks();
@@ -44,6 +45,10 @@ export default function PrivateTasks() {
             <p>
                 You haven't created any private projects yet.
             </p>
+        )}
+
+        {loading && (
+            <Spinner />
         )}
 
         <TableContainer>

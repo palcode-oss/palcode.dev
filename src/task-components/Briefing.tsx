@@ -5,7 +5,7 @@ import { BriefingTable, BriefingTableCell } from './briefing-renderers/BriefingT
 import { Shimmer } from 'react-shimmer';
 import loader from '../styles/loader.module.scss';
 import briefingRenderer from '../styles/briefing-renderer.module.scss';
-import { Task } from '../helpers/types';
+import { Task } from '../types';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
 
 const ReactMarkdown = lazy(() => import('react-markdown'));

@@ -1,4 +1,4 @@
-import { SubmissionTask, TaskStatus } from '../helpers/types';
+import { SubmissionTask, TaskStatus } from '../types';
 import { TableCell } from '@material-ui/core';
 import { Shimmer } from 'react-shimmer';
 import moment from 'moment';

@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { PrivateTask, TaskDoc, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
+import { TaskLanguage, TaskStatus, TaskType } from '../types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 
@@ -28,9 +28,7 @@ export default function NewTaskModal(
     props: PrivateProps | ClassroomProps,
 ): ReactElement {
     const [title, setTitle] = useState('');
-    const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value);
-    }, []);
+    const [language, setLanguage] = useState<TaskLanguage>('python');
 
     const [loading, setLoading] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
@@ -56,6 +54,7 @@ export default function NewTaskModal(
         const documentData = {
             createdBy: user.uid,
             name: title,
+            language,
             type,
             created: firebase.firestore.Timestamp.now(),
         } as any;
@@ -74,7 +73,7 @@ export default function NewTaskModal(
                 setLoading(false);
                 history.push(`/task/${doc.id}`);
             });
-    }, [props, title, user]);
+    }, [props, title, user, language]);
 
     const objectName = props.privateTask ? 'Project' : 'Task';
 
@@ -111,11 +110,28 @@ export default function NewTaskModal(
                         <input
                             type='text'
                             id='title-input'
-                            onChange={handleTitleChange}
+                            onChange={(e) => setTitle(e.target.value)}
                             value={title}
                             disabled={loading}
                             className={form.textInput}
                         />
+
+                        <label
+                            className={form.label}
+                            htmlFor='language-input'
+                        >
+                            Language
+                        </label>
+                        <select
+                            id='language-input'
+                            onChange={(e) => setLanguage(e.target.value as TaskLanguage)}
+                            value={language}
+                            disabled={loading}
+                            className={form.select}
+                        >
+                            <option value='python'>Python</option>
+                            <option value='nodejs'>NodeJS</option>
+                        </select>
 
                         {!props.privateTask && (
                             <p>

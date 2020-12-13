@@ -11,12 +11,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TaskSubmissionRow from '../ui/TaskSubmissionRow';
-import { TaskType, TemplateTask } from '../helpers/types';
+import { TaskType, TemplateTask } from '../types';
 import { orderBy } from 'lodash';
 import { useClassroom } from '../helpers/classroom';
 import table from '../styles/table.module.scss';
 import loader from '../styles/loader.module.scss';
 import { useTasks } from '../helpers/taskData';
+import Spinner from '../ui/Spinner';
 
 interface Params {
     classroomId: string;
@@ -53,14 +54,7 @@ export default function ViewClassroom(): ReactElement {
 
     if (!classroom || tasksLoading) {
         return (
-            <div className={loader.loader}>
-                <Loader
-                    type='Oval'
-                    width={120}
-                    height={120}
-                    color='blue'
-                />
-            </div>
+            <Spinner />
         );
     }
 

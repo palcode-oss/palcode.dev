@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import styles from '../styles/login.module.scss';
 import Loader from 'react-loader-spinner';
-import { Perms, UserDoc } from '../helpers/types';
+import { Perms, UserDoc } from '../types';
 import { Link } from 'react-router-dom';
 
 const provider = new firebase.auth.OAuthProvider('microsoft.com');

@@ -23,19 +23,30 @@ export default function FileEditor(
     const [loading, fileContent, setFileContent] = useFileContent(taskId, fileName);
     const [themeData, themeLoading] = useMonacoTheme(themePair.displayName);
 
+    const extension = useMemo(() => {
+        const splitFilename = fileName.split('.');
+        if (splitFilename.length === 1) {
+            return 'python';
+        }
+
+        return last(splitFilename);
+    }, [fileName]);
+
     useEffect(() => {
         if (themeLoading || !themeData) return;
         editor.defineTheme(themePair.normalisedName, themeData);
         editor.setTheme(themePair.normalisedName);
 
-        const dispose = connectToLanguageServer();
+        if (extension === 'py') {
+            const dispose = connectToLanguageServer();
 
-        if (dispose) {
-            return () => {
-                dispose();
+            if (dispose) {
+                return () => {
+                    dispose();
+                }
             }
         }
-    }, [themeData, themeLoading]);
+    }, [themeData, themeLoading, extension]);
 
     const initResizeListener = useCallback((e: editor.IStandaloneCodeEditor) => {
         const resizeEvent = () => e.layout();
@@ -46,15 +57,6 @@ export default function FileEditor(
         }
     }, []);
 
-    const extension = useMemo(() => {
-        const splitFilename = fileName.split('.');
-        if (splitFilename.length === 1) {
-            return 'python';
-        }
-
-        return last(splitFilename);
-    }, [fileName]);
-
     const language = useMemo(() => {
         switch (extension) {
             case 'md': return 'markdown';
@@ -62,6 +64,7 @@ export default function FileEditor(
             case 'svg': return 'html';
             case 'html': return 'html';
             case 'py': return 'python';
+            case 'js': return 'javascript';
             default: return 'plaintext';
         }
     }, [extension]);

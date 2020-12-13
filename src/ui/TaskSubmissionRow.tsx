@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { TableCell } from '@material-ui/core';
-import { Classroom, SubmissionTask, TaskStatus, TaskType, TemplateTask } from '../helpers/types';
+import { Classroom, SubmissionTask, TaskStatus, TaskType, TemplateTask } from '../types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -84,6 +84,7 @@ export default function TaskSubmissionRow(
             .set({
                 createdBy: user.uid,
                 name: task.name,
+                language: task.language,
                 status: TaskStatus.Unsubmitted,
                 type: TaskType.Submission,
                 id: taskDoc.id,

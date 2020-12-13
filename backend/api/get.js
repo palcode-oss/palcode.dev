@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 const sanitize = require("sanitize-filename");
+const { getLanguageDefaultFile } = require("../helpers");
 
 const storageRoot = process.env.PAL_STORAGE_ROOT;
 const ignoredPaths = [
@@ -10,14 +11,19 @@ const ignoredPaths = [
     'README.md',
     'env',
     'requirements.old.txt',
+    'node_modules',
+    'yarn.lock',
 ];
 
 router.get('/get-file-list', (req, res) => {
     const projectId = sanitize(req.query.projectId);
-    if (!projectId) {
+    const language = req.query.language;
+    if (!projectId || !language) {
         res.sendStatus(400);
         return;
     }
+
+    const defaultFile = getLanguageDefaultFile(language);
 
     let fileList = [];
     try {
@@ -25,13 +31,17 @@ router.get('/get-file-list', (req, res) => {
             path.resolve(storageRoot, projectId)
         );
     } catch (e) {
-        res.sendStatus(404);
+        res.json([defaultFile]);
         return;
     }
 
     const filteredFiles = fileList.filter(file => {
         return !ignoredPaths.includes(file) && !file.startsWith('.');
     });
+
+    if (!filteredFiles.includes(defaultFile)) {
+        filteredFiles.push(defaultFile);
+    }
 
     res.json(filteredFiles);
 });

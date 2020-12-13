@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { ClassroomDoc } from '../helpers/types';
+import { ClassroomDoc } from '../types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 

@@ -19,12 +19,6 @@ router.post('/save', (req, res) => {
     const projectExists = fs.existsSync(projectPath);
     if (!projectExists) {
         fs.mkdirSync(projectPath);
-
-        const containsIndexPy = files.some(file => file.name === "index.py");
-        if (!containsIndexPy) {
-            res.sendStatus(400);
-            return;
-        }
     }
 
     files.forEach(file => {

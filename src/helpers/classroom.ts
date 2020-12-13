@@ -1,4 +1,4 @@
-import { Classroom, ClassroomDoc } from './types';
+import { Classroom, ClassroomDoc } from '../types';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 

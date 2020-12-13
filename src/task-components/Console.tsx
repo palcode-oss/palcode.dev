@@ -5,13 +5,16 @@ import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faSkull } from '@fortawesome/free-solid-svg-icons';
 import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
+import { TaskLanguage } from '../types';
 
 export default function Console(
     {
         taskId,
+        taskLanguage,
         themeMetadata,
     }: {
         taskId: string,
+        taskLanguage?: TaskLanguage,
         themeMetadata?: ThemeMetadata,
     }
 ) {
@@ -20,8 +23,9 @@ export default function Console(
     const [lastStdout, lastStdoutID, running] = useStdout(socket, taskId);
 
     const run = useCallback(() => {
-        runCode(socket, taskId);
-    }, [taskId]);
+        if (!taskLanguage) return;
+        runCode(socket, taskId, taskLanguage);
+    }, [taskId, taskLanguage]);
 
     const kill = useCallback(() => {
         killCode(socket, taskId);
@@ -43,6 +47,7 @@ export default function Console(
                 <button
                     onClick={run}
                     className={editor.runButton}
+                    disabled={!taskLanguage}
                 >
                     <FontAwesomeIcon icon={faPlay} />
                     &nbsp;Run

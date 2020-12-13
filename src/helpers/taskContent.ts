@@ -1,16 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import { TaskLanguage } from '../types';
 
-export function useTaskFiles(taskId: string): [string[], boolean, (fileName: string) => void, (fileName: string) => void] {
+type Files = string[];
+type FilesLoading = boolean;
+type AddFile = (fileName: string) => void;
+type DeleteFile = (fileName: string) => void;
+
+export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, FilesLoading, AddFile, DeleteFile] {
     const [files, setFiles] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        if (!language) return;
+
         axios.get(
             process.env.REACT_APP_API + '/get-file-list',
             {
                 params: {
                     projectId: taskId,
+                    language,
                 }
             }
         )
@@ -27,7 +36,7 @@ export function useTaskFiles(taskId: string): [string[], boolean, (fileName: str
                 setLoading(false);
                 setFiles(['index.py'])
             });
-    }, [taskId]);
+    }, [taskId, language]);
 
     const addLocalFile = useCallback((fileName: string) => {
         if (files.includes(fileName)) {

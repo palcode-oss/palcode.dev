@@ -6,12 +6,13 @@ import editor from '../styles/editor.module.scss';
 import Briefing from '../task-components/Briefing';
 import Controls from '../task-components/Controls';
 import { useTask } from '../helpers/taskData';
-import { isSubmissionTask, TaskStatus, TaskType } from '../helpers/types';
+import { isSubmissionTask, TaskStatus, TaskType } from '../types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from '../helpers/auth';
 import Sidebar from '../task-components/Sidebar';
 import { availableThemes, ThemeMetadata } from '../helpers/monacoThemes';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
+import getLanguageDefaultFile from '../helpers/defaultFile';
 
 const FileEditor = lazy(() => import('../task-components/FileEditor'));
 const Console = lazy(() => import('../task-components/Console'));
@@ -33,8 +34,8 @@ export default function Task(
     const [,, user] = useAuth();
     const {enqueueSnackbar} = useSnackbar();
 
-    const [currentTab, setCurrentTab] = useState('index.py');
-    const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId, );
+    const [currentTab, setCurrentTab] = useState<string>();
+    const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId, task?.language);
 
     const selectTab = useCallback((fileName) => {
         setCurrentTab(fileName);
@@ -60,9 +61,12 @@ export default function Task(
 
     const deleteFile = useCallback((fileName: string) => {
         deleteLocalFile(fileName);
-        setCurrentTab('index.py');
         deleteRemoteFile(taskId, fileName);
-    }, [files, taskId]);
+
+        if (task) {
+            setCurrentTab(getLanguageDefaultFile(task.language));
+        }
+    }, [files, task]);
 
     const readOnly = useMemo<boolean>(() => {
         if (!task || !user) return true;
@@ -86,6 +90,10 @@ export default function Task(
     useEffect(() => {
         if (task?.type === TaskType.Template) {
             setShowPopOver(false);
+        }
+
+        if (task) {
+            setCurrentTab(getLanguageDefaultFile(task?.language));
         }
     }, [task]);
 
@@ -121,7 +129,7 @@ export default function Task(
     return (
         <div className={editor.editor}>
             <div className={`${editor.editorHalf} ${teacherView ? editor.editorHalfFeedback : ''}`}>
-                {!filesLoading &&
+                {!filesLoading && currentTab &&
                     <Files
                         files={files}
                         onTabSelect={selectTab}
@@ -138,7 +146,7 @@ export default function Task(
                 }
 
                 <Suspense fallback={<LazyComponentFallback />}>
-                    {theme && (
+                    {theme && currentTab && (
                         <FileEditor
                             taskId={taskId}
                             fileName={currentTab}
@@ -153,6 +161,7 @@ export default function Task(
                 <Suspense fallback={<LazyComponentFallback />}>
                     <Console
                         taskId={taskId}
+                        taskLanguage={task?.language}
                         themeMetadata={theme}
                     />
                 </Suspense>

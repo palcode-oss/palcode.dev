@@ -30,13 +30,26 @@ apt-cache policy docker-ce
 apt install docker-ce
 ```
 
-#### Installing the Python image
-Repl.it currently uses Python 3.8.2. The version of Python used can be configured with the `PAL_PYTHON_VERSION` environment variable. If the environment variable isn't set, PalCode will default to 3.8.2.
+#### Installing code images
+You need to install images for each language you want PalCode to work with. If you don't install an image, and you try running a project in that language, the server may crash.
 
-When running the server for the first time, Python will be installed automatically. However, it's recommended that you install it now.
+Currently, PalCode supports the following languages:
+
+* Python (Docker image: `python`, default version 3.9.1)
+* Node.JS (Docker image: `node`, default version 14.15.1)
+
+You can set the tag to install using the `PAL_<UPPERCASE_LANGUAGE>_VERSION` environment variables. For example, you could set `PAL_PYTHON_VERSION` to `3.9.1`. If a version doesn't have a matching environment variable, the aforementioned default values will be assumed. Once again, if no image is found for the specified/default version, PalCode will crash.
+
+For any language you use, you'll also need to install the image via Docker. This is pretty easy:
 
 ```shell script
-docker pull python:3.8.2
+docker pull <docker image>:<version>
+```
+
+For example, as a bare minimum, you'll need to install Python:
+
+```shell script
+docker pull python:3.9.1
 ```
 
 ### Node.js and Yarn

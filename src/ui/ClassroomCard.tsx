@@ -1,4 +1,4 @@
-import { Classroom, TaskType } from '../helpers/types';
+import { Classroom, TaskType } from '../types';
 import React, { ReactElement } from 'react';
 import { Shimmer } from 'react-shimmer';
 import { useUser } from '../helpers/auth';

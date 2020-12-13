@@ -20,8 +20,9 @@ import table from '../styles/table.module.scss';
 import loader from '../styles/loader.module.scss';
 import NewTaskModal from '../ui/NewTaskModal';
 import { useTasks } from '../helpers/taskData';
-import { isTemplateTask } from '../helpers/types';
+import { isTemplateTask } from '../types';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import Spinner from '../ui/Spinner';
 
 interface Params {
     classroomId: string;
@@ -167,14 +168,7 @@ export default function ManageClassroom(): ReactElement {
                         }
                     </>
                 ) : (
-                    <div className={loader.loader}>
-                        <Loader
-                            type='Oval'
-                            width={120}
-                            height={120}
-                            color='blue'
-                        />
-                    </div>
+                    <Spinner />
                 )
             }
         </div>

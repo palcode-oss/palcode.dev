@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { User, UserDoc } from './types';
+import { User, UserDoc } from '../types';
 
 export function useUser(userId?: string): [User | null, boolean] {
     const [user, setUser] = useState<User | null>(null);
