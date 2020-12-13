@@ -65,6 +65,7 @@ export default function FileEditor(
             case 'html': return 'html';
             case 'py': return 'python';
             case 'js': return 'javascript';
+            case 'json': return 'json';
             default: return 'plaintext';
         }
     }, [extension]);

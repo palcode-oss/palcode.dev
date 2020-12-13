@@ -113,7 +113,8 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
                 params: {
                     projectId: taskId,
                     fileName: fileName,
-                }
+                },
+                transformResponse: (res) => res,
             }
         )
             .then(response => {

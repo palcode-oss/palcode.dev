@@ -8,6 +8,7 @@ module.exports = {
                     'python',
                     'javascript',
                     'typescript',
+                    'json',
                     'markdown',
                     'html',
                 ]
