@@ -12,7 +12,7 @@ clear
 
 MODULE_COMMAND=$(node /opt/runner/detect-modules.js 2>/dev/null) || syntax_err
 
-if [ -n "$MODULE_COMMAND" ] ; then
+if [ -n "$MODULE_COMMAND" ] && [ "$MODULE_COMMAND" != "NO" ] ; then
   modules_info
 
   if [ ! -f "package.json" ] ; then
