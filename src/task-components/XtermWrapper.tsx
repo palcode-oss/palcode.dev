@@ -13,6 +13,7 @@ export default function XtermWrapper(
         onKey,
         backgroundColor,
         useBlackText,
+        taskId,
     } : {
         lastStdout: string,
         lastStdoutID: string,
@@ -20,6 +21,7 @@ export default function XtermWrapper(
         onKey(key: string): void,
         backgroundColor?: string,
         useBlackText?: boolean,
+        taskId: string,
     }
 ): ReactElement {
     const terminalContainer = useRef<HTMLDivElement | null>(null);
@@ -77,6 +79,10 @@ export default function XtermWrapper(
     useEffect(() => {
         terminal.setOption('disableStdin', !enabled);
     }, [enabled]);
+
+    useEffect(() => {
+        terminal.clear();
+    }, [taskId]);
 
     return (
         <div

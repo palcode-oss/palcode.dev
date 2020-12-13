@@ -33,7 +33,7 @@ export function runCode(socket: SocketIOClient.Socket, taskId: string): void {
     });
 }
 
-export function useStdout(socket: SocketIOClient.Socket): [string, string, boolean] {
+export function useStdout(socket: SocketIOClient.Socket, taskId: string): [string, string, boolean] {
     const [stdout, setStdout] = useState('');
     const [stdoutID, setStdoutID] = useState('');
     const [running, setRunning] = useState(false);
@@ -55,6 +55,10 @@ export function useStdout(socket: SocketIOClient.Socket): [string, string, boole
             socket.removeEventListener('run', onStdout);
         }
     }, []);
+
+    useEffect(() => {
+        setRunning(false);
+    }, [taskId]);
 
     return [stdout, stdoutID, running];
 }

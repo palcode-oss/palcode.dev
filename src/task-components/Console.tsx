@@ -1,5 +1,5 @@
 import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/socket';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import XtermWrapper from './XtermWrapper';
 import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +17,7 @@ export default function Console(
 ) {
     const socket = useSocket();
 
-    const [lastStdout, lastStdoutID, running] = useStdout(socket);
+    const [lastStdout, lastStdoutID, running] = useStdout(socket, taskId);
 
     const run = useCallback(() => {
         runCode(socket, taskId);
@@ -66,6 +66,7 @@ export default function Console(
                 enabled={running}
                 backgroundColor={xtermBackground}
                 useBlackText={themeMetadata?.light}
+                taskId={taskId}
             />
         </div>
     )
