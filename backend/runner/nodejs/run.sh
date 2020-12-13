@@ -20,7 +20,7 @@ if [ -n "$MODULE_COMMAND" ] ; then
   fi
 
   eval "$MODULE_COMMAND"
-elif [ "$MODULE_COMMAND" != 'NO' ] ; then
+elif [ "$MODULE_COMMAND" != "NO" ] ; then
   delete_env
 fi
 
