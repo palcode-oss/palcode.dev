@@ -41,7 +41,7 @@ async function execPython(projectId, language, socket, io) {
         DiskQuota: parseInt(process.env.PAL_DISK_QUOTA || 50 * 1048576),
         // CPU quota in units of 10^-9 CPUs/vCPUs
         // written as cores * 10^-9
-        NanoCPUs: parseInt(process.env.PAL_CPU_QUOTA || 0.15 * Math.pow(10, 9)),
+        NanoCPUs: parseInt(process.env.PAL_CPU_QUOTA || 0.08 * Math.pow(10, 9)),
     }, (err, container) => {
         if (err) {
             console.log(err);
