@@ -29,7 +29,7 @@ app.use("/api", api);
 
 app.get('/*', (req, res) => {
     if (req.path.startsWith('/static/')) {
-        res.sendFile(path.resolve('build' + req.path));
+        res.sendFile(path.resolve('build/' + req.path));
         return;
     }
 
@@ -39,7 +39,7 @@ app.get('/*', (req, res) => {
     });
 
     if (isFile && req.path !== '/index.html') {
-        res.sendFile(path.resolve('build' + sanitize(req.path)));
+        res.sendFile(path.resolve('build/' + sanitize(req.path)));
         return;
     }
 
