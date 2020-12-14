@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './styles/reset.scss';
 import firebase from "firebase/app";
+import getEnvVariable from "./helpers/getEnv";
 
 firebase.initializeApp({
-    apiKey: process.env.REACT_APP_F_API_KEY,
-    authDomain: process.env.REACT_APP_F_AUTH_DOMAIN,
-    databaseURL: process.env.REACT_APP_F_DATABASE_URL,
-    projectId: process.env.REACT_APP_F_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_F_STORAGE_BUCKET,
-    appId: process.env.REACT_APP_F_APP_ID,
+    apiKey: getEnvVariable('F_API_KEY'),
+    authDomain: getEnvVariable('F_AUTH_DOMAIN'),
+    databaseURL: getEnvVariable('F_DATABASE_URL'),
+    projectId: getEnvVariable('F_PROJECT_ID'),
+    storageBucket: getEnvVariable('F_STORAGE_BUCKET'),
+    appId: getEnvVariable('F_APP_ID'),
 });
 
 ReactDOM.render(

@@ -7,6 +7,7 @@ import {
 } from 'monaco-languageclient';
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import { editor } from 'monaco-editor';
+import getEnvVariable from './getEnv';
 
 function createLanguageClient(connection: MessageConnection) {
     return new MonacoLanguageClient({
@@ -33,7 +34,8 @@ function createLanguageClient(connection: MessageConnection) {
 
 type DisposeFunction = () => void;
 export default function connectToLanguageServer(): undefined | DisposeFunction {
-    if (!process.env.REACT_APP_LSP) {
+    const lspURL = getEnvVariable('LSP');
+    if (!lspURL) {
         return;
     }
 
@@ -43,7 +45,7 @@ export default function connectToLanguageServer(): undefined | DisposeFunction {
         MonacoServices.install(editor);
     }
 
-    const webSocket = new WebSocket(process.env.REACT_APP_LSP);
+    const webSocket = new WebSocket(lspURL);
     webSocket.onerror = () => {};
     listen({
         webSocket,

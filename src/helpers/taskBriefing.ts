@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import getEnvVariable from './getEnv';
 
 export default function useBriefing(taskId: string): string {
     const [briefingContent, setBriefingContent] = useState('');
 
     useEffect(() => {
         axios.get(
-            process.env.REACT_APP_API + '/get-file',
+            getEnvVariable('API') + '/get-file',
             {
                 params: {
                     projectId: taskId,

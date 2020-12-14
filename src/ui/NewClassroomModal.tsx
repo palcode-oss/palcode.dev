@@ -11,6 +11,7 @@ import 'firebase/auth';
 import { ClassroomDoc } from '../types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
+import getEnvVariable from '../helpers/getEnv';
 
 export enum NewClassroomAction {
     New,
@@ -96,7 +97,7 @@ export default function NewClassroomModal(props: NewProps | CloneProps): ReactEl
         }
 
         const {default: axios} = await import('axios');
-        axios.post(process.env.REACT_APP_API + '/clone-classroom', {
+        axios.post(getEnvVariable('API') + '/clone-classroom', {
             classroomId: props.classroomId,
             classroomName: name,
             token,

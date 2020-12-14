@@ -23,6 +23,6 @@ function syntax_err () {
 
   # we'll run the code with a super-short timeout, because it should crash instantly anyway
   # if it doesn't crash instantly, it's probably a bug that would keep it running forever
-  timeout 0.1s python index.py
+  eval "timeout 3s $1"
   exit
 }

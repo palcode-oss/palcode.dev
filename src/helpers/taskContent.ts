@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { TaskLanguage } from '../types';
+import getEnvVariable from './getEnv';
 
 type Files = string[];
 type FilesLoading = boolean;
@@ -15,7 +16,7 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
         if (!language) return;
 
         axios.get(
-            process.env.REACT_APP_API + '/get-file-list',
+            getEnvVariable('API') + '/get-file-list',
             {
                 params: {
                     projectId: taskId,
@@ -90,7 +91,7 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
 
             setSaving(true);
             axios.post(
-                process.env.REACT_APP_API + '/save',
+                getEnvVariable('API') + '/save',
                 {
                     projectId: taskId,
                     files: [{
@@ -108,7 +109,7 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
         }
 
         axios.get(
-            process.env.REACT_APP_API + '/get-file',
+            getEnvVariable('API') + '/get-file',
             {
                 params: {
                     projectId: taskId,
@@ -133,7 +134,7 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
 }
 
 export function deleteRemoteFile(taskId: string, fileName: string) {
-    return axios.post(process.env.REACT_APP_API + '/delete-file', {
+    return axios.post(getEnvVariable('API') + '/delete-file', {
         projectId: taskId,
         fileName,
     });

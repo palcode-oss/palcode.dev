@@ -38,7 +38,7 @@ Currently, PalCode supports the following languages:
 * Python (Docker image: `python`, default version 3.9.1)
 * Node.JS (Docker image: `node`, default version 14.15.1)
 
-You can set the tag to install using the `PAL_<UPPERCASE_LANGUAGE>_VERSION` environment variables. For example, you could set `PAL_PYTHON_VERSION` to `3.9.1`. If a version doesn't have a matching environment variable, the aforementioned default values will be assumed. Once again, if no image is found for the specified/default version, PalCode will crash.
+You can set the tag for the server to use using the `PAL_<UPPERCASE_LANGUAGE>_VERSION` environment variables. For example, you could set `PAL_PYTHON_VERSION` to `3.9.1`. If a version doesn't have a matching environment variable, the aforementioned default values will be assumed. Once again, if no image is found for the specified/default version, PalCode will crash.
 
 For any language you use, you'll also need to install the image via Docker. This is pretty easy:
 
@@ -143,13 +143,18 @@ $ Enter artifact ID: # <paste id here>
 The build will be installed and unzipped automatically. Please note that this script deletes the `build` directory, so between the start and finish of the script, the website will be temporarily unavailable.
 
 ## Setting environment variables
-PalCode uses a few backend environment variables that you need to set.
+PalCode uses a few backend environment variables that you need to set. Any variables prepended with `REACT_APP_` are delivered to the frontend by injecting them into a script tag.
 
-- `PAL_PYTHON_VERSION` - the [tag of Python](https://hub.docker.com/_/python?tab=tags) to install and use. Will automatically install if not already present on system.
+- `PAL_<language>_VERSION` - the Docker image tag of each supported language to use. Must be installed on the system.
 - `PAL_STORAGE_ROOT` - the directory to store user data. Cannot be a relative path. Must have read-write access for the `root` user.
 - `PAL_PORT` - the port to run PalCode's HTTPS server on. Must be [`443`](https://www.grc.com/port_443.htm) in a production environment.
 - `PAL_HOST` - the FQDN of the only valid URL from which PalCode can be accessed. All other requests will be redirected.
 - `NODE_ENV` - the environment being used. Must be `production` or `development`. To enable HTTPS, this must be `production`.
+- `REACT_APP_API` - set this to `http://localhost:<your server port>/api`. Defines the base URL for frontend API requests.
+- `REACT_APP_XTERM` - set this to `http://localhost:<your server port>`. Defines the base URL for Xterm's stdin/stdout container management.
+- `REACT_APP_LSP` - set this to `wss://lsp.palcode.dev`. Defines the base URL for WebSocket language server requests. As this doesn't store code server-side for any extended time period, feel free to use lsp.palcode.dev (a real, hosted LSP server maintained by Pal) in production, too. If you want your own, use [this repo](https://github.com/palkerecsenyi/palcode-lsp) as a base. PalCode will work without a language server, but cool things like real-time code checking, refactoring, and style guidance won't be available.
+- `REACT_APP_TENANT` - the Azure AD tenant ID to allow users from. [This website](https://www.whatismytenantid.com/) is very helpful for finding this. No admin access is required to find this ID, and using it poses no security risk to the institution to which the ID belongs. It's merely a frontend-only OAuth identifier that Microsoft uses to customise and filter the login page. Sign-ins from accounts not belonging to this tenant ID will be rejected by Microsoft.
+- `REACT_APP_F_*` - a few variables to configure the frontend Firebase connection. An example is available in [`.github/workflows/main.yml`](https://github.com/palkerecsenyi/palcode/blob/master/.github/workflows/main.yml#L31). Same as the variables in the `firebase.initializeApp()` call in [`src/index.js`](https://github.com/palkerecsenyi/palcode/blob/master/src/index.js#L7) but in an uppercase, underscore-delimited form, with `REACT_APP_F_` prepended to each.
 
 The best place to set these variables is at the bottom of `~/.bashrc`. Remember to run `source ~/.bashrc` after modifying the file.
 

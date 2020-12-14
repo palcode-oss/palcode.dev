@@ -15,15 +15,7 @@ You may need to run `yarn run install` to update packages.
 ## Development
 To run PalCode locally, first add a DNS alias for `palcode.local` to `127.0.0.1`.
 
-Then, set some environment variables:
-
-- `PAL_STORAGE_ROOT` - a read/writeable directory to store user code and files in
-- `PAL_PORT` - the port to run the server on. Make sure this is different to your React development port (3000 by default)
-- `REACT_APP_API` - set this to `http://localhost:<your server port>/api`. Defines the base URL for frontend API requests.
-- `REACT_APP_XTERM` - set this to `http://localhost:<your server port>`. Defines the base URL for Xterm's stdin/stdout container management.
-- `REACT_APP_LSP` - set this to `wss://lsp.palcode.dev`. Defines the base URL for WebSocket language server requests. As this doesn't store code server-side for any extended time period, feel free to use lsp.palcode.dev (a real, hosted LSP server maintained by Pal) in production, too. If you want your own, use [this repo](https://github.com/palkerecsenyi/palcode-lsp) as a base. PalCode will work without a language server, but cool things like real-time code checking, refactoring, and style guidance won't be available.
-- `REACT_APP_TENANT` - the Azure AD tenant ID to allow users from. [This website](https://www.whatismytenantid.com/) is very helpful for finding this. No admin access is required to find this ID, and using it poses no security risk to the institution to which the ID belongs. It's merely a frontend-only OAuth identifier that Microsoft uses to customise and filter the login page. Sign-ins from accounts not belonging to this tenant ID will be rejected by Microsoft.
-- `REACT_APP_F_*` - a few variables to configure the frontend Firebase connection. An example is available in [`.github/workflows/main.yml`](https://github.com/palkerecsenyi/palcode/blob/master/.github/workflows/main.yml#L31). Same as the variables in the `firebase.initializeApp()` call in [`src/index.js`](https://github.com/palkerecsenyi/palcode/blob/master/src/index.js#L7) but in an uppercase, underscore-delimited form, with `REACT_APP_F_` prepended to each.
+Then, set [some environment variables](https://github.com/palkerecsenyi/palcode/blob/master/SETUP.md#setting-environment-variables).
 
 Next, [download Docker CE](https://docs.docker.com/get-docker/) for your computer. It's available for all operating systems.
 
@@ -39,5 +31,3 @@ yarn run start-server-dev
 ```
 
 Your browser will automatically be opened to the frontend, and you'll need to wait up to 2 minutes for the page to load, as the first build takes a while to complete. From then on, changes you make to the code will automatically be refreshed in your browser.
-
-When running this for the first time, you'll notice that Terminal 2 installs the [Python Docker environment](https://hub.docker.com/_/python). This download is about 300MB and is necessary to run Python code. You don't need to do anything - the download is fully automatic. However, you won't be able to run code until the installation has completed.

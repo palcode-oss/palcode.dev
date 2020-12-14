@@ -10,17 +10,17 @@ TIMEOUT=$1
 cd /usr/src/app || exit
 clear
 
-MODULE_COMMAND=$(node /opt/runner/detect-modules.js 2>/dev/null) || syntax_err
+MODULE_COMMAND=$(node /opt/runner/detect-modules.js 2>/dev/null) || syntax_err "node index.js"
 
-if [ -n "$MODULE_COMMAND" ] && [ "$MODULE_COMMAND" != "NO" ] ; then
+if [ -n "$MODULE_COMMAND" ] && [[ $MODULE_COMMAND != "NO" ]] ; then
   modules_info
 
   if [ ! -f "package.json" ] ; then
-    npm init -y >/dev/null
+    yarn init -y >/dev/null
   fi
 
   eval "$MODULE_COMMAND"
-elif [ "$MODULE_COMMAND" != "NO" ] ; then
+elif [[ $MODULE_COMMAND != "NO" ]] ; then
   delete_env
 fi
 

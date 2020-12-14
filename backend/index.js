@@ -6,6 +6,8 @@ const path = require("path");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const sanitize = require("sanitize-filename");
+const indexHtml = require("./environment");
 
 app.use(bodyParser.json());
 
@@ -27,7 +29,7 @@ app.use("/api", api);
 
 app.get('/*', (req, res) => {
     if (req.path.startsWith('/static/')) {
-        res.sendFile(path.resolve('build/' + req.path));
+        res.sendFile(path.resolve('build/', sanitize(req.path)));
         return;
     }
 
@@ -36,12 +38,13 @@ app.get('/*', (req, res) => {
         return req.path.startsWith('/' + file);
     });
 
-    if (isFile) {
-        res.sendFile(path.resolve('build' + req.path));
+    if (isFile && req.path !== '/index.html') {
+        res.sendFile(path.resolve('build', sanitize(req.path)));
         return;
     }
 
-    res.sendFile(path.resolve('build/index.html'));
+    res.set('Content-Type', 'text/html')
+    res.send(indexHtml);
 });
 
 let server;

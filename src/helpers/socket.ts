@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import { useEffect, useMemo, useState } from 'react';
 import normaliseKey from './xterm-key-mapper';
 import { TaskLanguage } from '../types';
+import getEnvVariable from './getEnv';
 
 enum RunStatus {
     Failed = 500,
@@ -20,11 +21,12 @@ interface RunMessage {
 
 export function useSocket(): SocketIOClient.Socket {
     return useMemo(() => {
-        if (!process.env.REACT_APP_XTERM) {
+        const socketUrl = getEnvVariable('XTERM');
+        if (!socketUrl) {
             throw new TypeError('Xterm socket URL is undefined');
         }
 
-        return io(process.env.REACT_APP_XTERM);
+        return io(socketUrl);
     }, []);
 }
 

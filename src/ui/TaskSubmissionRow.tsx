@@ -19,6 +19,7 @@ import { faAward } from '@fortawesome/free-solid-svg-icons/faAward';
 import StudentFeedbackPreview from './StudentFeedbackPreview';
 import { useSnackbar } from 'notistack';
 import form from '../styles/form.module.scss';
+import getEnvVariable from '../helpers/getEnv';
 
 interface Props {
     task: TemplateTask;
@@ -94,7 +95,7 @@ export default function TaskSubmissionRow(
             } as SubmissionTask);
 
         await axios.post(
-            process.env.REACT_APP_API + '/clone',
+            getEnvVariable('API') + '/clone',
             {
                 projectId: taskDoc.id,
                 sourceProjectId: task.id,

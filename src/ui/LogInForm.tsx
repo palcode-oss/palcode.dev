@@ -9,12 +9,13 @@ import styles from '../styles/login.module.scss';
 import Loader from 'react-loader-spinner';
 import { Perms, UserDoc } from '../types';
 import { Link } from 'react-router-dom';
+import getEnvVariable from '../helpers/getEnv';
 
 const provider = new firebase.auth.OAuthProvider('microsoft.com');
 provider.setCustomParameters({
     // https://www.whatismytenantid.com/
     // see https://firebase.google.com/docs/auth/web/microsoft-oauth for details on how to use
-    tenant: process.env.REACT_APP_TENANT,
+    tenant: getEnvVariable('TENANT'),
 });
 
 interface MicrosoftProfile {
