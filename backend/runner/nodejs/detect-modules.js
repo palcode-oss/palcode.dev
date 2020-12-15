@@ -1,5 +1,8 @@
-const detective = require('detective');
-const isBuiltinModule = require('is-builtin-module');
+// the palcode/node Docker image pre-installs these modules to reduce runtime volume-mounting load
+// https://github.com/palkerecsenyi/palcode-images/blob/main/node/Dockerfile
+const detective = require('/opt/runner-modules/node_modules/detective');
+const isBuiltinModule = require('/opt/runner-modules/node_modules/is-builtin-module');
+
 const fs = require("fs");
 const path = require("path");
 

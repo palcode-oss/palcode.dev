@@ -69,6 +69,7 @@ export default function FileEditor(
             case 'py': return 'python';
             case 'js': return 'javascript';
             case 'json': return 'json';
+            case 'sh': return 'shell';
             default: return 'plaintext';
         }
     }, [extension]);

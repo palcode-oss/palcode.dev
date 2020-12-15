@@ -33,10 +33,13 @@ apt install docker-ce
 #### Installing code images
 You need to install images for each language you want PalCode to work with. If you don't install an image, and you try running a project in that language, the server may crash.
 
+Pal has created some Docker images based off the Alpine Linux versions of the official images for each language, adding the features it needs for initialization and module detection. You can find the source config files [here](https://github.com/palkerecsenyi/palcode-images).
+
 Currently, PalCode supports the following languages:
 
-* Python (Docker image: `python`, default version 3.9.1)
-* Node.JS (Docker image: `node`, default version 14.15.1)
+* Python (Docker image: `palcode/python`, default version 3.9.1)
+* Node.JS (Docker image: `palcode/node`, default version 14.15.1)
+* Bash (Docker image: `palcode/bash`, default version 1.0.0)
 
 You can set the tag for the server to use using the `PAL_<UPPERCASE_LANGUAGE>_VERSION` environment variables. For example, you could set `PAL_PYTHON_VERSION` to `3.9.1`. If a version doesn't have a matching environment variable, the aforementioned default values will be assumed. Once again, if no image is found for the specified/default version, PalCode will crash.
 
@@ -49,7 +52,7 @@ docker pull <docker image>:<version>
 For example, as a bare minimum, you'll need to install Python:
 
 ```shell script
-docker pull python:3.9.1
+docker pull palcode/python:3.9.1
 ```
 
 ### Node.js and Yarn

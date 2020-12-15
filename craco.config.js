@@ -11,6 +11,7 @@ module.exports = {
                     'json',
                     'markdown',
                     'html',
+                    'shell',
                 ]
             }),
         ],

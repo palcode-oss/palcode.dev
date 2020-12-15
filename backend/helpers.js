@@ -10,9 +10,11 @@ module.exports = {
     getTag(language) {
         switch(language) {
             case 'python':
-                return 'python:' + (process.env.PAL_PYTHON_VERSION || '3.9.1');
+                return 'palcode/python:' + (process.env.PAL_PYTHON_VERSION || '3.9.1');
             case 'nodejs':
-                return 'node:' + (process.env.PAL_NODEJS_VERSION || '14.15.1');
+                return 'palcode/node:' + (process.env.PAL_NODEJS_VERSION || '14.15.1');
+            case 'bash':
+                return 'palcode/bash:' + (process.env.PAL_BASH_VERSION || '1.0.0');
         }
     },
     getLanguageDefaultFile(language) {
@@ -21,10 +23,12 @@ module.exports = {
                 return 'index.py';
             case 'nodejs':
                 return 'index.js';
+            case 'bash':
+                return 'main.sh';
         }
     },
     isValidLanguage(language) {
-        return ['python', 'nodejs'].includes(language);
+        return ['python', 'nodejs', 'bash'].includes(language);
     },
     getStorageRoot() {
         return process.env.PAL_STORAGE_ROOT;

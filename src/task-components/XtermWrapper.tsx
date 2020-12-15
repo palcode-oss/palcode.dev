@@ -67,10 +67,14 @@ export default function XtermWrapper(
     }, [backgroundColor, useBlackText]);
 
     useEffect(() => {
-        terminal.onData(data => {
+        const listener = terminal.onData(data => {
             onKey(data);
         });
-    }, []);
+
+        return () => {
+            listener.dispose();
+        }
+    }, [onKey]);
 
     useEffect(() => {
         terminal.write(lastStdout);
