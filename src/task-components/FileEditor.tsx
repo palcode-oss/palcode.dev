@@ -21,7 +21,7 @@ export default function FileEditor(
     }
 ) {
     const [loading, fileContent, setFileContent] = useFileContent(taskId, fileName);
-    const [themeData, themeLoading] = useMonacoTheme(themePair.displayName);
+    const [themeData, themeIsBuiltIn, themeLoading] = useMonacoTheme(themePair.displayName);
 
     const extension = useMemo(() => {
         const splitFilename = fileName.split('.');
@@ -34,8 +34,11 @@ export default function FileEditor(
 
     useEffect(() => {
         if (themeLoading || !themeData) return;
-        editor.defineTheme(themePair.normalisedName, themeData);
-        editor.setTheme(themePair.normalisedName);
+
+        if (!themeIsBuiltIn) {
+            editor.defineTheme(themePair.normalisedName, themeData);
+            editor.setTheme(themePair.normalisedName);
+        }
 
         if (extension === 'py') {
             const dispose = connectToLanguageServer();
@@ -46,7 +49,7 @@ export default function FileEditor(
                 }
             }
         }
-    }, [themeData, themeLoading, extension]);
+    }, [themeData, themeLoading, themeIsBuiltIn, extension]);
 
     const initResizeListener = useCallback((e: editor.IStandaloneCodeEditor) => {
         const resizeEvent = () => e.layout();
@@ -89,6 +92,9 @@ export default function FileEditor(
                     readOnly,
                     wordWrap: ['txt', 'md'].includes(extension || '') ? 'on': 'off'
                 }}
+                theme={
+                    themeIsBuiltIn ? themePair.normalisedName : undefined
+                }
             />
         </div>
     )

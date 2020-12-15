@@ -76,15 +76,15 @@ export default function Help() {
         </p>
 
         <h2>
-            How do I use PyPI modules?
+            How do I use PyPI/NPM modules?
         </h2>
         <p>
             Just import them! When you run your code, PalCode will magically find any imported modules in your code,
             and install them for you.
         </p>
         <p>
-            The requirements.txt file is practically read-only. You can edit it, but it will always get overwritten with
-            these automatically-discovered imports when you run your code.
+            The requirements.txt (or any other manifest) file is practically read-only. You can edit it, but it will
+            always get overwritten with these automatically-discovered imports when you run your code.
         </p>
 
         <h2>
@@ -100,11 +100,11 @@ export default function Help() {
         </p>
 
         <h2>
-            Can I add multiple Python files?
+            Can I add multiple files?
         </h2>
         <p>
-            Yep! Feel free to add as many Python files as you want, and import them into eachother. Python's full range
-            of module functionality is available.
+            Yep! Feel free to add as many files as you want, and import them into eachother. The full range
+            of module functionality is available in all languages.
         </p>
 
         <h2>
@@ -113,6 +113,14 @@ export default function Help() {
         <p>
             Sorry about that — PalCode runs on a server with limited resources. We're trying to figure out the best
             cost-performance balance, and when many people are using PalCode at the same time, load can spike significantly.
+        </p>
+
+        <h2>
+            Why did my code randomly stop?
+        </h2>
+        <p>
+            PalCode puts a time limit on your code to prevent abandoned containers. Not doing so would introduce a few
+            problems, such as unnecessary load caused by abandoned containers
         </p>
 
         <h2>

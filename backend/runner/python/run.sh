@@ -50,6 +50,6 @@ else
 fi
 
 PYTHON_VERSION=$(python --version)
-printf "\033[0;30mPalCode 0.3.0 — %s\033[0m \n" "$PYTHON_VERSION"
+printf "\033[0;30mPalCode Runner — %s\033[0m \n" "$PYTHON_VERSION"
 
-timeout -v --foreground "$TIMEOUT" python index.py
+timeout --foreground "$TIMEOUT" python index.py

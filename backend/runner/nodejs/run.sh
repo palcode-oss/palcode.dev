@@ -27,6 +27,6 @@ fi
 clear
 
 NODE_VERSION=$(node --version)
-printf "\033[0;30mPalCode 0.3.0 — Node %s\033[0m \n" "$NODE_VERSION"
+printf "\033[0;30mPalCode Runner — Node %s\033[0m \n" "$NODE_VERSION"
 
 timeout --foreground "$TIMEOUT" node index.js

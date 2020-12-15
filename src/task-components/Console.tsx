@@ -1,5 +1,5 @@
-import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/socket';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/xtermSocket';
+import React, { useCallback, useMemo } from 'react';
 import XtermWrapper from './XtermWrapper';
 import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,26 +20,37 @@ export default function Console(
 ) {
     const socket = useSocket();
 
-    const [lastStdout, lastStdoutID, running] = useStdout(socket, taskId);
+    const [lastStdout, lastStdoutID, running] = useStdout(taskId, socket);
 
     const run = useCallback(() => {
         if (!taskLanguage) return;
-        runCode(socket, taskId, taskLanguage);
-    }, [taskId, taskLanguage]);
+        runCode(taskId, taskLanguage, socket);
+    }, [taskId, taskLanguage, socket]);
 
     const kill = useCallback(() => {
-        killCode(socket, taskId);
-    }, [taskId]);
+        killCode(taskId, socket);
+    }, [taskId, socket]);
 
     const onKey = useCallback((key: string) => {
-        stdin(socket, taskId, key);
-    }, [running, taskId]);
+        stdin(taskId, key, socket);
+    }, [running, taskId, socket]);
 
-    const [themeData] = useMonacoTheme(themeMetadata?.displayName);
+    const [themeData, themeIsBuiltIn] = useMonacoTheme(themeMetadata?.displayName);
     const xtermBackground = useMemo<string | undefined>(() => {
+        if (themeIsBuiltIn) {
+            switch (themeMetadata?.normalisedName) {
+                case 'vs-dark':
+                    return '#1e1e1e';
+                case 'vs':
+                    return '#ffffff';
+                case 'hc-black':
+                    return '#000000';
+            }
+        }
+
         if (!themeData) return undefined;
         return themeData.colors['editor.background'] || '#000000';
-    }, [themeData]);
+    }, [themeData, themeIsBuiltIn, themeMetadata]);
 
     return (
         <div className={editor.console}>

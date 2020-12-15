@@ -16,6 +16,7 @@ import moment from 'moment';
 import { useTask, useTasks } from '../helpers/taskData';
 import loader from '../styles/loader.module.scss';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import TaskLanguageIcon from './TaskLanguageIcon';
 
 interface Props {
     taskId: string;
@@ -64,6 +65,7 @@ export default function TaskRow(
     return (
         <TableRow>
             <TableCell>
+                <TaskLanguageIcon language={task?.language} />
                 {
                     task?.name || (
                         <Shimmer
@@ -95,12 +97,12 @@ export default function TaskRow(
                     >
                         {
                             tasks.reduce(
-                                (acc, classroomTask) =>
+                                (totalTaskCount, classroomTask) =>
                                     isSubmissionTask(classroomTask)
                                     && classroomTask.parentTask === taskId
                                     && classroomTask.status === status
-                                        ? acc + 1
-                                        : acc,
+                                        ? totalTaskCount + 1
+                                        : totalTaskCount,
                                 0,
                             )
                         }

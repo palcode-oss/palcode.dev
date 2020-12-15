@@ -20,6 +20,7 @@ import StudentFeedbackPreview from './StudentFeedbackPreview';
 import { useSnackbar } from 'notistack';
 import form from '../styles/form.module.scss';
 import getEnvVariable from '../helpers/getEnv';
+import TaskLanguageIcon from './TaskLanguageIcon';
 
 interface Props {
     task: TemplateTask;
@@ -114,6 +115,7 @@ export default function TaskSubmissionRow(
     return (
         <TableRow>
             <TableCell>
+                <TaskLanguageIcon language={task.language} />
                 {
                     task.name
                 }

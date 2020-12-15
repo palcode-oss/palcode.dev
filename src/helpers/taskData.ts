@@ -1,5 +1,5 @@
 import { PrivateTask, SubmissionTask, Task, TaskDoc, TaskType } from '../types';
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useAuth } from './auth';

@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import { useEffect, useMemo, useState } from 'react';
-import normaliseKey from './xterm-key-mapper';
+import normaliseKey from './xtermKeyMapper';
 import { TaskLanguage } from '../types';
 import getEnvVariable from './getEnv';
 
@@ -19,25 +19,36 @@ interface RunMessage {
     stdoutID?: string;
 }
 
-export function useSocket(): SocketIOClient.Socket {
-    return useMemo(() => {
+export function useSocket(): SocketIOClient.Socket | undefined {
+    const [socket, setSocket] = useState<SocketIOClient.Socket>();
+
+    useEffect(() => {
         const socketUrl = getEnvVariable('XTERM');
         if (!socketUrl) {
             throw new TypeError('Xterm socket URL is undefined');
         }
 
-        return io(socketUrl);
+        const socketIo = io(socketUrl);
+        setSocket(socketIo);
+
+        return () => {
+            socketIo.close();
+        }
     }, []);
+
+    return socket;
 }
 
-export function runCode(socket: SocketIOClient.Socket, taskId: string, language: TaskLanguage): void {
+export function runCode(taskId: string, language: TaskLanguage, socket?: SocketIOClient.Socket): void {
+    if (!socket) return;
+
     socket.emit('start', {
         projectId: taskId,
         language,
     });
 }
 
-export function useStdout(socket: SocketIOClient.Socket, taskId: string): [string, string, boolean] {
+export function useStdout(taskId: string, socket?: SocketIOClient.Socket): [string, string, boolean] {
     const [stdout, setStdout] = useState('');
     const [stdoutID, setStdoutID] = useState('');
     const [running, setRunning] = useState(false);
@@ -54,11 +65,13 @@ export function useStdout(socket: SocketIOClient.Socket, taskId: string): [strin
             }
         }
 
+        if (!socket) return;
+
         socket.addEventListener('run', onStdout);
         return () => {
             socket.removeEventListener('run', onStdout);
         }
-    }, []);
+    }, [socket]);
 
     useEffect(() => {
         setRunning(false);
@@ -67,14 +80,18 @@ export function useStdout(socket: SocketIOClient.Socket, taskId: string): [strin
     return [stdout, stdoutID, running];
 }
 
-export function stdin(socket: SocketIOClient.Socket, taskId: string, text: string): void {
+export function stdin(taskId: string, text: string, socket?: SocketIOClient.Socket): void {
+    if (!socket) return;
+
     socket.emit('stdin', {
         projectId: taskId,
         stdin: text,
     });
 }
 
-export function killCode(socket: SocketIOClient.Socket, taskId: string): void {
+export function killCode(taskId: string, socket?: SocketIOClient.Socket): void {
+    if (!socket) return;
+
     socket.emit('stop', {
         projectId: taskId,
     });

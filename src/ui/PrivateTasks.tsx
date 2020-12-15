@@ -11,6 +11,7 @@ import NewTaskModal from './NewTaskModal';
 import { useHistory } from 'react-router-dom';
 import table from '../styles/table.module.scss';
 import Spinner from './Spinner';
+import TaskLanguageIcon from './TaskLanguageIcon';
 
 export default function PrivateTasks() {
     const [tasks, loading] = usePrivateTasks();
@@ -63,6 +64,7 @@ export default function PrivateTasks() {
                             className={table.link}
                         >
                             <TableCell>
+                                <TaskLanguageIcon language={task.language} />
                                 {task.name}
                             </TableCell>
 

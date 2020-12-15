@@ -21,7 +21,8 @@ export default function useBriefing(taskId: string): string {
                 } else {
                     setBriefingContent(response.data);
                 }
-            });
+            })
+            .catch(() => {});
     }, [taskId]);
 
     return briefingContent;

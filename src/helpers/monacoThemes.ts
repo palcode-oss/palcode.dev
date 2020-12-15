@@ -5,9 +5,29 @@ export interface ThemeMetadata {
     displayName: string;
     normalisedName: string;
     light: boolean,
+    builtIn?: boolean,
 }
 
 export const availableThemes: ThemeMetadata[] = [
+    {
+        displayName: 'VS Dark',
+        normalisedName: 'vs-dark',
+        light: false,
+        builtIn: true,
+    },
+    {
+        displayName: 'VS',
+        normalisedName: 'vs',
+        light: true,
+        builtIn: true,
+    },
+    {
+        displayName: 'High Contrast',
+        normalisedName: 'hc-black',
+        light: false,
+        builtIn: true,
+    },
+
     {
         displayName: 'Blackboard',
         normalisedName: 'blackboard',
@@ -100,12 +120,27 @@ export const availableThemes: ThemeMetadata[] = [
     },
 ];
 
-export function useMonacoTheme(themeDisplayName?: string): [editor.IStandaloneThemeData | undefined, boolean] {
+type ThemeData = editor.IStandaloneThemeData | undefined;
+type IsBuiltIn = boolean;
+type Loading = boolean;
+export function useMonacoTheme(themeDisplayName?: string): [ThemeData, IsBuiltIn, Loading] {
     const [loading, setLoading] = useState(true);
     const [themeData, setThemeData] = useState<editor.IStandaloneThemeData | undefined>(undefined);
+    const [isBuiltIn, setIsBuiltIn] = useState(false);
 
     useEffect(() => {
         if (!themeDisplayName) return;
+
+        const themeMetadata = availableThemes.find(e => e.displayName === themeDisplayName);
+        if (!themeMetadata) return;
+
+        if (themeMetadata.builtIn) {
+            setThemeData(undefined);
+            setIsBuiltIn(true);
+            return;
+        } else {
+            setIsBuiltIn(false);
+        }
 
         setLoading(true);
         const existingThemeString = localStorage.getItem(`Theme-${themeDisplayName}`);
@@ -134,5 +169,5 @@ export function useMonacoTheme(themeDisplayName?: string): [editor.IStandaloneTh
             });
     }, [themeDisplayName]);
 
-    return [themeData, loading];
+    return [themeData, isBuiltIn, loading];
 }

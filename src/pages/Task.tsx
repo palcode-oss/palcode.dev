@@ -12,7 +12,7 @@ import { useAuth } from '../helpers/auth';
 import Sidebar from '../task-components/Sidebar';
 import { availableThemes, ThemeMetadata } from '../helpers/monacoThemes';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
-import getLanguageDefaultFile from '../helpers/defaultFile';
+import {getLanguageDefaultFile} from '../helpers/languageData';
 
 const FileEditor = lazy(() => import('../task-components/FileEditor'));
 const Console = lazy(() => import('../task-components/Console'));

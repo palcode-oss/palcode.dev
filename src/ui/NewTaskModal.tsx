@@ -10,6 +10,7 @@ import 'firebase/firestore';
 import { TaskLanguage, TaskStatus, TaskType } from '../types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
+import { getLanguages } from '../helpers/languageData';
 
 interface Props {
     closeModal: () => void;
@@ -129,8 +130,16 @@ export default function NewTaskModal(
                             disabled={loading}
                             className={form.select}
                         >
-                            <option value='python'>Python</option>
-                            <option value='nodejs'>NodeJS</option>
+                            {
+                                getLanguages().map(language => (
+                                    <option
+                                        key={language.code}
+                                        value={language.code}
+                                    >
+                                        {language.displayName}
+                                    </option>
+                                ))
+                            }
                         </select>
 
                         {!props.privateTask && (
