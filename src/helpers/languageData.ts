@@ -1,21 +1,18 @@
 import { TaskLanguage } from '../types';
-import type { IconDefinition } from '@fortawesome/free-brands-svg-icons';
-import { faNodeJs } from '@fortawesome/free-brands-svg-icons/faNodeJs';
-import { faPython } from '@fortawesome/free-brands-svg-icons/faPython';
-import { faTerminal } from '@fortawesome/free-solid-svg-icons/faTerminal';
 
 export function getLanguageDefaultFile(language: TaskLanguage): string {
     switch (language) {
-        case 'python': return 'index.py';
+        case 'python': return 'main.py';
         case 'nodejs': return 'index.js';
         case 'bash': return 'main.sh';
+        case 'java': return 'Main.java';
     }
 }
 
 export interface LanguageData {
     code: TaskLanguage,
     displayName: string,
-    icon: IconDefinition,
+    icon: string,
     iconColor: string,
 }
 
@@ -24,19 +21,25 @@ export function getLanguages(): LanguageData[] {
         {
             code: 'nodejs',
             displayName: 'Node.JS',
-            icon: faNodeJs,
+            icon: require('../language-icons/node.png'),
             iconColor: '#679e63',
         },
         {
             code: 'python',
             displayName: 'Python',
-            icon: faPython,
+            icon: require("../language-icons/python.png"),
             iconColor: '#030027',
+        },
+        {
+            code: 'java',
+            displayName: 'Java',
+            icon: require("../language-icons/java.png"),
+            iconColor: '#5382a1',
         },
         {
             code: 'bash',
             displayName: 'Bash',
-            icon: faTerminal,
+            icon: require("../language-icons/bash.png"),
             iconColor: '#030027',
         }
     ];

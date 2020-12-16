@@ -70,6 +70,7 @@ export default function FileEditor(
             case 'js': return 'javascript';
             case 'json': return 'json';
             case 'sh': return 'shell';
+            case 'java': return 'java';
             default: return 'plaintext';
         }
     }, [extension]);

@@ -12,6 +12,7 @@ module.exports = {
                     'markdown',
                     'html',
                     'shell',
+                    'java',
                 ]
             }),
         ],

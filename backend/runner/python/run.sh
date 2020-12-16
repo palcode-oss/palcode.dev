@@ -14,7 +14,7 @@ clear
 # this is _guaranteed_ to work, as it uses the same Python interpreter as real python code
 # if the user's code contains syntax errors, detect-modules.py will crash, in which case we can just ignore it
 # detect-modules.py also adds any unknown modules to requirements.txt, ready for pip to install when we get there
-USING_IMPORTS=$(python /opt/runner/detect-modules.py 2>/dev/null) || syntax_err "python index.py"
+USING_IMPORTS=$(python /opt/runner/detect-modules.py 2>/dev/null) || syntax_err "python main.py"
 if [[ $USING_IMPORTS == 'YES' ]] ; then
   # intro text if modules haven't been used in the package before
   modules_info
@@ -52,4 +52,4 @@ fi
 PYTHON_VERSION=$(python --version)
 printf "\033[0;30mPalCode Runner — %s\033[0m \n" "$PYTHON_VERSION"
 
-timeout --foreground "$TIMEOUT" python index.py
+timeout --foreground "$TIMEOUT" python main.py

@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react';
 import { TaskLanguage } from '../types';
 import { getLanguages, LanguageData } from '../helpers/languageData';
-import { IconDefinition } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function TaskLanguageIcon(
     {
@@ -23,13 +21,15 @@ export default function TaskLanguageIcon(
     }
 
     return (
-        <FontAwesomeIcon
-            icon={languageData.icon}
-            color={languageData.iconColor}
-            size='lg'
+        <img
+            src={languageData.icon}
+            height={20}
+            alt={languageData.displayName}
             style={{
                 marginRight: 10,
                 marginLeft: 5,
+                display: 'inline-block',
+                verticalAlign: 'middle',
             }}
         />
     );
