@@ -33,13 +33,14 @@ export default function FileEditor(
     }, [fileName]);
 
     useEffect(() => {
-        if (themeLoading || !themeData) return;
+        if (themeLoading) return;
 
-        if (!themeIsBuiltIn) {
+        if (!themeIsBuiltIn && themeData) {
             editor.defineTheme(themePair.normalisedName, themeData);
             editor.setTheme(themePair.normalisedName);
         }
 
+        console.log(extension);
         if (extension === 'py') {
             const dispose = connectToLanguageServer();
 

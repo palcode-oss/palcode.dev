@@ -137,6 +137,7 @@ export function useMonacoTheme(themeDisplayName?: string): [ThemeData, IsBuiltIn
         if (themeMetadata.builtIn) {
             setThemeData(undefined);
             setIsBuiltIn(true);
+            setLoading(false);
             return;
         } else {
             setIsBuiltIn(false);
