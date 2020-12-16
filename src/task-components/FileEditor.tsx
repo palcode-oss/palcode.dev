@@ -40,7 +40,6 @@ export default function FileEditor(
             editor.setTheme(themePair.normalisedName);
         }
 
-        console.log(extension);
         if (extension === 'py') {
             const dispose = connectToLanguageServer();
 
