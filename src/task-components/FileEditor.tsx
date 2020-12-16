@@ -63,7 +63,7 @@ export default function FileEditor(
     const language = useMemo(() => {
         switch (extension) {
             case 'md': return 'markdown';
-            case 'txt': return 'plain';
+            case 'txt': return 'plaintext';
             case 'svg': return 'html';
             case 'html': return 'html';
             case 'py': return 'python';
@@ -71,6 +71,7 @@ export default function FileEditor(
             case 'json': return 'json';
             case 'sh': return 'shell';
             case 'java': return 'java';
+            case 'pl': return 'plaintext';
             default: return 'plaintext';
         }
     }, [extension]);

@@ -17,6 +17,8 @@ module.exports = {
                 return 'palcode/bash:' + (process.env.PAL_BASH_VERSION || '1.0.0');
             case 'java':
                 return 'palcode/java:' + (process.env.PAL_JAVA_VERSION || '16');
+            case 'prolog':
+                return 'swipl:' + (process.env.PAL_PROLOG_VERSION || '8.3.13');
         }
     },
     getLanguageDefaultFile(language) {
@@ -25,10 +27,11 @@ module.exports = {
             case 'nodejs': return 'index.js';
             case 'bash': return 'main.sh';
             case 'java': return 'Main.java';
+            case 'prolog': return 'main.pl';
         }
     },
     isValidLanguage(language) {
-        return ['python', 'nodejs', 'bash', 'java'].includes(language);
+        return ['python', 'nodejs', 'bash', 'java', 'prolog'].includes(language);
     },
     getStorageRoot() {
         return process.env.PAL_STORAGE_ROOT;
