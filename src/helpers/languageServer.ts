@@ -50,6 +50,7 @@ export default function connectToLanguageServer(
 
     const webSocket = new WebSocket(lspURL + '/' + language);
     webSocket.onerror = () => {};
+    let pingInterval: number;
     listen({
         webSocket,
         onConnection: (connection) => {
@@ -57,12 +58,17 @@ export default function connectToLanguageServer(
             const disposable = client.start();
             connection.onClose(() => disposable.dispose());
             connection.onError(() => {});
+
+            pingInterval = window.setInterval(() => {
+                webSocket.send('ping');
+            }, 20000);
         },
     });
 
     return () => {
         try {
             webSocket.close();
+            clearInterval(pingInterval);
         } catch (e) {}
     };
 }
