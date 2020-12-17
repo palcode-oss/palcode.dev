@@ -25,13 +25,13 @@ router.post('/save', (req, res) => {
         const fileName = sanitize(file.name);
         const fileContent = file.content;
 
-        if (!fileName || !fileContent) {
+        if (!fileName) {
             return;
         }
 
         fs.writeFileSync(
             path.resolve(projectPath, fileName),
-            fileContent,
+            fileContent || '',
         );
     });
 

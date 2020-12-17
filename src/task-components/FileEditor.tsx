@@ -21,7 +21,7 @@ export default function FileEditor(
         themePair: ThemeMetadata,
     }
 ) {
-    const [loading, fileContent, setFileContent] = useFileContent(taskId, fileName);
+    const [downloading, fileContent, uploading, setFileContent] = useFileContent(taskId, fileName);
     const [themeData, themeIsBuiltIn, themeLoading] = useMonacoTheme(themePair.displayName);
 
     const extension = useMemo(() => {
@@ -80,11 +80,18 @@ export default function FileEditor(
         }
     }, []);
 
-    if (loading) {
+    if (downloading) {
         return <div className={styles.monacoLoading} />;
     }
 
-    return (
+    return <>
+        <div className={styles.editorStatus}>
+            <p className={uploading ? styles.editorStatusSaving : ''}>
+                {uploading && 'Saving...'}
+                {!uploading && 'All changes saved'}
+            </p>
+        </div>
+
         <div
             className={styles.monacoContainer}
         >
@@ -104,5 +111,5 @@ export default function FileEditor(
                 }
             />
         </div>
-    )
+    </>
 }

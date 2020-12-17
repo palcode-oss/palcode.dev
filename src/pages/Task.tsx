@@ -128,7 +128,7 @@ export default function Task(
 
     return (
         <div className={editor.editor}>
-            <div className={`${editor.editorHalf} ${teacherView ? editor.editorHalfFeedback : ''}`}>
+            <div className={editor.filesSection}>
                 {!filesLoading && currentTab &&
                     <Files
                         files={files}
@@ -144,7 +144,9 @@ export default function Task(
                 {filesLoading &&
                     <div className={editor.filesLoading} />
                 }
+            </div>
 
+            <div className={`${editor.editorSection} ${teacherView ? editor.editorSectionFeedback : ''}`}>
                 <Suspense fallback={<LazyComponentFallback />}>
                     {theme && currentTab && (
                         <FileEditor
@@ -157,7 +159,7 @@ export default function Task(
                 </Suspense>
             </div>
 
-            <div className={`${editor.consoleHalf} ${teacherView ? editor.consoleHalfFeedback : ''}`}>
+            <div className={`${editor.consoleSection} ${teacherView ? editor.consoleSectionFeedback : ''}`}>
                 <Suspense fallback={<LazyComponentFallback />}>
                     <Console
                         taskId={taskId}

@@ -43,6 +43,22 @@ router.get('/get-file-list', (req, res) => {
         filteredFiles.push(defaultFile);
     }
 
+    filteredFiles.sort((a, b) => {
+        if (a === defaultFile) {
+            return -1;
+        } else if (b === defaultFile) {
+            return 1;
+        }
+
+        try {
+            if (a.endsWith('.txt') || !a.includes('.')) {
+                return 1;
+            }
+        } catch (e) {}
+
+        return 0;
+    });
+
     res.json(filteredFiles);
 });
 

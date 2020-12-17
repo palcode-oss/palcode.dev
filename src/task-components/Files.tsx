@@ -32,6 +32,7 @@ export default function Files(
                     title='New file'
                 >
                     <FontAwesomeIcon icon={faFile}/>
+                    &nbsp; New file
                 </button>
             }
 

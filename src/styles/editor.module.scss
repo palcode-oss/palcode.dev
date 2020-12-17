@@ -7,9 +7,104 @@
   overflow-y: hidden;
 
   $editor-width: 65%;
+  $console-width: 30%;
   $sidebar-width: 60px;
   $feedback-width: 30vw;
-  .editorHalf {
+  $file-height: 35px;
+  .filesSection .filesContainer {
+    width: 100%;
+    height: 100%;
+    @include bg-dark;
+
+    padding: 20px 10px 15px;
+
+    .newFile {
+      padding: 0 15px;
+      margin-bottom: 10px;
+      color: lighten($bg-light, 20%);
+
+      &:hover {
+        color: lighten($bg-light, 60%);
+      }
+    }
+
+    .files {
+      list-style: none;
+      margin-block-start: 0;
+      margin-block-end: 0;
+      padding-block-start: 0;
+      padding-block-end: 0;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      padding-inline-start: 0;
+
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+
+      .file, .fileSelected {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        width: 200px;
+        height: $file-height;
+        margin-bottom: 2px;
+      }
+
+      .file a, .fileSelected a {
+        padding: 0 15px;
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
+
+        &:not(.fileDelete) {
+          width: 100%;
+
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+
+      .file, .file a, .fileSelected, .fileSelected a {
+        text-decoration: none;
+        border-radius: 10px;
+
+        transition: transform 100ms ease-in-out;
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+
+      .file, .file a {
+        transition: background-color 100ms ease-in-out;
+        color: lighten($bg-dark, 60%);
+        @include bg-dark;
+
+        &:hover {
+          background-color: lighten($bg-dark, 10%);
+        }
+      }
+
+      .fileSelected, .fileSelected a {
+        color: lighten($bg-light, 70%);
+        background-color: lighten($bg-light, 20%);
+
+        .fileDelete {
+          margin-left: 5px;
+          color: lighten($bg-light, 50%);
+          transition: color 100ms ease-in-out;
+
+          &:hover {
+            color: lighten($bg-light, 70%);
+          }
+        }
+      }
+    }
+  }
+
+  .editorSection {
     @include bg-dark;
     width: $editor-width;
     overflow: hidden;
@@ -17,73 +112,24 @@
     flex-direction: column;
     height: 100%;
 
-    &.editorHalfFeedback {
+    &.editorSectionFeedback {
       width: calc(#{$editor-width} - #{$feedback-width});
     }
 
-    $files-height: 40px;
-    .filesLoading {
-      height: $files-height;
-    }
+    .editorStatus {
+      margin-top: 10px;
+      margin-bottom: 10px;
 
-    .filesContainer {
-      display: flex;
-      width: 100%;
-      height: $files-height;
-      @include bg-dark;
-
-      .newFile {
-        padding: 0 10px;
+      p {
         color: lighten($bg-light, 20%);
 
-        &:hover {
-          color: lighten($bg-light, 60%);
-        }
-      }
-
-      .files {
-        flex: 1;
-
-        list-style: none;
-        margin-block-start: 0;
-        margin-block-end: 0;
-        padding-block-start: 0;
-        padding-block-end: 0;
-        margin-inline-start: 0;
-        margin-inline-end: 0;
-        padding-inline-start: 0;
-
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-end;
-        width: 100%;
-
-        .file, .file a, .fileSelected, .fileSelected a {
-          padding: 10px 5px;
-          text-decoration: none;
-          border-top-left-radius: 15px;
-          border-top-right-radius: 15px;
-          transition: background-color 100ms ease-in-out;
+        @keyframes flashing {
+          0% { color: lighten($bg-light, 30%) }
+          50% { color: lighten($bg-light, 50%) }
         }
 
-        .file, .file a {
-          color: lighten($bg-dark, 60%);
-          @include bg-dark;
-        }
-
-        $file-delete-color: #832626;
-        .fileSelected, .fileSelected a {
-          color: lighten($bg-light, 70%);
-          @include bg-light;
-
-          .fileDelete {
-            color: $file-delete-color;
-            transition: color 100ms ease-in-out;
-
-            &:hover {
-              color: lighten($file-delete-color, 30%);
-            }
-          }
+        &.editorStatusSaving {
+          animation: flashing 1s ease-in-out infinite;
         }
       }
     }
@@ -96,14 +142,15 @@
       width: 100%;
       flex: 1;
     }
+
+    .monacoContainer {
+      border-top-left-radius: 10px;
+      overflow: hidden;
+    }
   }
 
-  .consoleHalf {
-    width: calc(#{100% - $editor-width} - #{$sidebar-width});
-
-    &.consoleHalfFeedback {
-      width: calc(#{100% - $editor-width});
-    }
+  .consoleSection {
+    width: $console-width;
 
     background-color: $bg-dark;
 
@@ -112,7 +159,7 @@
       height: 100%;
 
       width: 100%;
-      background-color: black;
+      @include bg-dark;
 
       $run-color: #263b26;
       $kill-color: #452323;
@@ -214,7 +261,7 @@
       transform: translateX(0);
     }
 
-    box-shadow: 0 0 30px 1px adjust-color($bg-light, $alpha: 0.5, $saturation: 0.8);
+    box-shadow: 0 0 30px 1px adjust-color($bg-light, $alpha: 0.5, $lightness: -15%);
 
     display: flex;
     flex-direction: column;

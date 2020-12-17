@@ -61,9 +61,14 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
     return [files, loading, addLocalFile, deleteLocalFile];
 }
 
-export function useFileContent(taskId: string, fileName: string): [boolean, string, (fileContent: string) => void] {
+type Downloading = boolean;
+type FileContent = string;
+type Uploading = boolean;
+type SetFileContent = (fileContent: string) => void;
+
+export function useFileContent(taskId: string, fileName: string): [Downloading, FileContent, Uploading, SetFileContent] {
     const [fileContent, setFileContent] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [downloading, setDownloading] = useState(true);
     const [initialDownloadComplete, setInitialDownloadComplete] = useState(false);
 
     const timeout = useRef<NodeJS.Timeout | null>(null);
@@ -72,7 +77,7 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
     useEffect(() => {
         setInitialDownloadComplete(false);
         setFileContent('');
-        setLoading(true);
+        setDownloading(true);
     }, [fileName, taskId]);
 
     useEffect(() => {
@@ -99,7 +104,9 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
                         content: fileContent,
                     }],
                 }
-            ).then(() => setSaving(false));
+            )
+                .then(() => setSaving(false))
+                .catch(() => setSaving(false));
         }, 400);
     }, [fileContent, fileName, taskId, initialDownloadComplete, timeout]);
 
@@ -119,18 +126,18 @@ export function useFileContent(taskId: string, fileName: string): [boolean, stri
             }
         )
             .then(response => {
-                setLoading(false);
+                setDownloading(false);
                 setInitialDownloadComplete(true);
                 setFileContent(response.data);
             })
             .catch(() => {
-                setLoading(false);
+                setDownloading(false);
                 setInitialDownloadComplete(true);
                 setFileContent('');
             })
     }, [taskId, fileName, initialDownloadComplete]);
 
-    return [loading, fileContent, setFileContent];
+    return [downloading, fileContent, saving, setFileContent];
 }
 
 export function deleteRemoteFile(taskId: string, fileName: string) {
