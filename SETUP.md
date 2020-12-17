@@ -41,8 +41,9 @@ Currently, PalCode supports the following languages:
 * Node.JS (Docker image: `palcode/node`, default version 14.15.1)
 * Bash (Docker image: `palcode/bash`, default version 1.0.0)
 * Java (Docker image: `palcode/java`, default version 16)
+* Prolog (Docker image: `swipl`, default version 8.3.13)
 
-You can set the tag for the server to use using the `PAL_<UPPERCASE_LANGUAGE>_VERSION` environment variables. For example, you could set `PAL_PYTHON_VERSION` to `3.9.1`. If a version doesn't have a matching environment variable, the aforementioned default values will be assumed. Once again, if no image is found for the specified/default version, PalCode will crash.
+You can set the tag for the server to use using the `PAL_<UPPERCASE_LANGUAGE>_VERSION` environment variables. For example, you could set `PAL_PYTHON_VERSION` to `3.9.1`. If a version doesn't have a matching environment variable, the aforementioned default values will be assumed. Once again, if no image is found for the specified/default version, the frontend terminal won't respond to a press of the 'Run' button, and an error message will be logged on the server.
 
 For any language you use, you'll also need to install the image via Docker. This is pretty easy:
 
