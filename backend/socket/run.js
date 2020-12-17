@@ -6,7 +6,7 @@ const docker = Docker();
 const uuid = require("uuid").v4;
 const sanitize = require("sanitize-filename");
 
-async function execPython(projectId, language, socket, io) {
+function execCode(projectId, language, socket, io) {
     io.to(projectId).emit('run', {
         status: 200,
         message: 'Starting...'
@@ -16,10 +16,10 @@ async function execPython(projectId, language, socket, io) {
         name: projectId,
         WorkingDir: '/opt/runner',
         Binds: [
-            '/var/run/docker.sock:/var/run/docker.sock',
-            path.resolve(getStorageRoot(), sanitize(projectId)) + ':/usr/src/app',
-            path.resolve(__dirname, '../runner/', language) + ':/opt/runner',
-            path.resolve(__dirname, '../runner/common') + ':/opt/common',
+            '/var/run/docker.sock:/var/run/docker.sock:ro',
+            path.resolve(getStorageRoot(), sanitize(projectId)) + ':/usr/src/app:rw',
+            path.resolve(__dirname, '../runner/', language) + ':/opt/runner:ro',
+            path.resolve(__dirname, '../runner/common') + ':/opt/common:ro',
         ],
         Entrypoint: [
             // Maximum run time for Python script (ensures infinite loops aren't left running)
@@ -139,15 +139,7 @@ module.exports = (io) => {
             socket.leaveAll();
 
             socket.join(data.projectId);
-            io.to(data.projectId).emit('run', {
-                status: 200,
-                running: true,
-                // ansi seq for clearing terminal
-                // see https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
-                stdout: '\033[2J\033[H',
-                stdoutID: 'cls',
-            });
-            execPython(data.projectId, data.language, socket, io);
+            execCode(data.projectId, data.language, socket, io);
         });
 
         socket.on('stdin', (data) => {
