@@ -6,6 +6,7 @@ import styles from '../styles/editor.module.scss';
 import last from 'lodash/last';
 import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
 import connectToLanguageServer from '../helpers/languageServer';
+import { getLanguageFromExtension } from '../helpers/languageData';
 
 export default function FileEditor(
     {
@@ -32,6 +33,22 @@ export default function FileEditor(
         return last(splitFilename);
     }, [fileName]);
 
+    const language = useMemo(() => {
+        switch (extension) {
+            case 'md': return 'markdown';
+            case 'txt': return 'plaintext';
+            case 'svg': return 'html';
+            case 'html': return 'html';
+            case 'py': return 'python';
+            case 'js': return 'javascript';
+            case 'json': return 'json';
+            case 'sh': return 'shell';
+            case 'java': return 'java';
+            case 'pl': return 'plaintext';
+            default: return 'plaintext';
+        }
+    }, [extension]);
+
     useEffect(() => {
         if (themeLoading) return;
 
@@ -40,8 +57,11 @@ export default function FileEditor(
             editor.setTheme(themePair.normalisedName);
         }
 
-        if (extension === 'py') {
-            const dispose = connectToLanguageServer();
+        if (extension && ['py', 'sh'].includes(extension)) {
+            const lspLanguage = getLanguageFromExtension(extension);
+            if (!lspLanguage) return;
+
+            const dispose = connectToLanguageServer(lspLanguage);
 
             if (dispose) {
                 return () => {
@@ -59,22 +79,6 @@ export default function FileEditor(
             window.removeEventListener('resize', resizeEvent);
         }
     }, []);
-
-    const language = useMemo(() => {
-        switch (extension) {
-            case 'md': return 'markdown';
-            case 'txt': return 'plaintext';
-            case 'svg': return 'html';
-            case 'html': return 'html';
-            case 'py': return 'python';
-            case 'js': return 'javascript';
-            case 'json': return 'json';
-            case 'sh': return 'shell';
-            case 'java': return 'java';
-            case 'pl': return 'plaintext';
-            default: return 'plaintext';
-        }
-    }, [extension]);
 
     if (loading) {
         return <div className={styles.monacoLoading} />;
