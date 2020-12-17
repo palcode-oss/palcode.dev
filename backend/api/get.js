@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 const sanitize = require("sanitize-filename");
-const { getLanguageDefaultFile } = require("../helpers");
+const { getLanguageDefaultFile, isValidLanguage } = require("../helpers");
 
 const storageRoot = process.env.PAL_STORAGE_ROOT;
 const ignoredPaths = [
@@ -18,7 +18,7 @@ const ignoredPaths = [
 router.get('/get-file-list', (req, res) => {
     const projectId = sanitize(req.query.projectId);
     const language = req.query.language;
-    if (!projectId || !language) {
+    if (!projectId || !language || !isValidLanguage(language)) {
         res.sendStatus(400);
         return;
     }
