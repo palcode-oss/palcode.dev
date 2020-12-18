@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const api = require("./api/index");
-const socket = require("./socket/run");
 const path = require("path");
 const fs = require("fs");
 const bodyParser = require("body-parser");
@@ -59,9 +58,6 @@ if (process.env.NODE_ENV !== 'production') {
 
     server = https.createServer(options, app);
 }
-
-const io = require("socket.io")(server);
-socket(io);
 
 server.listen(process.env.PAL_PORT, () => {
     console.log("Ready on port " + process.env.PAL_PORT);
