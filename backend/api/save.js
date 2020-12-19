@@ -1,27 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs-extra");
 const path = require("path");
 const sanitize = require("sanitize-filename");
-const {getStorageRoot} = require("../helpers");
+const {getBucket} = require("../helpers");
 
-const storageRoot = getStorageRoot();
-
-router.post('/save', (req, res) => {
-    const projectId = sanitize(req.body.projectId);
+router.post('/save', async (req, res) => {
+    const projectId = sanitize(req.body.projectId || '');
     const files = req.body.files;
-    if (!projectId || !files || !files.length) {
+    const schoolId = req.body.schoolId;
+    if (!projectId || !files || !files.length || !schoolId) {
         res.sendStatus(400);
         return;
     }
 
-    const projectPath = path.resolve(storageRoot, projectId);
-    const projectExists = fs.existsSync(projectPath);
-    if (!projectExists) {
-        fs.mkdirSync(projectPath);
-    }
-
-    files.forEach(file => {
+    for (const file of files) {
         const fileName = sanitize(file.name);
         const fileContent = file.content;
 
@@ -29,54 +21,72 @@ router.post('/save', (req, res) => {
             return;
         }
 
-        fs.writeFileSync(
-            path.resolve(projectPath, fileName),
-            fileContent || '',
-        );
-    });
+        try {
+            await getBucket(schoolId)
+                .file(
+                    path.join(projectId, fileName)
+                )
+                .save(fileContent);
+        } catch (e) {
+            console.log(e.code, Date.now());
+            res.sendStatus(500);
+            return;
+        }
+    }
 
     res.sendStatus(200);
 });
 
-router.post('/delete-file', (req, res) => {
-    const projectId = sanitize(req.body.projectId);
-    const fileName = sanitize(req.body.fileName);
+router.post('/delete-file', async (req, res) => {
+    const projectId = sanitize(req.body.projectId || '');
+    const fileName = sanitize(req.body.fileName || '');
+    const schoolId = req.body.schoolId;
 
-    if (!projectId || !fileName) {
+    if (!projectId || !fileName || !schoolId) {
         res.sendStatus(400);
         return;
     }
 
-    const filePath = path.resolve(storageRoot, projectId, fileName);
-    const fileExists = fs.existsSync(filePath);
-    if (!fileExists) {
-        res.sendStatus(404);
-        return;
-    }
+    const filePath = path.join(projectId, fileName);
 
-    fs.unlinkSync(filePath);
-    res.sendStatus(200);
+    try {
+        await getBucket(schoolId)
+            .file(filePath)
+            .delete();
+        res.sendStatus(200);
+    } catch (e) {
+        res.sendStatus(404);
+    }
 });
 
-router.post('/clone', (req, res) => {
-    const projectId = sanitize(req.body.projectId);
-    const sourceProjectId = sanitize(req.body.sourceProjectId);
+router.post('/clone', async (req, res) => {
+    const projectId = sanitize(req.body.projectId || '');
+    const sourceProjectId = sanitize(req.body.sourceProjectId || '');
+    const schoolId = req.body.schoolId;
 
     if (!projectId || !sourceProjectId) {
         res.sendStatus(400);
         return;
     }
 
-    const sourceProjectPath = path.resolve(storageRoot, sourceProjectId);
-    const pathExists = fs.existsSync(sourceProjectPath);
-    if (!pathExists) {
+    const sourceProjectPath = path.join(sourceProjectId);
+    const bucket = getBucket(schoolId);
+    const [files] = await bucket.getFiles({
+        prefix: sourceProjectPath,
+    });
+
+    if (files.length === 0) {
         res.sendStatus(404);
         return;
     }
 
-    const projectPath = path.resolve(storageRoot, projectId);
-    fs.mkdirSync(projectPath);
-    fs.copySync(sourceProjectPath, projectPath);
+    for (const file of files) {
+        try {
+            await file.copy(
+                path.join(projectId, file.name),
+            );
+        } catch (e) {}
+    }
 
     res.sendStatus(200);
 });

@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
 const path = require("path");
 const sanitize = require("sanitize-filename");
-const { getLanguageDefaultFile, isValidLanguage } = require("../helpers");
+const { getLanguageDefaultFile, isValidLanguage, getBucket } = require("../helpers");
 
-const storageRoot = process.env.PAL_STORAGE_ROOT;
 const ignoredPaths = [
     '__pycache__',
     'README.md',
@@ -15,10 +13,11 @@ const ignoredPaths = [
     'yarn.lock',
 ];
 
-router.get('/get-file-list', (req, res) => {
-    const projectId = sanitize(req.query.projectId);
+router.get('/get-file-list', async (req, res) => {
+    const projectId = sanitize(req.query.projectId || '');
+    const schoolId = req.query.schoolId;
     const language = req.query.language;
-    if (!projectId || !language || !isValidLanguage(language)) {
+    if (!projectId || !language || !isValidLanguage(language) || !schoolId) {
         res.sendStatus(400);
         return;
     }
@@ -27,9 +26,11 @@ router.get('/get-file-list', (req, res) => {
 
     let fileList = [];
     try {
-        fileList = fs.readdirSync(
-            path.resolve(storageRoot, projectId)
-        );
+        const [rawFiles] = await getBucket(schoolId)
+            .getFiles({
+                prefix: '/' + projectId,
+            });
+        fileList = rawFiles.map(e => e.name);
     } catch (e) {
         res.json([defaultFile]);
         return;
@@ -62,21 +63,25 @@ router.get('/get-file-list', (req, res) => {
     res.json(filteredFiles);
 });
 
-router.get('/get-file', (req, res) => {
-    const projectId = sanitize(req.query.projectId);
-    const fileName = sanitize(req.query.fileName);
+router.get('/get-file', async (req, res) => {
+    const projectId = sanitize(req.query.projectId || '');
+    const fileName = sanitize(req.query.fileName || '');
+    const schoolId = req.query.schoolId;
 
-    if (!projectId || !fileName) {
+    if (!projectId || !fileName || !schoolId) {
         res.sendStatus(400);
         return;
     }
 
     let fileContents = '';
     try {
-        fileContents = fs.readFileSync(
-            path.resolve(storageRoot, projectId, fileName),
-            "utf-8"
-        );
+        const [data] = await getBucket(schoolId)
+            .file(
+                path.join(projectId, fileName),
+            )
+            .download();
+
+        fileContents = data.toString('utf8');
     } catch (e) {
         res.sendStatus(404);
         return;

@@ -13,6 +13,7 @@ import Sidebar from '../task-components/Sidebar';
 import { availableThemes, ThemeMetadata } from '../helpers/monacoThemes';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
 import {getLanguageDefaultFile} from '../helpers/languageData';
+import { useSchoolId } from '../helpers/school';
 
 const FileEditor = lazy(() => import('../task-components/FileEditor'));
 const Console = lazy(() => import('../task-components/Console'));
@@ -59,14 +60,16 @@ export default function Task(
         setCurrentTab(fileName);
     }, [files]);
 
+    const schoolId = useSchoolId();
     const deleteFile = useCallback((fileName: string) => {
+        if (!schoolId) return;
         deleteLocalFile(fileName);
-        deleteRemoteFile(taskId, fileName);
+        deleteRemoteFile(taskId, fileName, schoolId);
 
         if (task) {
             setCurrentTab(getLanguageDefaultFile(task.language));
         }
-    }, [files, task]);
+    }, [files, task, schoolId]);
 
     const readOnly = useMemo<boolean>(() => {
         if (!task || !user) return true;

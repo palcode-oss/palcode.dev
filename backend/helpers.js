@@ -1,26 +1,19 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("../serviceAccount.json");
+const {Storage} = require('@google-cloud/storage');
+
+let serviceAccount;
+if (process.env.NODE_ENV !== 'production') {
+    serviceAccount = require("../serviceAccount.json");
+}
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: `https://${serviceAccount['project_id']}.firebaseio.com`,
+    credential: serviceAccount ? admin.credential.cert(serviceAccount) : admin.credential.applicationDefault(),
+    databaseURL: serviceAccount ? `https://${serviceAccount['project_id']}.firebaseio.com` : 'https://palcode-ba70e.firebaseio.com',
 });
 
+const storage = new Storage();
+
 module.exports = {
-    getTag(language) {
-        switch(language) {
-            case 'python':
-                return 'palcode/python:' + (process.env.PAL_PYTHON_VERSION || '3.9.1');
-            case 'nodejs':
-                return 'palcode/node:' + (process.env.PAL_NODEJS_VERSION || '14.15.1');
-            case 'bash':
-                return 'palcode/bash:' + (process.env.PAL_BASH_VERSION || '1.0.0');
-            case 'java':
-                return 'palcode/java:' + (process.env.PAL_JAVA_VERSION || '16');
-            case 'prolog':
-                return 'swipl:' + (process.env.PAL_PROLOG_VERSION || '8.3.13');
-        }
-    },
     getLanguageDefaultFile(language) {
         switch (language) {
             case 'python': return 'main.py';
@@ -38,5 +31,9 @@ module.exports = {
     },
     getFirebase() {
         return admin;
+    },
+    getBucket(schoolId) {
+        if (!schoolId || typeof schoolId !== 'string') throw new Error("No School ID provided!");
+        return storage.bucket('palcode-school-' + schoolId.toLowerCase());
     }
 }

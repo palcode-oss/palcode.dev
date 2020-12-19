@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import getEnvVariable from './getEnv';
+import { useSchoolId } from './school';
 
 export default function useBriefing(taskId: string): string {
+    const schoolId = useSchoolId();
     const [briefingContent, setBriefingContent] = useState('');
 
     useEffect(() => {
+        if (!schoolId) return;
+
         axios.get(
             getEnvVariable('API') + '/get-file',
             {
                 params: {
                     projectId: taskId,
                     fileName: 'README.md',
+                    schoolId,
                 }
             }
         )
@@ -23,7 +28,7 @@ export default function useBriefing(taskId: string): string {
                 }
             })
             .catch(() => {});
-    }, [taskId]);
+    }, [taskId, schoolId]);
 
     return briefingContent;
 }

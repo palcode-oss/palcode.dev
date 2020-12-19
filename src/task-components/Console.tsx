@@ -1,11 +1,12 @@
 import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/xtermSocket';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import XtermWrapper from './XtermWrapper';
 import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faSkull } from '@fortawesome/free-solid-svg-icons';
 import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
 import { TaskLanguage } from '../types';
+import { useSchoolId } from '../helpers/school';
 
 export default function Console(
     {
@@ -22,10 +23,17 @@ export default function Console(
 
     const [lastStdout, lastStdoutID, running] = useStdout(taskId, socket);
 
+    const schoolId = useSchoolId();
+    const [loading, setLoading] = useState(false);
     const run = useCallback(() => {
-        if (!taskLanguage) return;
-        runCode(taskId, taskLanguage, socket);
-    }, [taskId, taskLanguage, socket]);
+        if (!taskLanguage || !schoolId || loading) return;
+        setLoading(true);
+        runCode(taskId, taskLanguage, schoolId, socket);
+    }, [taskId, taskLanguage, socket, schoolId, loading]);
+
+    useEffect(() => {
+        setLoading(false);
+    }, [running]);
 
     const kill = useCallback(() => {
         killCode(taskId, socket);
@@ -57,11 +65,18 @@ export default function Console(
             {!running && (
                 <button
                     onClick={run}
-                    className={editor.runButton}
+                    className={loading ? editor.loadingButton : editor.runButton}
                     disabled={!taskLanguage}
                 >
-                    <FontAwesomeIcon icon={faPlay} />
-                    &nbsp;Run
+                    {
+                        loading && 'Starting...'
+                    }
+                    {
+                        !loading && <>
+                            <FontAwesomeIcon icon={faPlay} />
+                            &nbsp;Run
+                        </>
+                    }
                 </button>
             )}
 

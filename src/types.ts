@@ -26,6 +26,7 @@ export interface User {
     username: string;
     perms: Perms;
     uid: string;
+    schoolId: string;
 }
 
 export type UserDoc = Omit<User, 'uid'>;

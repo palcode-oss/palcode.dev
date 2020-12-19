@@ -21,6 +21,7 @@ import { useSnackbar } from 'notistack';
 import form from '../styles/form.module.scss';
 import getEnvVariable from '../helpers/getEnv';
 import TaskLanguageIcon from './TaskLanguageIcon';
+import { useSchoolId } from '../helpers/school';
 
 interface Props {
     task: TemplateTask;
@@ -57,8 +58,9 @@ export default function TaskSubmissionRow(
 
     const history = useHistory();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const schoolId = useSchoolId();
     const openSubmission = useCallback(async () => {
-        if (!user || !classroom) return;
+        if (!user || !classroom || !schoolId) return;
 
         const existingTaskResponse = await firebase
             .firestore()
@@ -100,12 +102,13 @@ export default function TaskSubmissionRow(
             {
                 projectId: taskDoc.id,
                 sourceProjectId: task.id,
+                schoolId,
             },
         );
 
         closeSnackbar('task-clone');
         history.push(`/task/${taskDoc.id}`);
-    }, [task, classroom, user]);
+    }, [task, classroom, user, schoolId]);
 
     const [showFeedback, setShowFeedback] = useState(false);
     const displayFeedback = useCallback(() => {

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { TaskLanguage } from '../types';
 import getEnvVariable from './getEnv';
+import { useSchoolId } from './school';
 
 type Files = string[];
 type FilesLoading = boolean;
@@ -11,9 +12,10 @@ type DeleteFile = (fileName: string) => void;
 export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, FilesLoading, AddFile, DeleteFile] {
     const [files, setFiles] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const schoolId = useSchoolId();
 
     useEffect(() => {
-        if (!language) return;
+        if (!language || !schoolId) return;
 
         axios.get(
             getEnvVariable('API') + '/get-file-list',
@@ -21,6 +23,7 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
                 params: {
                     projectId: taskId,
                     language,
+                    schoolId,
                 }
             }
         )
@@ -37,7 +40,7 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
                 setLoading(false);
                 setFiles(['index.py'])
             });
-    }, [taskId, language]);
+    }, [taskId, language, schoolId]);
 
     const addLocalFile = useCallback((fileName: string) => {
         if (files.includes(fileName)) {
@@ -74,6 +77,8 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
     const timeout = useRef<NodeJS.Timeout | null>(null);
     const [saving, setSaving] = useState(false);
 
+    const schoolId = useSchoolId();
+
     useEffect(() => {
         setInitialDownloadComplete(false);
         setFileContent('');
@@ -85,7 +90,7 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
             clearTimeout(timeout.current);
         }
 
-        if (!initialDownloadComplete || saving) {
+        if (!initialDownloadComplete || saving || !schoolId) {
             return;
         }
 
@@ -103,15 +108,16 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                         name: fileName,
                         content: fileContent,
                     }],
+                    schoolId,
                 }
             )
                 .then(() => setSaving(false))
                 .catch(() => setSaving(false));
         }, 400);
-    }, [fileContent, fileName, taskId, initialDownloadComplete, timeout]);
+    }, [fileContent, fileName, taskId, initialDownloadComplete, timeout, schoolId]);
 
     useEffect(() => {
-        if (initialDownloadComplete) {
+        if (initialDownloadComplete || !schoolId) {
             return;
         }
 
@@ -120,7 +126,8 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
             {
                 params: {
                     projectId: taskId,
-                    fileName: fileName,
+                    fileName,
+                    schoolId,
                 },
                 transformResponse: (res) => res,
             }
@@ -135,14 +142,15 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                 setInitialDownloadComplete(true);
                 setFileContent('');
             })
-    }, [taskId, fileName, initialDownloadComplete]);
+    }, [taskId, fileName, initialDownloadComplete, schoolId]);
 
     return [downloading, fileContent, saving, setFileContent];
 }
 
-export function deleteRemoteFile(taskId: string, fileName: string) {
+export function deleteRemoteFile(taskId: string, fileName: string, schoolId: string) {
     return axios.post(getEnvVariable('API') + '/delete-file', {
         projectId: taskId,
         fileName,
+        schoolId,
     });
 }

@@ -23,12 +23,14 @@ export function useSocket(): SocketIOClient.Socket | undefined {
     const [socket, setSocket] = useState<SocketIOClient.Socket>();
 
     useEffect(() => {
-        const socketUrl = getEnvVariable('XTERM');
+        const socketUrl = getEnvVariable('RUNNER');
         if (!socketUrl) {
             throw new TypeError('Xterm socket URL is undefined');
         }
 
-        const socketIo = io(socketUrl);
+        const socketIo = io(socketUrl, {
+            path: getEnvVariable('RUNNER_PATH') || undefined,
+        });
         setSocket(socketIo);
 
         return () => {
@@ -39,12 +41,13 @@ export function useSocket(): SocketIOClient.Socket | undefined {
     return socket;
 }
 
-export function runCode(taskId: string, language: TaskLanguage, socket?: SocketIOClient.Socket): void {
+export function runCode(taskId: string, language: TaskLanguage, schoolId: string, socket?: SocketIOClient.Socket): void {
     if (!socket) return;
 
     socket.emit('start', {
         projectId: taskId,
         language,
+        schoolId,
     });
 }
 
