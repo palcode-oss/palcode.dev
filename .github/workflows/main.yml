@@ -21,9 +21,10 @@ jobs:
           CI: false
 
           # URL of backend API routes
-          REACT_APP_API: https://palcode.dev/api
+          REACT_APP_API: https://api.palcode.dev/api
           # Base URL for socket.io
-          REACT_APP_XTERM: https://palcode.dev
+          REACT_APP_RUNNER: https://runner.palcode.dev
+          REACT_APP_RUNNER_PATH: /runner/socket
           # URL for language server requests
           REACT_APP_LSP: wss://lsp.palcode.dev
 
@@ -38,7 +39,13 @@ jobs:
           REACT_APP_F_STORAGE_BUCKET: palcode-ba70e.appspot.com
           REACT_APP_F_APP_ID: 1:1066769258920:web:472b48d2d97f99f99fa59d
 
-      - uses: actions/upload-artifact@v2
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        name: Deploy to Firebase Hosting
         with:
-          name: react-build
-          path: build
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          expires: 30d
+          projectId: palcode-ba70e
+          channelId: live
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
