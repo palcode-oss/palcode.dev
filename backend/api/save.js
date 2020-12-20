@@ -4,6 +4,10 @@ const path = require("path");
 const sanitize = require("sanitize-filename");
 const {getBucket} = require("../helpers");
 
+const prohibitedFiles = [
+    '.palcode.lock',
+];
+
 router.post('/save', async (req, res) => {
     const projectId = sanitize(req.body.projectId || '');
     const files = req.body.files;
@@ -17,8 +21,8 @@ router.post('/save', async (req, res) => {
         const fileName = sanitize(file.name);
         const fileContent = file.content;
 
-        if (!fileName) {
-            return;
+        if (!fileName || prohibitedFiles.includes(fileName)) {
+            continue;
         }
 
         try {
