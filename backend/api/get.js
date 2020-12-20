@@ -5,12 +5,13 @@ const sanitize = require("sanitize-filename");
 const { getLanguageDefaultFile, isValidLanguage, getBucket } = require("../helpers");
 
 const ignoredPaths = [
-    '__pycache__',
+    '__pycache__/',
     'README.md',
-    'env',
+    'env/',
     'requirements.old.txt',
-    'node_modules',
+    'node_modules/',
     'yarn.lock',
+    '.',
 ];
 
 router.get('/get-file-list', async (req, res) => {
@@ -28,16 +29,18 @@ router.get('/get-file-list', async (req, res) => {
     try {
         const [rawFiles] = await getBucket(schoolId)
             .getFiles({
-                prefix: '/' + projectId,
+                prefix: projectId,
             });
-        fileList = rawFiles.map(e => e.name);
+        fileList = rawFiles.map(e => {
+            return e.name.substring((projectId + '/').length);
+        });
     } catch (e) {
         res.json([defaultFile]);
         return;
     }
 
     const filteredFiles = fileList.filter(file => {
-        return !ignoredPaths.includes(file) && !file.startsWith('.');
+        return !ignoredPaths.some(e => file.startsWith(e));
     });
 
     if (!filteredFiles.includes(defaultFile)) {

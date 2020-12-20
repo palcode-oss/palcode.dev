@@ -59,6 +59,7 @@ export default function Files(
                         <a
                             href='#'
                             onClick={() => onTabSelect(file)}
+                            title={file}
                         >
                             {file}
                         </a>
