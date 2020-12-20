@@ -30,6 +30,10 @@ export function useSocket(): SocketIOClient.Socket | undefined {
 
         const socketIo = io(socketUrl, {
             path: getEnvVariable('RUNNER_PATH') || undefined,
+            // browsers that don't support websockets won't support the rest of PalCode anyway
+            // long-polling doesn't seem to work (because load balancing)
+            // https://caniuse.com/mdn-api_websocket
+            transports: ['websocket'],
         });
         setSocket(socketIo);
 
