@@ -9,6 +9,7 @@ enum RunStatus {
     Continuing = 200,
     BadRequest = 400,
     ProjectNotFound = 404,
+    ServerError = 500,
 }
 
 interface RunMessage {
@@ -68,7 +69,11 @@ export function useStdout(taskId: string, socket?: SocketIOClient.Socket): [stri
 
             if (data.status === RunStatus.Continuing && data.stdout && data.stdoutID) {
                 setStdout(normaliseKey(data.stdout));
-                setStdoutID(data.stdoutID);
+                setStdoutID(data.stdoutID || '');
+            }
+
+            if (data.status === RunStatus.ServerError) {
+                setStdoutID(Math.random().toString());
             }
         }
 

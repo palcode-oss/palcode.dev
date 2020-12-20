@@ -33,7 +33,7 @@ export default function Console(
 
     useEffect(() => {
         setLoading(false);
-    }, [running]);
+    }, [running, lastStdoutID]);
 
     const kill = useCallback(() => {
         killCode(taskId, socket);
