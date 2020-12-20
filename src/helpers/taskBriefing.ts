@@ -17,7 +17,8 @@ export default function useBriefing(taskId: string): string {
                     projectId: taskId,
                     fileName: 'README.md',
                     schoolId,
-                }
+                },
+                withCredentials: true,
             }
         )
             .then(response => {

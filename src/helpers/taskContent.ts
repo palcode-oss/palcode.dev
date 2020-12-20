@@ -24,7 +24,8 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
                     projectId: taskId,
                     language,
                     schoolId,
-                }
+                },
+                withCredentials: true,
             }
         )
             .then(response => {
@@ -109,7 +110,10 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                         content: fileContent,
                     }],
                     schoolId,
-                }
+                },
+                {
+                    withCredentials: true,
+                },
             )
                 .then(() => setSaving(false))
                 .catch(() => setSaving(false));
@@ -129,6 +133,7 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                     fileName,
                     schoolId,
                 },
+                withCredentials: true,
                 transformResponse: (res) => res,
             }
         )
@@ -152,5 +157,7 @@ export function deleteRemoteFile(taskId: string, fileName: string, schoolId: str
         projectId: taskId,
         fileName,
         schoolId,
+    }, {
+        withCredentials: true,
     });
 }
