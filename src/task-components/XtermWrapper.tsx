@@ -88,12 +88,6 @@ export default function XtermWrapper(
         terminal.clear();
     }, [taskId]);
 
-    useEffect(() => {
-        if (enabled) {
-            terminal.clear();
-        }
-    }, [enabled]);
-
     return (
         <div
             ref={terminalContainer}
