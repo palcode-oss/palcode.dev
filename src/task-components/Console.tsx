@@ -1,4 +1,4 @@
-import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/xtermSocket';
+import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/socket/xtermSocket';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import XtermWrapper from './XtermWrapper';
 import editor from '../styles/editor.module.scss';
