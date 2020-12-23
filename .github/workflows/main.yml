@@ -21,9 +21,9 @@ jobs:
           CI: false
 
           # URL of backend API routes
-          REACT_APP_API: https://api.palcode.dev/api
+          REACT_APP_API: https://api.palcode.dev
           # Base URL for socket.io
-          REACT_APP_RUNNER: wss://runner.palcode.dev/runner/socket
+          REACT_APP_RUNNER: wss://runner.palcode.dev/xterm
           # URL for language server requests
           REACT_APP_LSP: wss://lsp.palcode.dev
 
