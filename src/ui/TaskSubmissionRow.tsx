@@ -22,6 +22,7 @@ import form from '../styles/form.module.scss';
 import getEnvVariable from '../helpers/getEnv';
 import TaskLanguageIcon from './TaskLanguageIcon';
 import { useSchoolId } from '../helpers/school';
+import useAPIToken from '../helpers/apiToken';
 
 interface Props {
     task: TemplateTask;
@@ -59,8 +60,9 @@ export default function TaskSubmissionRow(
     const history = useHistory();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const schoolId = useSchoolId();
+    const token = useAPIToken();
     const openSubmission = useCallback(async () => {
-        if (!user || !classroom || !schoolId) return;
+        if (!user || !classroom || !schoolId || !token) return;
 
         const existingTaskResponse = await firebase
             .firestore()
@@ -103,12 +105,13 @@ export default function TaskSubmissionRow(
                 projectId: taskDoc.id,
                 sourceProjectId: task.id,
                 schoolId,
+                token,
             },
         );
 
         closeSnackbar('task-clone');
         history.push(`/task/${taskDoc.id}`);
-    }, [task, classroom, user, schoolId]);
+    }, [task, classroom, user, schoolId, token]);
 
     const [showFeedback, setShowFeedback] = useState(false);
     const displayFeedback = useCallback(() => {

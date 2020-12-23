@@ -56,7 +56,9 @@ export function useUserByUsername(username?: string): [User | null, boolean] {
     return [user, loading];
 }
 
-export function useAuth(): [firebase.User | null, boolean, User | null] {
+export function useAuth(
+    includeUserQuery = true,
+): [firebase.User | null, boolean, User | null] {
     const [user, setUser] = useState<firebase.User | null>(null);
     const [loading, setLoading] = useState(true);
     const [userDoc, setUserDoc] = useState<User | null>(null);
@@ -67,6 +69,12 @@ export function useAuth(): [firebase.User | null, boolean, User | null] {
             .onAuthStateChanged(authUser => {
                 if (authUser) {
                     setUser(authUser);
+
+                    if (!includeUserQuery) {
+                        setLoading(false);
+                        return;
+                    }
+
                     firebase
                         .firestore()
                         .collection('users')

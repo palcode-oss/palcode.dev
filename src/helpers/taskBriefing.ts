@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import getEnvVariable from './getEnv';
 import { useSchoolId } from './school';
+import useAPIToken from './apiToken';
 
 export default function useBriefing(taskId: string): string {
     const schoolId = useSchoolId();
+    const token = useAPIToken();
     const [briefingContent, setBriefingContent] = useState('');
 
     useEffect(() => {
-        if (!schoolId) return;
+        if (!schoolId || !token) return;
 
         axios.get(
             getEnvVariable('API') + '/get-file',
@@ -17,6 +19,7 @@ export default function useBriefing(taskId: string): string {
                     projectId: taskId,
                     fileName: 'README.md',
                     schoolId,
+                    token,
                 },
                 withCredentials: true,
             }
@@ -29,7 +32,7 @@ export default function useBriefing(taskId: string): string {
                 }
             })
             .catch(() => {});
-    }, [taskId, schoolId]);
+    }, [taskId, schoolId, token]);
 
     return briefingContent;
 }

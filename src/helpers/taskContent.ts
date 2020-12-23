@@ -3,6 +3,7 @@ import axios from 'axios';
 import { TaskLanguage } from '../types';
 import getEnvVariable from './getEnv';
 import { useSchoolId } from './school';
+import useAPIToken from './apiToken';
 
 type Files = string[];
 type FilesLoading = boolean;
@@ -13,9 +14,10 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
     const [files, setFiles] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const schoolId = useSchoolId();
+    const token = useAPIToken();
 
     useEffect(() => {
-        if (!language || !schoolId) return;
+        if (!language || !schoolId || !token) return;
 
         axios.get(
             getEnvVariable('API') + '/get-file-list',
@@ -24,6 +26,7 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
                     projectId: taskId,
                     language,
                     schoolId,
+                    token,
                 },
                 withCredentials: true,
             }
@@ -41,7 +44,7 @@ export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, F
                 setLoading(false);
                 setFiles(['index.py'])
             });
-    }, [taskId, language, schoolId]);
+    }, [taskId, language, schoolId, token]);
 
     const addLocalFile = useCallback((fileName: string) => {
         if (files.includes(fileName)) {
@@ -79,6 +82,7 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
     const [saving, setSaving] = useState(false);
 
     const schoolId = useSchoolId();
+    const token = useAPIToken();
 
     useEffect(() => {
         setInitialDownloadComplete(false);
@@ -91,7 +95,7 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
             clearTimeout(timeout.current);
         }
 
-        if (!initialDownloadComplete || saving || !schoolId) {
+        if (!initialDownloadComplete || saving || !schoolId || !token) {
             return;
         }
 
@@ -110,6 +114,7 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                         content: fileContent,
                     }],
                     schoolId,
+                    token,
                 },
                 {
                     withCredentials: true,
@@ -118,10 +123,10 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                 .then(() => setSaving(false))
                 .catch(() => setSaving(false));
         }, 400);
-    }, [fileContent, fileName, taskId, initialDownloadComplete, timeout, schoolId]);
+    }, [fileContent, fileName, taskId, initialDownloadComplete, timeout, schoolId, token]);
 
     useEffect(() => {
-        if (initialDownloadComplete || !schoolId) {
+        if (initialDownloadComplete || !schoolId || !token) {
             return;
         }
 
@@ -132,6 +137,7 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                     projectId: taskId,
                     fileName,
                     schoolId,
+                    token,
                 },
                 withCredentials: true,
                 transformResponse: (res) => res,
@@ -147,7 +153,7 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
                 setInitialDownloadComplete(true);
                 setFileContent('');
             })
-    }, [taskId, fileName, initialDownloadComplete, schoolId]);
+    }, [taskId, fileName, initialDownloadComplete, schoolId, token]);
 
     return [downloading, fileContent, saving, setFileContent];
 }
