@@ -17,7 +17,7 @@ export default function connectToSocket(
 
     socket.addEventListener('close', reconnect);
     return () => {
-        socket.close();
         socket.removeEventListener('close', reconnect);
+        socket.close();
     }
 }

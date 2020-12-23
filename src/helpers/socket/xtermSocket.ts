@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import normaliseKey from '../xtermKeyMapper';
 import { TaskLanguage } from '../../types';
-import getEnvVariable from '../getEnv';
 import sendSerializedMessage from './send';
 import parseMessage, { RunStatus } from './parse';
 import connectToSocket from './connect';
