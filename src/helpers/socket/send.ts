@@ -1,10 +1,9 @@
-import { encode } from 'js-base64';
+import { ClientMessage, encode } from 'palcode-sockets';
 
 export default function sendSerializedMessage(
     socket: WebSocket,
-    message: Object
+    message: ClientMessage
 ) {
-    const stringJSON = JSON.stringify(message);
-    const base64 = encode(stringJSON);
-    socket.send(base64);
+    const encodedMessage = encode(message);
+    socket.send(encodedMessage);
 }

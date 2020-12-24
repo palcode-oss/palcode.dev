@@ -1,4 +1,4 @@
-import { decode } from 'js-base64';
+import { decode, isServerMessage, ServerMessage } from 'palcode-sockets';
 
 export enum RunStatus {
     Failed = 500,
@@ -8,22 +8,17 @@ export enum RunStatus {
     ServerError = 500,
 }
 
-export interface RunMessage {
-    status: RunStatus;
-    message?: string;
-    running?: boolean;
-    stdout?: string;
-    stdoutID?: string;
-}
-
-export default function parseMessage(message: string): RunMessage | undefined {
+export default function parseMessage(message: string): ServerMessage | undefined {
     let data;
     try {
-        const stringJSON = decode(message);
-        data = JSON.parse(stringJSON);
+        data = decode(message);
     } catch (e) {
         return;
     }
 
-    return data as RunMessage;
+    if (isServerMessage(data)) {
+        return data;
+    } else {
+        return;
+    }
 }
