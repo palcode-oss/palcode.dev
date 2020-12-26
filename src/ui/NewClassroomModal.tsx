@@ -12,6 +12,7 @@ import { ClassroomDoc } from '../types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 import getEnvVariable from '../helpers/getEnv';
+import { useSchoolId } from '../helpers/school';
 
 export enum NewClassroomAction {
     New,
@@ -42,7 +43,7 @@ export default function NewClassroomModal(props: NewProps | CloneProps): ReactEl
 
     const [loading, setLoading] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
-    const [user] = useAuth();
+    const [user] = useAuth(false);
     const history = useHistory();
 
     const validateClassroom = useCallback(() => {
@@ -56,9 +57,10 @@ export default function NewClassroomModal(props: NewProps | CloneProps): ReactEl
         }
     }, [name]);
 
+    const schoolId = useSchoolId();
     const createClassroom = useCallback(async () => {
         if(!validateClassroom()) return;
-        if (!user) return;
+        if (!user || !schoolId) return;
 
         setLoading(true);
         const classroomDoc = firebase
@@ -72,7 +74,8 @@ export default function NewClassroomModal(props: NewProps | CloneProps): ReactEl
                 name,
                 members: [],
                 created: firebase.firestore.Timestamp.now(),
-                tasks: [],
+                schoolId,
+
             } as ClassroomDoc)
             .then(() => {
                 enqueueSnackbar('Classroom created successfully!', {
@@ -81,7 +84,7 @@ export default function NewClassroomModal(props: NewProps | CloneProps): ReactEl
                 setLoading(false);
                 history.push(`/classroom/${classroomDoc.id}/manage`);
             });
-    }, [name, user]);
+    }, [name, user, schoolId]);
 
     const cloneClassroom = useCallback(async () => {
         if(!validateClassroom()) return;

@@ -59,7 +59,7 @@ export default function Dashboard(): ReactElement {
     if (userDoc.perms !== Perms.Student) {
         const TeacherDashboard = lazy(() => import('./TeacherDashboard'));
         return <Suspense fallback={<LazyComponentFallback />}>
-            <TeacherDashboard user={userDoc}/>
+            <TeacherDashboard />
         </Suspense>
     }
 

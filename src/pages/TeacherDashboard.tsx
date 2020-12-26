@@ -24,15 +24,7 @@ import Spinner from '../ui/Spinner';
 
 const ClassroomRow = lazy(() => import('../ui/ClassroomRow'));
 
-interface Props {
-    user: User
-}
-
-export default function TeacherDashboard(
-    {
-        user,
-    }: Props,
-): ReactElement {
+export default function TeacherDashboard(): ReactElement {
     const [classroomDataUpdater, setClassroomDataUpdater] = useState(0);
     const [classroomData, classroomDataLoading] = useSchoolClassrooms(classroomDataUpdater);
 
