@@ -27,9 +27,6 @@ jobs:
           # URL for language server requests
           REACT_APP_LSP: wss://lsp.palcode.dev
 
-          # Azure AD tenant ID to allow users from
-          REACT_APP_TENANT: 391f633c-b9ba-4cd1-b446-168fe408c462
-
           # Firebase configuration (REACT_APP_F_*)
           REACT_APP_F_API_KEY: AIzaSyDvtCpVfSv_WyqODPmPlrYvGqCmlZZlbk8
           REACT_APP_F_AUTH_DOMAIN: palcode-ba70e.firebaseapp.com

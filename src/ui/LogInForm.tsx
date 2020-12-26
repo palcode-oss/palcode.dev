@@ -3,25 +3,13 @@ import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import form from '../styles/form.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import styles from '../styles/login.module.scss';
 import Loader from 'react-loader-spinner';
 import { Perms, UserDoc } from '../types';
 import { Link } from 'react-router-dom';
+import { getSchoolAuth } from '../helpers/school';
+import axios from 'axios';
 import getEnvVariable from '../helpers/getEnv';
-
-const provider = new firebase.auth.OAuthProvider('microsoft.com');
-provider.setCustomParameters({
-    // https://www.whatismytenantid.com/
-    // see https://firebase.google.com/docs/auth/web/microsoft-oauth for details on how to use
-    tenant: getEnvVariable('TENANT'),
-});
-
-interface MicrosoftProfile {
-    givenName?: string;
-    surname?: string;
-}
 
 export default function LogInForm(
     {
@@ -34,7 +22,32 @@ export default function LogInForm(
 ): ReactElement {
     const {enqueueSnackbar} = useSnackbar();
     const [signingIn, setSigningIn] = useState(true);
-    const msalLogin = useCallback(() => {
+    const [schoolDomain, setSchoolDomain] = useState('');
+
+    const login = useCallback(async () => {
+        enqueueSnackbar('Signing in...', {
+            variant: 'info',
+            preventDuplicate: true,
+            persist: true,
+        });
+
+        const schoolAuth = await getSchoolAuth(schoolDomain);
+        if (!schoolAuth) {
+            enqueueSnackbar(
+                'Oops... it looks like we\'ve never heard of that domain before.',
+                {
+                    variant: 'error',
+                    preventDuplicate: true,
+                }
+            );
+            return;
+        }
+
+        const provider = new firebase.auth.OAuthProvider(schoolAuth.service);
+        provider.setCustomParameters({
+            tenant: schoolAuth.tenant,
+        });
+
         return firebase.auth()
             .signInWithRedirect(provider)
             .catch(() => {
@@ -45,7 +58,7 @@ export default function LogInForm(
 
                 return null;
             });
-    }, []);
+    }, [schoolDomain]);
 
     useEffect(() => {
         if (!signingIn) {
@@ -63,44 +76,31 @@ export default function LogInForm(
                 setSigningIn(true);
             }
 
-            if (!redirectResult.user.email?.endsWith('mgs.org')) {
-                enqueueSnackbar('Sorry, PalCode is only available for users with @mgs.org email addresses.', {
-                    variant: 'error',
-                });
+            const token = await redirectResult.user.getIdToken(true);
+            if (!token) {
                 setSigningIn(false);
+                enqueueSnackbar('We couldn\'t sign you in. Please try again.', {
+                    variant: 'warning',
+                });
                 return;
             }
 
-            const existingUserResponse = await firebase.firestore()
-                .collection('users')
-                .doc(redirectResult.user.uid)
-                .get();
-
-            // for students, displayName is always their MGS username. not a nice, real name.
-            // we default to displayName, but the additionalUserInfo object almost always contains the user's actual name
-            let displayName = redirectResult.user.displayName;
-            let givenName = redirectResult.user.displayName;
-            if (redirectResult.additionalUserInfo?.profile) {
-                const profile = redirectResult.additionalUserInfo.profile as MicrosoftProfile;
-                if (profile.givenName && profile.surname) {
-                    displayName = profile.givenName + ' ' + profile.surname;
-                    givenName = profile.givenName;
-                }
+            try {
+                await axios.post(
+                    getEnvVariable('API') + '/ensure-user',
+                    {
+                        token,
+                    }
+                );
+            } catch (e) {
+                setSigningIn(false);
+                enqueueSnackbar('Something went wrong. Please speak to your administrator.', {
+                    variant: 'error',
+                });
+                return;
             }
 
-            if (!existingUserResponse.exists) {
-                await firebase.firestore()
-                    .collection('users')
-                    .doc(redirectResult.user.uid)
-                    .set({
-                        email: redirectResult.user.email,
-                        displayName,
-                        username: redirectResult.user.email?.split('@mgs.org')[0],
-                        perms: Perms.Student,
-                    } as UserDoc);
-            }
-
-            enqueueSnackbar(`Hi ${givenName}! Signed in successfully.`, {
+            enqueueSnackbar(`Hi there! Signed in successfully.`, {
                 variant: 'success',
             });
 
@@ -135,19 +135,35 @@ export default function LogInForm(
                     Welcome to PalCode! 👋
                 </h1>
                 <p>
-                    Signing you in for the first time may take a few seconds.
+                    Enter your domain to get started. Signing you in for the first time may take a few seconds.
                 </p>
 
                 <form
-                    onSubmit={(e) => e.preventDefault()}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        return login();
+                    }}
                     className={form.form}
                 >
+                    <label
+                        className={form.label}
+                        htmlFor='domain'
+                    >
+                        Your school's domain
+                    </label>
+                    <input
+                        className={form.textInput}
+                        id='domain'
+                        value={schoolDomain}
+                        onChange={(e) => setSchoolDomain(e.target.value)}
+                        placeholder='E.g. myschool.edu'
+                        required
+                    />
+
                     <button
-                        onClick={msalLogin}
                         className={form.button}
                     >
-                        <FontAwesomeIcon icon={faMicrosoft} />
-                        Sign in with MGS
+                        Sign in!
                     </button>
                 </form>
             </div>
@@ -165,7 +181,7 @@ export default function LogInForm(
                         Visit <Link to='/help'>PalCode's help page</Link>.
                     </li>
                     <li>
-                        Ask your Computing teacher
+                        Ask your teacher
                     </li>
                     <li>
                         Take a look at&nbsp;
