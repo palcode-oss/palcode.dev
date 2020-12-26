@@ -44,8 +44,17 @@ export default function LogInForm(
         }
 
         const provider = new firebase.auth.OAuthProvider(schoolAuth.service);
+        let tenantParameterName = 'tenant';
+        switch (schoolAuth.service) {
+            case 'microsoft.com':
+                tenantParameterName = 'tenant';
+                break;
+            case 'google.com':
+                tenantParameterName = 'hd';
+                break;
+        }
         provider.setCustomParameters({
-            tenant: schoolAuth.tenant,
+            [tenantParameterName]: schoolAuth.tenant,
         });
 
         return firebase.auth()

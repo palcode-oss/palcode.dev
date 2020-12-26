@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 
-export type SchoolAuthService = 'microsoft.com';
+export type SchoolAuthService = 'microsoft.com' | 'google.com';
 
 export interface SchoolAuth {
     domains: string[];
