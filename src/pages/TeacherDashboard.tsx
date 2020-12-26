@@ -13,7 +13,7 @@ import { useSnackbar } from 'notistack';
 import Toolbar from '@material-ui/core/Toolbar';
 import table from '../styles/table.module.scss';
 import Typography from '@material-ui/core/Typography';
-import { useOwnedClassroom } from '../helpers/classroom';
+import { useSchoolClassrooms } from '../helpers/classroom';
 import IconButton from '@material-ui/core/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -34,7 +34,7 @@ export default function TeacherDashboard(
     }: Props,
 ): ReactElement {
     const [classroomDataUpdater, setClassroomDataUpdater] = useState(0);
-    const [classroomData, classroomDataLoading] = useOwnedClassroom(user.uid, classroomDataUpdater);
+    const [classroomData, classroomDataLoading] = useSchoolClassrooms(classroomDataUpdater);
 
     const {enqueueSnackbar} = useSnackbar();
     const handleDelete = useCallback(async (classroomId: string) => {

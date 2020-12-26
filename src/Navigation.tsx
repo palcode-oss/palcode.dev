@@ -9,7 +9,6 @@ import { useSnackbar } from 'notistack';
 import LazyComponentFallback from './ui/LazyComponentFallback';
 import Dashboard from './pages/Dashboard';
 
-const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Task = lazy(() => import('./pages/Task'));
@@ -162,9 +161,6 @@ export default function Navigation(): ReactElement {
                         <RedirectUnauthed />
                         <EnsureTaskExists />
                         <Task />
-                    </Route>
-                    <Route path='/about'>
-                        <About />
                     </Route>
                     <Route path='/help'>
                         <Help />

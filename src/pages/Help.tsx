@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from '../styles/info.module.scss';
 
 export default function Help() {
@@ -9,22 +10,22 @@ export default function Help() {
 
         <p>
             This page is mostly intended for students. If you're a member of staff and you have questions about PalCode,
-            please contact kerecsenyip-y15@mgs.org.
+            please contact contact@palcode.dev.
         </p>
 
-        <h1>
-            Your account and projects
-        </h1>
         <h2>
             How do you get my details?
         </h2>
         <p>
             Have you ever seen a 'Sign in with Google' button on the internet?
-            PalCode uses similar tech, but plugs straight into your MGS account instead.
+            PalCode uses similar tech, but plugs straight into your school account instead.
         </p>
         <p>
-            Your name and username are imported from MGS' database, and you can't change them.
+            Your name and username are imported from your school's database, and you can't change them.
             PalCode will only get your details once you consent to it.
+        </p>
+        <p>
+            See our <Link to='/privacy'>privacy policy</Link> for more info.
         </p>
 
         <h2>
@@ -52,20 +53,13 @@ export default function Help() {
         </h2>
         <p>
             Similarly to how you can't delete messages on Microsoft Teams, PalCode doesn't let you delete projects.
-            This is just to keep a log of your activities for safeguarding purposes — always keep in mind that MGS staff
+            This is just to keep a log of your activities for safeguarding purposes — always keep in mind that your school
             can see your activity.
         </p>
 
         <h1>
             Editing code
         </h1>
-        <h2>
-            What Python version does PalCode use?
-        </h2>
-        <p>
-            Always the latest minor version — we won't upgrade major versions without advance notice.
-            Currently, it's using Python 3.9.1.
-        </p>
 
         <h2>
             What's the README.md file?
@@ -88,18 +82,6 @@ export default function Help() {
         </p>
 
         <h2>
-            Why do my files keep disappearing?
-        </h2>
-        <p>
-            When you create a new file in the PalCode editor, it stores it in your browser's local memory. The file isn't
-            actually created on the server until you put some text in it, and this means that your Python code might think
-            the file doesn't exist.
-        </p>
-        <p>
-            To make your file stay there, just put some text in it.
-        </p>
-
-        <h2>
             Can I add multiple files?
         </h2>
         <p>
@@ -111,8 +93,9 @@ export default function Help() {
             Why is my code so slow?
         </h2>
         <p>
-            Sorry about that — PalCode runs on a server with limited resources. We're trying to figure out the best
-            cost-performance balance, and when many people are using PalCode at the same time, load can spike significantly.
+            Sorry about that — PalCode runs on a server with limited resources. Your school can select a different
+            subscriptions which specifies how much compute power each student gets. The more they pay, the faster your
+            code will run.
         </p>
 
         <h2>
@@ -121,21 +104,6 @@ export default function Help() {
         <p>
             PalCode puts a time limit on your code to prevent abandoned containers. Not doing so would introduce a few
             problems, such as unnecessary load caused by abandoned containers
-        </p>
-
-        <h2>
-            Can I abuse PalCode?
-        </h2>
-        <p>
-            No, please don't. PalCode is part of MGS' IT network, so your usage is bound by the Acceptable Use Policy.
-            Attempts to use Python code to take down PalCode or compromise user data aren't 'funny' or 'quirky', but
-            annoying and, in many cases, heavily illegal. You could get into a lot of trouble for intentionally damaging
-            this site.
-        </p>
-        <p>
-            Of course, don't worry if you've accidentally crashed PalCode or found a security vulnerability! It does happen,
-            since this website <em>was</em> made by two people in the space of a weekend. Please make a responsible disclosure
-            to kerecsenyip-y15@mgs.org if you've found a vulnerability, and don't tell any other students.
         </p>
     </div>
 }

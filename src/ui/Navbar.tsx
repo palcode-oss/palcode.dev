@@ -32,23 +32,6 @@ export default function Navbar(): ReactElement {
 
             <div className={styles.options}>
                 {
-                    !authLoading && <>
-                        <Link
-                            className={styles.option}
-                            to='/help'
-                        >
-                            Help
-                        </Link>
-                        <Link
-                            className={styles.option}
-                            to='/about'
-                        >
-                            About
-                        </Link>
-                    </>
-                }
-
-                {
                     authUser && (
                         <>
                             <Link

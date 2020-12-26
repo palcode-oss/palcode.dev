@@ -184,19 +184,22 @@ export default function LogInForm(
                         Ask your teacher
                     </li>
                     <li>
-                        Take a look at&nbsp;
+                        Take a look at documentation for your language
+                    </li>
+                    <li>
+                        Ask a question on&nbsp;
                         <a
-                            href='https://docs.python.org/3/'
+                            href='https://stackoverflow.com'
                             target='_blank'
-                            rel='noreferrer'
+                            rel='noopener noreferrer'
                         >
-                            Python's docs.
+                            Stack Overflow
                         </a>
                     </li>
                 </ul>
 
                 <p>
-                    Got feature suggestions, bugs, or general feedback? Please send an email to kerecsenyip-y15@mgs.org.
+                    Got feature suggestions, bugs, or general feedback? Please send an email to contact@palcode.dev.
                 </p>
             </div>
 
@@ -211,7 +214,7 @@ export default function LogInForm(
                     </Link>
                 </p>
                 <p>
-                    PalCode is a closed-source project, distributed under the MIT license. Copyright © Pal Kerecsenyi 2020.
+                    PalCode is an open-source project, distributed under the MIT license. Copyright © PalChat Technologies Limited 2020.
                 </p>
             </div>
         </div>
