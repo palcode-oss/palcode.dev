@@ -7,6 +7,7 @@ export function getLanguageDefaultFile(language: TaskLanguage): string {
         case 'bash': return 'main.sh';
         case 'java': return 'Main.java';
         case 'prolog': return 'main.pl';
+        case 'go': return 'main.go';
     }
 }
 
@@ -48,6 +49,12 @@ export function getLanguages(): LanguageData[] {
             extension: 'sh',
             displayName: 'Bash',
             icon: require("../language-icons/bash.png"),
+        },
+        {
+            code: 'go',
+            extension: 'go',
+            displayName: 'Golang',
+            icon: require("../language-icons/go.png"),
         }
     ];
 }

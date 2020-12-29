@@ -13,6 +13,7 @@ module.exports = {
                     'html',
                     'shell',
                     'java',
+                    'go',
                 ]
             }),
         ],

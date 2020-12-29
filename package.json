@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^5.7.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.31",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.0",
@@ -11,17 +10,13 @@
     "@fortawesome/react-fontawesome": "^0.1.11",
     "@material-ui/core": "^4.11.0",
     "axios": "^0.20.0",
-    "email-validator": "^2.0.4",
     "firebase": "^7.21.1",
-    "firebase-admin": "^9.2.0",
-    "fs-extra": "^9.0.1",
     "lodash": "^4.17.20",
     "moment": "^2.29.0",
     "monaco-editor": "^0.21.2",
     "monaco-languageclient": "^0.13.0",
-    "node-html-parser": "^2.0.0",
     "notistack": "^1.0.0",
-    "palcode-sockets": "^1.0.2",
+    "palcode-sockets": "^1.0.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-loader-spinner": "^3.1.14",
@@ -31,13 +26,13 @@
     "react-scripts": "3.4.3",
     "react-shimmer": "^3.1.1",
     "react-syntax-highlighter": "^14.0.0",
-    "typescript": "^4.0.3",
     "vscode-ws-jsonrpc": "^0.2.0",
     "xterm": "^4.9.0",
     "xterm-addon-fit": "^0.4.0",
     "xterm-addon-web-links": "^0.4.0"
   },
   "devDependencies": {
+    "@craco/craco": "^5.7.0",
     "@fortawesome/fontawesome-common-types": "^0.2.32",
     "@types/dom-mediacapture-record": "^1.0.7",
     "@types/email-validator": "^1.0.6",
@@ -56,7 +51,8 @@
     "@types/ws": "^7.2.7",
     "monaco-editor-webpack-plugin": "^2.0.0",
     "nodemon": "^2.0.4",
-    "sass": "^1.30.0"
+    "sass": "^1.30.0",
+    "typescript": "^4.0.3"
   },
   "resolutions": {
     "**/@typescript-eslint/eslint-plugin": "^4.1.1",

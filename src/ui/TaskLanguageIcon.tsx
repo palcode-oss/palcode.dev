@@ -23,7 +23,7 @@ export default function TaskLanguageIcon(
     return (
         <img
             src={languageData.icon}
-            height={20}
+            width={18}
             alt={languageData.displayName}
             style={{
                 marginRight: 10,

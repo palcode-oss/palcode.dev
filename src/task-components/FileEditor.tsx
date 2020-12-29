@@ -45,6 +45,7 @@ export default function FileEditor(
             case 'sh': return 'shell';
             case 'java': return 'java';
             case 'pl': return 'plaintext';
+            case 'go': return 'go';
             default: return 'plaintext';
         }
     }, [extension]);
