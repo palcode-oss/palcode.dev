@@ -1,5 +1,5 @@
 import { killCode, runCode, stdin, useSocket, useStdout } from '../helpers/socket/xtermSocket';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import XtermWrapper from './XtermWrapper';
 import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,9 @@ import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
 import { TaskLanguage } from '../types';
 import { useSchoolId } from '../helpers/school';
 import { useSnackbar } from 'notistack';
+import { useDispatch, useSelector } from 'react-redux';
+import { RunnerAction, RunnerActions, runnerSelector } from '../stores/runner';
+import { Dispatch } from '@reduxjs/toolkit';
 
 export default function Console(
     {
@@ -24,11 +27,20 @@ export default function Console(
 ) {
     const socket = useSocket();
 
-    const [lastStdout, lastStdoutID, running] = useStdout(taskId, socket);
+    const [lastStdout, lastStdoutID] = useStdout(taskId, socket);
+    const [running, loading] = useSelector(runnerSelector);
+    const dispatch = useDispatch<Dispatch<RunnerAction>>();
     const {enqueueSnackbar} = useSnackbar();
 
     const schoolId = useSchoolId();
-    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        if (!taskLanguage || !schoolId) return;
+
+        if (loading && !running) {
+            runCode(taskId, taskLanguage, schoolId, socket);
+        }
+    }, [loading, taskId, taskLanguage, schoolId, socket]);
+
     const run = useCallback(() => {
         if (uploading) {
             enqueueSnackbar('Please wait for your code to save.', {
@@ -39,14 +51,12 @@ export default function Console(
             return;
         }
 
-        if (!taskLanguage || !schoolId || loading) return;
-        setLoading(true);
-        runCode(taskId, taskLanguage, schoolId, socket);
-    }, [taskId, taskLanguage, socket, schoolId, loading, uploading]);
+        if (loading) return;
 
-    useEffect(() => {
-        setLoading(false);
-    }, [running, lastStdoutID]);
+        dispatch({
+            type: RunnerActions.requestRun,
+        });
+    }, [loading, uploading]);
 
     const kill = useCallback(() => {
         killCode(taskId, socket);

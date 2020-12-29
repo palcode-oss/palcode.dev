@@ -4,6 +4,9 @@ import { TaskLanguage } from '../../types';
 import sendSerializedMessage from './send';
 import parseMessage, { RunStatus } from './parse';
 import connectToSocket from './connect';
+import { useDispatch } from 'react-redux';
+import { RunnerAction, RunnerActions } from '../../stores/runner';
+import { Dispatch } from '@reduxjs/toolkit';
 
 export function useSocket(): WebSocket | undefined {
     const [socket, setSocket] = useState<WebSocket>();
@@ -33,14 +36,13 @@ export function runCode(
 
 type Stdout = string;
 type StdoutID = string;
-type Running = boolean;
 export function useStdout(
     taskId: string,
     socket?: WebSocket,
-): [Stdout, StdoutID, Running] {
+): [Stdout, StdoutID] {
     const [stdout, setStdout] = useState('');
     const [stdoutID, setStdoutID] = useState('');
-    const [running, setRunning] = useState(false);
+    const dispatch = useDispatch<Dispatch<RunnerAction>>();
 
     useEffect(() => {
         function onStdout(event: MessageEvent) {
@@ -48,7 +50,9 @@ export function useStdout(
             if (!data) return;
 
             if (typeof data.running === "boolean") {
-                setRunning(data.running);
+                dispatch({
+                    type: data.running ? RunnerActions.setRunning : RunnerActions.setStopped,
+                });
             }
 
             if (data.status === RunStatus.Continuing && data.stdout) {
@@ -57,7 +61,9 @@ export function useStdout(
             }
 
             if (data.status === RunStatus.ServerError) {
-                setStdoutID(Math.random().toString());
+                dispatch({
+                    type: RunnerActions.setStopped,
+                });
             }
         }
 
@@ -70,10 +76,12 @@ export function useStdout(
     }, [socket]);
 
     useEffect(() => {
-        setRunning(false);
+        dispatch({
+            type: RunnerActions.setStopped,
+        });
     }, [taskId]);
 
-    return [stdout, stdoutID, running];
+    return [stdout, stdoutID];
 }
 
 export function stdin(

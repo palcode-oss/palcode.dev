@@ -135,19 +135,19 @@ export default function Task(
         <div className={editor.editor}>
             <div className={editor.filesSection}>
                 {!filesLoading && currentTab &&
-                    <Files
-                        files={files}
-                        onTabSelect={selectTab}
-                        selectedFile={currentTab}
-                        onNewFile={addFile}
-                        onFileDelete={deleteFile}
-                        readOnly={readOnly}
-                        showReadme={task?.type !== TaskType.Submission}
-                    />
+                <Files
+                    files={files}
+                    onTabSelect={selectTab}
+                    selectedFile={currentTab}
+                    onNewFile={addFile}
+                    onFileDelete={deleteFile}
+                    readOnly={readOnly}
+                    showReadme={task?.type !== TaskType.Submission}
+                />
                 }
 
                 {filesLoading &&
-                    <div className={editor.filesLoading} />
+                <div className={editor.filesLoading} />
                 }
             </div>
 

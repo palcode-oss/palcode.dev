@@ -1,12 +1,15 @@
 import MonacoEditor from 'react-monaco-editor';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFileContent } from '../helpers/taskContent';
-import { editor } from 'monaco-editor';
+import { editor, KeyCode, KeyMod } from 'monaco-editor';
 import styles from '../styles/editor.module.scss';
 import last from 'lodash/last';
 import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
 import connectToLanguageServer from '../helpers/languageServer';
 import { getLanguageFromExtension } from '../helpers/languageData';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from '@reduxjs/toolkit';
+import { RunnerAction, RunnerActions } from '../stores/runner';
 
 export default function FileEditor(
     {
@@ -30,7 +33,6 @@ export default function FileEditor(
         if (onUploadingChange) {
             onUploadingChange(uploading);
         }
-
     }, [uploading]);
 
     const extension = useMemo(() => {
@@ -81,9 +83,33 @@ export default function FileEditor(
         }
     }, [themeData, themeLoading, themeIsBuiltIn, extension]);
 
-    const initResizeListener = useCallback((e: editor.IStandaloneCodeEditor) => {
-        const resizeEvent = () => e.layout();
+    const dispatch = useDispatch<Dispatch<RunnerAction>>();
+    const onEditorMount = useCallback((e: editor.IStandaloneCodeEditor) => {
+        e.addAction({
+            id: 'ignore-save',
+            label: 'Save',
+            contextMenuGroupId: 'PalCode',
+            keybindings: [
+                KeyMod.CtrlCmd | KeyCode.KEY_S
+            ],
+            run: () => {},
+        });
 
+        e.addAction({
+            id: 'run',
+            label: 'Run',
+            contextMenuGroupId: 'PalCode',
+            keybindings: [
+                KeyMod.CtrlCmd | KeyCode.Enter,
+            ],
+            run: () => {
+                dispatch({
+                    type: RunnerActions.requestRun,
+                });
+            }
+        })
+
+        const resizeEvent = () => e.layout();
         window.addEventListener('resize', resizeEvent);
         return () => {
             window.removeEventListener('resize', resizeEvent);
@@ -109,7 +135,7 @@ export default function FileEditor(
                 language={language}
                 value={fileContent}
                 onChange={setFileContent}
-                editorDidMount={initResizeListener}
+                editorDidMount={onEditorMount}
                 width='100%'
                 height='100%'
                 options={{
