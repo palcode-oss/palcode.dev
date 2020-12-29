@@ -129,6 +129,8 @@ export default function Task(
         localStorage.setItem('PalCode-Theme', theme.displayName);
     }, [theme]);
 
+    const [uploading, setUploading] = useState(false);
+
     return (
         <div className={editor.editor}>
             <div className={editor.filesSection}>
@@ -157,6 +159,7 @@ export default function Task(
                             fileName={currentTab}
                             readOnly={readOnly}
                             themePair={theme}
+                            onUploadingChange={setUploading}
                         />
                     )}
                 </Suspense>
@@ -168,6 +171,7 @@ export default function Task(
                         taskId={taskId}
                         taskLanguage={task?.language}
                         themeMetadata={theme}
+                        uploading={uploading}
                     />
                 </Suspense>
             </div>

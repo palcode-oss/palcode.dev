@@ -14,15 +14,24 @@ export default function FileEditor(
         fileName,
         readOnly,
         themePair,
+        onUploadingChange,
     }: {
         taskId: string,
         fileName: string,
         readOnly: boolean,
         themePair: ThemeMetadata,
+        onUploadingChange?(uploading: boolean): void,
     }
 ) {
     const [downloading, fileContent, uploading, setFileContent] = useFileContent(taskId, fileName);
     const [themeData, themeIsBuiltIn, themeLoading] = useMonacoTheme(themePair.displayName);
+
+    useEffect(() => {
+        if (onUploadingChange) {
+            onUploadingChange(uploading);
+        }
+
+    }, [uploading]);
 
     const extension = useMemo(() => {
         const splitFilename = fileName.split('.');

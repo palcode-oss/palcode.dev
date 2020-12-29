@@ -7,29 +7,42 @@ import { faPlay, faSkull } from '@fortawesome/free-solid-svg-icons';
 import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
 import { TaskLanguage } from '../types';
 import { useSchoolId } from '../helpers/school';
+import { useSnackbar } from 'notistack';
 
 export default function Console(
     {
         taskId,
         taskLanguage,
         themeMetadata,
+        uploading,
     }: {
         taskId: string,
         taskLanguage?: TaskLanguage,
         themeMetadata?: ThemeMetadata,
+        uploading: boolean,
     }
 ) {
     const socket = useSocket();
 
     const [lastStdout, lastStdoutID, running] = useStdout(taskId, socket);
+    const {enqueueSnackbar} = useSnackbar();
 
     const schoolId = useSchoolId();
     const [loading, setLoading] = useState(false);
     const run = useCallback(() => {
+        if (uploading) {
+            enqueueSnackbar('Please wait for your code to save.', {
+                preventDuplicate: true,
+                variant: 'info',
+                autoHideDuration: 1000,
+            });
+            return;
+        }
+
         if (!taskLanguage || !schoolId || loading) return;
         setLoading(true);
         runCode(taskId, taskLanguage, schoolId, socket);
-    }, [taskId, taskLanguage, socket, schoolId, loading]);
+    }, [taskId, taskLanguage, socket, schoolId, loading, uploading]);
 
     useEffect(() => {
         setLoading(false);

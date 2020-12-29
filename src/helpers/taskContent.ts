@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import axios, { CancelTokenSource } from 'axios';
 import { TaskLanguage } from '../types';
 import getEnvVariable from './getEnv';
 import { useSchoolId } from './school';
 import useAPIToken from './apiToken';
+import cancellableRequest from './requestCanceller';
 
 type Files = string[];
 type FilesLoading = boolean;
@@ -95,33 +96,35 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
             clearTimeout(timeout.current);
         }
 
-        if (!initialDownloadComplete || saving || !schoolId || !token) {
+        if (!initialDownloadComplete || !schoolId || !token) {
             return;
         }
 
         timeout.current = setTimeout(() => {
-            if (saving) {
-                return;
-            }
-
             setSaving(true);
-            axios.post(
+            cancellableRequest(
+                'save-task',
+                'POST',
                 getEnvVariable('API') + '/save',
                 {
-                    projectId: taskId,
-                    files: [{
-                        name: fileName,
-                        content: fileContent,
-                    }],
-                    schoolId,
-                    token,
-                },
-                {
+                    data: {
+                        projectId: taskId,
+                        files: [{
+                            name: fileName,
+                            content: fileContent,
+                        }],
+                        schoolId,
+                        token,
+                    },
                     withCredentials: true,
-                },
+                }
             )
                 .then(() => setSaving(false))
-                .catch(() => setSaving(false));
+                .catch((e) => {
+                    if (!axios.isCancel(e)) {
+                        setSaving(false);
+                    }
+                })
         }, 400);
     }, [fileContent, fileName, taskId, initialDownloadComplete, timeout, schoolId, token]);
 
