@@ -14,7 +14,7 @@ function createLanguageClient(connection: MessageConnection) {
     return new MonacoLanguageClient({
         name: 'lsp.palcode.dev',
         clientOptions: {
-            documentSelector: ['python', 'shell'],
+            documentSelector: ['python', 'shell', 'go'],
             errorHandler: {
                 error: () => ErrorAction.Continue,
                 // when we close the WebSocket (primarily through webSocket.close()) make sure to stop pyls

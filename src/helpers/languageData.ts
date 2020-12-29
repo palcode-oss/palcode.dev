@@ -1,4 +1,10 @@
 import { TaskLanguage } from '../types';
+import node from '../language-icons/node.png';
+import python from '../language-icons/python.png';
+import go from '../language-icons/go.png';
+import bash from '../language-icons/bash.png';
+import prolog from '../language-icons/prolog.png';
+import java from '../language-icons/java.png';
 
 export function getLanguageDefaultFile(language: TaskLanguage): string {
     switch (language) {
@@ -24,37 +30,37 @@ export function getLanguages(): LanguageData[] {
             code: 'nodejs',
             extension: 'js',
             displayName: 'Node.JS',
-            icon: require('../language-icons/node.png'),
+            icon: node,
         },
         {
             code: 'python',
             extension: 'py',
             displayName: 'Python',
-            icon: require("../language-icons/python.png"),
+            icon: python,
         },
         {
             code: 'java',
             extension: 'java',
             displayName: 'Java',
-            icon: require("../language-icons/java.png"),
+            icon: java,
         },
         {
             code: 'prolog',
             extension: 'pl',
             displayName: 'Prolog',
-            icon: require("../language-icons/prolog.png"),
+            icon: prolog,
         },
         {
             code: 'bash',
             extension: 'sh',
             displayName: 'Bash',
-            icon: require("../language-icons/bash.png"),
+            icon: bash,
         },
         {
             code: 'go',
             extension: 'go',
             displayName: 'Golang',
-            icon: require("../language-icons/go.png"),
+            icon: go,
         }
     ];
 }
