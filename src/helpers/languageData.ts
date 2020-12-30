@@ -5,6 +5,7 @@ import go from '../language-icons/go.png';
 import bash from '../language-icons/bash.png';
 import prolog from '../language-icons/prolog.png';
 import java from '../language-icons/java.png';
+import cpp from '../language-icons/cpp.png';
 
 export function getLanguageDefaultFile(language: TaskLanguage): string {
     switch (language) {
@@ -14,6 +15,7 @@ export function getLanguageDefaultFile(language: TaskLanguage): string {
         case 'java': return 'Main.java';
         case 'prolog': return 'main.pl';
         case 'go': return 'main.go';
+        case 'cpp': return 'main.cpp';
     }
 }
 
@@ -61,7 +63,13 @@ export function getLanguages(): LanguageData[] {
             extension: 'go',
             displayName: 'Golang',
             icon: go,
-        }
+        },
+        {
+            code: 'cpp',
+            extension: 'cpp',
+            displayName: 'C++',
+            icon: cpp,
+        },
     ];
 }
 

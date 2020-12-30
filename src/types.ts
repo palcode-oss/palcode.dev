@@ -43,7 +43,7 @@ export enum TaskType {
     Private,
 }
 
-export type TaskLanguage = 'python' | 'nodejs' | 'bash' | 'java' | 'prolog' | 'go';
+export type TaskLanguage = 'python' | 'nodejs' | 'bash' | 'java' | 'prolog' | 'go' | 'cpp';
 
 export interface TaskProps {
     name: string;

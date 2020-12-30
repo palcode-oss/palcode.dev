@@ -18,7 +18,7 @@
     "monaco-editor-core": "^0.21.2",
     "monaco-languageclient": "^0.13.1-next.4",
     "notistack": "^1.0.0",
-    "palcode-sockets": "^1.0.3",
+    "palcode-sockets": "^1.0.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-loader-spinner": "^3.1.14",
