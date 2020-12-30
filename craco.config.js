@@ -14,6 +14,7 @@ module.exports = {
                     'shell',
                     'java',
                     'go',
+                    'cpp',
                 ]
             }),
         ],
