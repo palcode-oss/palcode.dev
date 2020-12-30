@@ -5,7 +5,7 @@ import sendSerializedMessage from './send';
 import parseMessage, { RunStatus } from './parse';
 import connectToSocket from './connect';
 import { useDispatch } from 'react-redux';
-import { RunnerAction, RunnerActions } from '../../stores/runner';
+import { RunnerActions } from '../../stores/runner';
 import { Dispatch } from '@reduxjs/toolkit';
 
 export function useSocket(): WebSocket | undefined {
@@ -42,7 +42,7 @@ export function useStdout(
 ): [Stdout, StdoutID] {
     const [stdout, setStdout] = useState('');
     const [stdoutID, setStdoutID] = useState('');
-    const dispatch = useDispatch<Dispatch<RunnerAction>>();
+    const dispatch = useDispatch<Dispatch>();
 
     useEffect(() => {
         function onStdout(event: MessageEvent) {

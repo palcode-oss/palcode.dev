@@ -161,11 +161,12 @@ export function useFileContent(taskId: string, fileName: string): [Downloading, 
     return [downloading, fileContent, saving, setFileContent];
 }
 
-export function deleteRemoteFile(taskId: string, fileName: string, schoolId: string) {
+export function deleteRemoteFile(taskId: string, fileName: string, schoolId: string, token: string,) {
     return axios.post(getEnvVariable('API') + '/delete-file', {
         projectId: taskId,
         fileName,
         schoolId,
+        token,
     }, {
         withCredentials: true,
     });

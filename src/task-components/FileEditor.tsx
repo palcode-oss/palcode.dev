@@ -9,7 +9,8 @@ import connectToLanguageServer from '../helpers/languageServer';
 import { getLanguageFromExtension } from '../helpers/languageData';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from '@reduxjs/toolkit';
-import { RunnerAction, RunnerActions } from '../stores/runner';
+import { RunnerActions } from '../stores/runner';
+import { UploaderActions } from '../stores/uploader';
 
 export default function FileEditor(
     {
@@ -17,22 +18,21 @@ export default function FileEditor(
         fileName,
         readOnly,
         themePair,
-        onUploadingChange,
     }: {
         taskId: string,
         fileName: string,
         readOnly: boolean,
         themePair: ThemeMetadata,
-        onUploadingChange?(uploading: boolean): void,
     }
 ) {
     const [downloading, fileContent, uploading, setFileContent] = useFileContent(taskId, fileName);
     const [themeData, themeIsBuiltIn, themeLoading] = useMonacoTheme(themePair.displayName);
+    const dispatch = useDispatch<Dispatch>();
 
     useEffect(() => {
-        if (onUploadingChange) {
-            onUploadingChange(uploading);
-        }
+        dispatch({
+            type: uploading ? UploaderActions.setUploading : UploaderActions.completeUpload,
+        });
     }, [uploading]);
 
     const extension = useMemo(() => {
@@ -83,7 +83,6 @@ export default function FileEditor(
         }
     }, [themeData, themeLoading, themeIsBuiltIn, extension]);
 
-    const dispatch = useDispatch<Dispatch<RunnerAction>>();
     const onEditorMount = useCallback((e: editor.IStandaloneCodeEditor) => {
         e.addAction({
             id: 'ignore-save',

@@ -14,6 +14,7 @@ import { availableThemes, ThemeMetadata } from '../helpers/monacoThemes';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
 import {getLanguageDefaultFile} from '../helpers/languageData';
 import { useSchoolId } from '../helpers/school';
+import useAPIToken from '../helpers/apiToken';
 
 const FileEditor = lazy(() => import('../task-components/FileEditor'));
 const Console = lazy(() => import('../task-components/Console'));
@@ -61,15 +62,16 @@ export default function Task(
     }, [files]);
 
     const schoolId = useSchoolId();
+    const apiToken = useAPIToken();
     const deleteFile = useCallback((fileName: string) => {
-        if (!schoolId) return;
+        if (!schoolId || !apiToken) return;
         deleteLocalFile(fileName);
-        deleteRemoteFile(taskId, fileName, schoolId);
+        deleteRemoteFile(taskId, fileName, schoolId, apiToken);
 
         if (task) {
             setCurrentTab(getLanguageDefaultFile(task.language));
         }
-    }, [files, task, schoolId]);
+    }, [files, task, schoolId, apiToken]);
 
     const readOnly = useMemo<boolean>(() => {
         if (!task || !user) return true;
@@ -129,8 +131,6 @@ export default function Task(
         localStorage.setItem('PalCode-Theme', theme.displayName);
     }, [theme]);
 
-    const [uploading, setUploading] = useState(false);
-
     return (
         <div className={editor.editor}>
             <div className={editor.filesSection}>
@@ -159,7 +159,6 @@ export default function Task(
                             fileName={currentTab}
                             readOnly={readOnly}
                             themePair={theme}
-                            onUploadingChange={setUploading}
                         />
                     )}
                 </Suspense>
@@ -171,7 +170,6 @@ export default function Task(
                         taskId={taskId}
                         taskLanguage={task?.language}
                         themeMetadata={theme}
-                        uploading={uploading}
                     />
                 </Suspense>
             </div>

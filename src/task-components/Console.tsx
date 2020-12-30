@@ -9,27 +9,27 @@ import { TaskLanguage } from '../types';
 import { useSchoolId } from '../helpers/school';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
-import { RunnerAction, RunnerActions, runnerSelector } from '../stores/runner';
+import { RunnerActions, runnerSelector } from '../stores/runner';
 import { Dispatch } from '@reduxjs/toolkit';
+import { uploaderSelector } from '../stores/uploader';
 
 export default function Console(
     {
         taskId,
         taskLanguage,
         themeMetadata,
-        uploading,
     }: {
         taskId: string,
         taskLanguage?: TaskLanguage,
         themeMetadata?: ThemeMetadata,
-        uploading: boolean,
     }
 ) {
     const socket = useSocket();
 
     const [lastStdout, lastStdoutID] = useStdout(taskId, socket);
     const [running, loading] = useSelector(runnerSelector);
-    const dispatch = useDispatch<Dispatch<RunnerAction>>();
+    const uploading = useSelector(uploaderSelector);
+    const dispatch = useDispatch<Dispatch>();
     const {enqueueSnackbar} = useSnackbar();
 
     const schoolId = useSchoolId();

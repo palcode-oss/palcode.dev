@@ -6,9 +6,11 @@ import { SchoolIdContext } from './helpers/school';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from '@reduxjs/toolkit';
 import runnerReducer from './stores/runner';
+import uploaderReducer from './stores/uploader';
 
 const applicationStore = createStore(combineReducers({
     runner: runnerReducer,
+    uploader: uploaderReducer,
 }));
 
 function App() {
