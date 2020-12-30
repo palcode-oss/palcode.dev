@@ -6,7 +6,6 @@ import {
     MonacoServices,
 } from 'monaco-languageclient';
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
-import { editor } from 'monaco-editor';
 import getEnvVariable from './getEnv';
 import { TaskLanguage } from '../types';
 
@@ -14,7 +13,7 @@ function createLanguageClient(connection: MessageConnection) {
     return new MonacoLanguageClient({
         name: 'lsp.palcode.dev',
         clientOptions: {
-            documentSelector: ['python', 'shell', 'go'],
+            documentSelector: ['python', 'shell'],
             errorHandler: {
                 error: () => ErrorAction.Continue,
                 // when we close the WebSocket (primarily through webSocket.close()) make sure to stop pyls
@@ -24,6 +23,7 @@ function createLanguageClient(connection: MessageConnection) {
         connectionProvider: {
             get(errorHandler, closeHandler) {
                 return Promise.resolve(createConnection(
+                    // @ts-ignore
                     connection,
                     errorHandler,
                     closeHandler,
@@ -45,7 +45,8 @@ export default function connectToLanguageServer(
     try {
         MonacoServices.get();
     } catch (e) {
-        MonacoServices.install(editor);
+        // @ts-ignore
+        MonacoServices.install(require('monaco-editor-core/esm/vs/platform/commands/common/commands').CommandsRegistry);
     }
 
     const webSocket = new WebSocket(lspURL + '/' + language);
