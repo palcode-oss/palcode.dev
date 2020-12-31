@@ -1,6 +1,5 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Loader from 'react-loader-spinner';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
@@ -11,13 +10,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TaskSubmissionRow from '../ui/TaskSubmissionRow';
-import { TaskType, TemplateTask } from '../types';
+import { TemplateTask } from '../types';
 import { orderBy } from 'lodash';
 import { useClassroom } from '../helpers/classroom';
 import table from '../styles/table.module.scss';
-import loader from '../styles/loader.module.scss';
 import { useTasks } from '../helpers/taskData';
 import Spinner from '../ui/Spinner';
+import { ProjectType } from 'palcode-types';
 
 interface Params {
     classroomId: string;
@@ -58,7 +57,7 @@ export default function ViewClassroom(): ReactElement {
         );
     }
 
-    const tasks = tasksData.filter(task => task.type === TaskType.Template) as TemplateTask[];
+    const tasks = tasksData.filter(task => task.type === ProjectType.Template) as TemplateTask[];
 
     return (
         <div className={table.tablePage}>

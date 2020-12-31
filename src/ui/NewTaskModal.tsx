@@ -7,10 +7,10 @@ import Loader from 'react-loader-spinner';
 import { useSnackbar } from 'notistack';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { TaskLanguage, TaskStatus, TaskType } from '../types';
 import { useAuth } from '../helpers/auth';
 import { useHistory } from 'react-router-dom';
 import { getLanguages } from '../helpers/languageData';
+import { languageData, ProjectStatus, ProjectType, SupportedLanguage } from 'palcode-types';
 
 interface Props {
     closeModal: () => void;
@@ -29,7 +29,7 @@ export default function NewTaskModal(
     props: PrivateProps | ClassroomProps,
 ): ReactElement {
     const [title, setTitle] = useState('');
-    const [language, setLanguage] = useState<TaskLanguage>('python');
+    const [language, setLanguage] = useState<SupportedLanguage>('python');
 
     const [loading, setLoading] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
@@ -51,7 +51,7 @@ export default function NewTaskModal(
             .collection('tasks')
             .doc();
 
-        const type = props.privateTask ? TaskType.Private : TaskType.Template;
+        const type = props.privateTask ? ProjectType.Private : ProjectType.Template;
         const documentData = {
             createdBy: user.uid,
             name: title,
@@ -61,7 +61,7 @@ export default function NewTaskModal(
         } as any;
 
         if (!props.privateTask)  {
-            documentData.status = TaskStatus.Unsubmitted;
+            documentData.status = ProjectStatus.Unsubmitted;
             documentData.classroomId = props.classroomId;
         }
 
@@ -125,7 +125,7 @@ export default function NewTaskModal(
                         </label>
                         <select
                             id='language-input'
-                            onChange={(e) => setLanguage(e.target.value as TaskLanguage)}
+                            onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
                             value={language}
                             disabled={loading}
                             className={form.select}
@@ -136,7 +136,7 @@ export default function NewTaskModal(
                                         key={language.code}
                                         value={language.code}
                                     >
-                                        {language.displayName}
+                                        {languageData.find(e => e.names.code === language.code)?.names.display}
                                     </option>
                                 ))
                             }

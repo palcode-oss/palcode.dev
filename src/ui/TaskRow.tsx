@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback } from 'react';
-import { Classroom, isSubmissionTask, TaskStatus } from '../types';
+import { Classroom, isSubmissionTask } from '../types';
 import { TableCell } from '@material-ui/core';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -17,6 +17,7 @@ import { useTask, useTasks } from '../helpers/taskData';
 import loader from '../styles/loader.module.scss';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import TaskLanguageIcon from './TaskLanguageIcon';
+import { ProjectStatus } from 'palcode-types';
 
 interface Props {
     taskId: string;
@@ -90,7 +91,7 @@ export default function TaskRow(
                 }
             </TableCell>
             {
-                [TaskStatus.Unsubmitted, TaskStatus.Submitted, TaskStatus.HasFeedback].map(status => (
+                [ProjectStatus.Unsubmitted, ProjectStatus.Submitted, ProjectStatus.HasFeedback].map(status => (
                     <TableCell
                         align='right'
                         key={status}

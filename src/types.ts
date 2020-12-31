@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+import { ProjectStatus, ProjectType } from 'palcode-types';
 
 export type SchoolAuthService = 'microsoft.com' | 'google.com';
 
@@ -31,18 +32,6 @@ export interface User {
 
 export type UserDoc = Omit<User, 'uid'>;
 
-export enum TaskStatus {
-    Unsubmitted,
-    Submitted,
-    HasFeedback,
-}
-
-export enum TaskType {
-    Template,
-    Submission,
-    Private,
-}
-
 export type TaskLanguage = 'python' | 'nodejs' | 'bash' | 'java' | 'prolog' | 'go' | 'cpp';
 
 export interface TaskProps {
@@ -54,35 +43,35 @@ export interface TaskProps {
 }
 
 export interface TemplateTask extends TaskProps {
-    type: TaskType.Template;
+    type: ProjectType.Template;
     classroomId: string;
 }
 
 export interface SubmissionTask extends TaskProps {
-    type: TaskType.Submission;
-    status: TaskStatus;
+    type: ProjectType.Submission;
+    status: ProjectStatus;
     parentTask: string;
     feedback?: string;
     classroomId: string;
 }
 
 export interface PrivateTask extends TaskProps {
-    type: TaskType.Private;
+    type: ProjectType.Private;
 }
 
-export type Task<T extends TaskType = any> = T extends TaskType.Submission ? SubmissionTask
-    : T extends TaskType.Template ? TemplateTask
-        : T extends TaskType.Private ? PrivateTask
+export type Task<T extends ProjectType = any> = T extends ProjectType.Submission ? SubmissionTask
+    : T extends ProjectType.Template ? TemplateTask
+        : T extends ProjectType.Private ? PrivateTask
             : never;
 
-export type TaskDoc<T extends TaskType = any> = Omit<Task<T>, 'id'>;
+export type TaskDoc<T extends ProjectType = any> = Omit<Task<T>, 'id'>;
 
 export function isSubmissionTask(task?: Task | null): task is SubmissionTask {
-    return task?.type === TaskType.Submission
+    return task?.type === ProjectType.Submission
 }
 
 export function isTemplateTask(task: Task): task is TemplateTask {
-    return task.type === TaskType.Template
+    return task.type === ProjectType.Template
 }
 
 export interface Classroom {

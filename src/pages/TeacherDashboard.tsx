@@ -1,5 +1,4 @@
 import React, { lazy, ReactElement, Suspense, useCallback, useState } from 'react';
-import { User } from '../types';
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';

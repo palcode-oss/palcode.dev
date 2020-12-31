@@ -1,4 +1,3 @@
-import { TaskLanguage } from '../types';
 import node from '../language-icons/node.png';
 import python from '../language-icons/python.png';
 import go from '../language-icons/go.png';
@@ -6,80 +5,61 @@ import bash from '../language-icons/bash.png';
 import prolog from '../language-icons/prolog.png';
 import java from '../language-icons/java.png';
 import cpp from '../language-icons/cpp.png';
+import { languageData, SupportedLanguage } from 'palcode-types';
 
-export function getLanguageDefaultFile(language: TaskLanguage): string {
-    switch (language) {
-        case 'python': return 'main.py';
-        case 'nodejs': return 'index.js';
-        case 'bash': return 'main.sh';
-        case 'java': return 'Main.java';
-        case 'prolog': return 'main.pl';
-        case 'go': return 'main.go';
-        case 'cpp': return 'main.cpp';
+export function getLanguageDefaultFile(languageName: SupportedLanguage): string {
+    const language = languageData.find(e => e.names.code === languageName);
+    if (!language) {
+        return 'main.txt';
     }
+
+    return language.entrypoint;
 }
 
-export interface LanguageData {
-    code: TaskLanguage,
-    extension: string,
-    displayName: string,
+export interface LanguageIconData {
+    code: SupportedLanguage,
     icon: string,
 }
 
-export function getLanguages(): LanguageData[] {
+export function getLanguages(): LanguageIconData[] {
     return [
         {
             code: 'nodejs',
-            extension: 'js',
-            displayName: 'Node.JS',
             icon: node,
         },
         {
             code: 'python',
-            extension: 'py',
-            displayName: 'Python',
             icon: python,
         },
         {
             code: 'java',
-            extension: 'java',
-            displayName: 'Java',
             icon: java,
         },
         {
             code: 'prolog',
-            extension: 'pl',
-            displayName: 'Prolog',
             icon: prolog,
         },
         {
             code: 'bash',
-            extension: 'sh',
-            displayName: 'Bash',
             icon: bash,
         },
         {
             code: 'go',
-            extension: 'go',
-            displayName: 'Golang',
             icon: go,
         },
         {
             code: 'cpp',
-            extension: 'cpp',
-            displayName: 'C++',
             icon: cpp,
         },
     ];
 }
 
-export function getLanguageFromExtension(extension: string): TaskLanguage | void {
-    const languages = getLanguages();
-    const language = languages.find(language => {
+export function getLanguageFromExtension(extension: string): SupportedLanguage | void {
+    const language = languageData.find(language => {
         return language.extension === extension;
     });
 
     if (language) {
-        return language.code;
+        return language.names.code;
     }
 }

@@ -1,10 +1,11 @@
-import { SubmissionTask, TaskStatus } from '../types';
+import { SubmissionTask } from '../types';
 import React, { ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentDots } from '@fortawesome/free-regular-svg-icons/faCommentDots';
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons/faPaperPlane';
 import { faEye } from '@fortawesome/free-regular-svg-icons/faEye';
 import { faEyeSlash } from '@fortawesome/free-regular-svg-icons/faEyeSlash';
+import { ProjectStatus } from 'palcode-types';
 
 interface Props {
     task?: SubmissionTask | null
@@ -16,14 +17,14 @@ export default function TaskStatusIndicator(
     }: Props
 ): ReactElement {
     return task ? (
-        task.status === TaskStatus.HasFeedback
+        task.status === ProjectStatus.HasFeedback
             ? (
                 <span style={{
                         color: '#474747'
                 }}>
                     <FontAwesomeIcon icon={faCommentDots}/> Returned
                 </span>
-            ) : task.status === TaskStatus.Submitted ? (
+            ) : task.status === ProjectStatus.Submitted ? (
                 <span style={{
                         color: '#1f7a22'
                 }}>

@@ -9153,10 +9153,15 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
-palcode-sockets@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/palcode-sockets/-/palcode-sockets-1.0.4.tgz#59eb3b6a8c08017a5992503963ce8d5157491160"
-  integrity sha512-hFX8MRc4yYAEuAzM7keOc3ly5/ba1GP8u7voH3nvYAL3BEzN9mNExcdcfKXJoNQj5dki2akgRJm3wKTVXYujIQ==
+palcode-sockets@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/palcode-sockets/-/palcode-sockets-1.1.0.tgz#456252c8cdf99b9cc00e68a6510c8cd9a198a472"
+  integrity sha512-lJFWfwpWViwxu/9jrsSOAw5CKM2/aklp8p+CqLsHtGqNBd+zKaghkKpahonfQLOPPFl/2le3QhK6tZxXY0/OOA==
+
+palcode-types@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/palcode-types/-/palcode-types-1.0.3.tgz#0516960c8f9b942c39bce7d6179cc5e8cc247b64"
+  integrity sha512-wlW9nIE61Yb2IHhPR9mbPMeHJAhaphrHr/6/6AWd3XOkHO+6wEbsoP3lGr/NRreiR+G1K0ZPE3VdvpXiWs9Whw==
 
 parallel-transform@^1.1.0:
   version "1.2.0"

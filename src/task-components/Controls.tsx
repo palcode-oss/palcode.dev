@@ -1,5 +1,5 @@
 import React, { FormEvent, useCallback, useMemo } from 'react';
-import { isSubmissionTask, Task, TaskStatus } from '../types';
+import { isSubmissionTask, Task } from '../types';
 import form from '../styles/form.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEject, faPaperPlane, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { availableThemes } from '../helpers/monacoThemes';
 import { partition } from 'lodash';
+import { ProjectStatus } from 'palcode-types';
 
 const groupedThemes = partition(availableThemes, 'light')
     .sort((a) => {
@@ -32,13 +33,13 @@ export default function Controls(
         onThemeChange(themeDisplayName: string): void,
     }
 ) {
-    const submissionStatus = useMemo<TaskStatus | null>(() => {
+    const submissionStatus = useMemo<ProjectStatus | null>(() => {
         if (!task || !isSubmissionTask(task)) {
             return null;
         }
 
         if (!Number.isInteger(task.status)) {
-            return TaskStatus.Unsubmitted;
+            return ProjectStatus.Unsubmitted;
         }
 
         return task.status;
@@ -46,9 +47,9 @@ export default function Controls(
 
     const onButtonPress = useCallback(async (e: FormEvent) => {
         e.preventDefault();
-        const targetSubmissionStatus: TaskStatus = submissionStatus === TaskStatus.Unsubmitted
-            ? TaskStatus.Submitted :
-            TaskStatus.Unsubmitted;
+        const targetSubmissionStatus: ProjectStatus = submissionStatus === ProjectStatus.Unsubmitted
+            ? ProjectStatus.Submitted :
+            ProjectStatus.Unsubmitted;
 
         const taskDoc = firebase.firestore()
             .collection('tasks')
@@ -130,13 +131,13 @@ export default function Controls(
                 type='submit'
             >
                 {
-                    submissionStatus === TaskStatus.Unsubmitted && <>
+                    submissionStatus === ProjectStatus.Unsubmitted && <>
                         <FontAwesomeIcon icon={faPaperPlane} />
                         Submit task
                     </>
                 }
                 {
-                    [TaskStatus.Submitted, TaskStatus.HasFeedback].includes(submissionStatus) && <>
+                    [ProjectStatus.Submitted, ProjectStatus.HasFeedback].includes(submissionStatus) && <>
                         <FontAwesomeIcon icon={faEject} />
                         Unsubmit
                     </>

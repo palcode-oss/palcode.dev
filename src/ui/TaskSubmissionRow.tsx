@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { TableCell } from '@material-ui/core';
-import { Classroom, SubmissionTask, TaskStatus, TaskType, TemplateTask } from '../types';
+import { Classroom, SubmissionTask, TemplateTask } from '../types';
 import DropdownMenu from './DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,6 +23,7 @@ import getEnvVariable from '../helpers/getEnv';
 import TaskLanguageIcon from './TaskLanguageIcon';
 import { useSchoolId } from '../helpers/school';
 import useAPIToken from '../helpers/apiToken';
+import { ProjectStatus, ProjectType } from 'palcode-types';
 
 interface Props {
     task: TemplateTask;
@@ -91,8 +92,8 @@ export default function TaskSubmissionRow(
                 createdBy: user.uid,
                 name: task.name,
                 language: task.language,
-                status: TaskStatus.Unsubmitted,
-                type: TaskType.Submission,
+                status: ProjectStatus.Unsubmitted,
+                type: ProjectType.Submission,
                 id: taskDoc.id,
                 created: firebase.firestore.Timestamp.now(),
                 parentTask: task.id,
@@ -146,7 +147,7 @@ export default function TaskSubmissionRow(
             </TableCell>
             <TableCell align='center'>
                 {
-                    submission?.status !== TaskStatus.HasFeedback && (
+                    submission?.status !== ProjectStatus.HasFeedback && (
                         <button
                             className={form.button}
                             onClick={openSubmission}
@@ -158,14 +159,14 @@ export default function TaskSubmissionRow(
                 }
 
                 {
-                    submission?.status === TaskStatus.HasFeedback && (
+                    submission?.status === ProjectStatus.HasFeedback && (
                         <DropdownMenu>
                             <MenuItem onClick={openSubmission}>
                                 <FontAwesomeIcon icon={faEdit}/>
                                 &nbsp;Open
                             </MenuItem>
                             {
-                                submission?.status === TaskStatus.HasFeedback && (
+                                submission?.status === ProjectStatus.HasFeedback && (
                                     <MenuItem onClick={displayFeedback}>
                                         <FontAwesomeIcon icon={faAward}/>
                                         &nbsp;View feedback

@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
-import { isSubmissionTask, SubmissionTask, TaskStatus, User } from '../types';
+import { isSubmissionTask, SubmissionTask } from '../types';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
@@ -14,6 +14,7 @@ import { useClassroom } from '../helpers/classroom';
 import { useTasks } from '../helpers/taskData';
 import { useUserByUsername } from '../helpers/auth';
 import loader from '../styles/loader.module.scss';
+import { ProjectStatus } from 'palcode-types';
 
 interface Props {
     memberUsername: string;
@@ -98,7 +99,7 @@ export default function StudentRow(
                 }
             </TableCell>
             {
-                [TaskStatus.Unsubmitted, TaskStatus.Submitted, TaskStatus.HasFeedback].map(status => (
+                [ProjectStatus.Unsubmitted, ProjectStatus.Submitted, ProjectStatus.HasFeedback].map(status => (
                     <TableCell
                         align='right'
                         key={status}

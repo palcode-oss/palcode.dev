@@ -1,7 +1,6 @@
 {
   "name": "palcode",
   "version": "0.1.0",
-  "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.31",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
@@ -18,7 +17,7 @@
     "monaco-editor-core": "^0.21.2",
     "monaco-languageclient": "^0.13.1-next.4",
     "notistack": "^1.0.0",
-    "palcode-sockets": "^1.0.4",
+    "palcode-sockets": "^1.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-loader-spinner": "^3.1.14",
@@ -50,6 +49,7 @@
     "@types/vscode": "^1.52.0",
     "@types/ws": "^7.2.7",
     "monaco-editor-webpack-plugin": "^2.0.0",
+    "palcode-types": "1.0.3",
     "sass": "^1.30.0",
     "typescript": "^4.1.3"
   },

@@ -6,7 +6,7 @@ import editor from '../styles/editor.module.scss';
 import Briefing from '../task-components/Briefing';
 import Controls from '../task-components/Controls';
 import { useTask } from '../helpers/taskData';
-import { isSubmissionTask, TaskStatus, TaskType } from '../types';
+import { isSubmissionTask } from '../types';
 import { useSnackbar } from 'notistack';
 import { useAuth } from '../helpers/auth';
 import Sidebar from '../task-components/Sidebar';
@@ -15,6 +15,7 @@ import LazyComponentFallback from '../ui/LazyComponentFallback';
 import {getLanguageDefaultFile} from '../helpers/languageData';
 import { useSchoolId } from '../helpers/school';
 import useAPIToken from '../helpers/apiToken';
+import { ProjectStatus, ProjectType } from 'palcode-types';
 
 const FileEditor = lazy(() => import('../task-components/FileEditor'));
 const Console = lazy(() => import('../task-components/Console'));
@@ -80,12 +81,12 @@ export default function Task(
             return true;
         }
 
-        if (task.type === TaskType.Template) {
+        if (task.type === ProjectType.Template) {
             return user.perms === 0;
         }
 
-        if (task.type === TaskType.Submission) {
-            return task.status !== TaskStatus.Unsubmitted;
+        if (task.type === ProjectType.Submission) {
+            return task.status !== ProjectStatus.Unsubmitted;
         }
 
         return false;
@@ -93,7 +94,7 @@ export default function Task(
 
     const [showPopOver, setShowPopOver] = useState(true);
     useEffect(() => {
-        if (task?.type === TaskType.Template) {
+        if (task?.type === ProjectType.Template) {
             setShowPopOver(false);
         }
 
@@ -142,7 +143,7 @@ export default function Task(
                     onNewFile={addFile}
                     onFileDelete={deleteFile}
                     readOnly={readOnly}
-                    showReadme={task?.type !== TaskType.Submission}
+                    showReadme={task?.type !== ProjectType.Submission}
                 />
                 }
 

@@ -1,30 +1,30 @@
 import React, { useMemo } from 'react';
-import { TaskLanguage } from '../types';
-import { getLanguages, LanguageData } from '../helpers/languageData';
+import {  languageData, SupportedLanguage } from 'palcode-types';
+import { getLanguages, LanguageIconData } from '../helpers/languageData';
 
 export default function TaskLanguageIcon(
     {
-        language,
+        language: languageCode,
     }: {
-        language?: TaskLanguage,
+        language?: SupportedLanguage,
     }
 ) {
-    const languageData = useMemo<LanguageData | undefined>(() => {
-        const languageDefinition = getLanguages().find(e => e.code === language);
+    const language = useMemo<LanguageIconData | undefined>(() => {
+        const languageDefinition = getLanguages().find(e => e.code === languageCode);
         if (languageDefinition) {
             return languageDefinition;
         }
-    }, [language]);
+    }, [languageCode]);
 
-    if (!languageData) {
+    if (!language) {
         return <></>;
     }
 
     return (
         <img
-            src={languageData.icon}
+            src={language.icon}
             width={18}
-            alt={languageData.displayName}
+            alt='Language icon'
             style={{
                 marginRight: 10,
                 marginLeft: 5,

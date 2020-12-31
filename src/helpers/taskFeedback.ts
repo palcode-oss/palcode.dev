@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/firestore';
-import { TaskStatus } from '../types';
+import { ProjectStatus } from 'palcode-types';
 
 export function uploadVoiceFeedback(taskId: string, audio: Blob): firebase.storage.UploadTask {
     return firebase.storage()
@@ -21,7 +21,7 @@ export function getVoiceFeedbackDownloadUrl(taskId: string): Promise<any> {
         .getDownloadURL();
 }
 
-async function updateTaskFeedback(taskId: string, target: TaskStatus): Promise<void> {
+async function updateTaskFeedback(taskId: string, target: ProjectStatus): Promise<void> {
     await firebase.firestore()
         .collection('tasks')
         .doc(taskId)
@@ -40,9 +40,9 @@ async function updateTaskFeedback(taskId: string, target: TaskStatus): Promise<v
 }
 
 export function completeTaskFeedback(taskId: string): Promise<void> {
-    return updateTaskFeedback(taskId, TaskStatus.HasFeedback);
+    return updateTaskFeedback(taskId, ProjectStatus.HasFeedback);
 }
 
 export function uncompleteTaskFeedback(taskId: string) {
-    return updateTaskFeedback(taskId, TaskStatus.Submitted);
+    return updateTaskFeedback(taskId, ProjectStatus.Submitted);
 }

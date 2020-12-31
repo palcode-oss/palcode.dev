@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import normaliseKey from '../xtermKeyMapper';
-import { TaskLanguage } from '../../types';
 import sendSerializedMessage from './send';
 import parseMessage, { RunStatus } from './parse';
 import connectToSocket from './connect';
 import { useDispatch } from 'react-redux';
 import { RunnerActions } from '../../stores/runner';
 import { Dispatch } from '@reduxjs/toolkit';
+import { SupportedLanguage } from 'palcode-types';
 
 export function useSocket(): WebSocket | undefined {
     const [socket, setSocket] = useState<WebSocket>();
@@ -20,7 +20,7 @@ export function useSocket(): WebSocket | undefined {
 
 export function runCode(
     taskId: string,
-    language: TaskLanguage,
+    language: SupportedLanguage,
     schoolId: string,
     socket?: WebSocket,
 ): void {

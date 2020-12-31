@@ -1,4 +1,4 @@
-import { SubmissionTask, TaskStatus } from '../types';
+import { SubmissionTask } from '../types';
 import { TableCell } from '@material-ui/core';
 import { Shimmer } from 'react-shimmer';
 import moment from 'moment';
@@ -11,6 +11,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import loader from '../styles/loader.module.scss';
 import table from '../styles/table.module.scss';
+import { ProjectStatus } from 'palcode-types';
 
 interface Props {
     task: SubmissionTask;
@@ -24,14 +25,14 @@ export default function StudentSubmissionRow(
     const [creator, creatorLoading] = useUser(task.createdBy);
     const [taskSubmissionTime, setTaskSubmissionTime] = useState<null | firebase.firestore.Timestamp>(null);
     useEffect(() => {
-        if (task.status === TaskStatus.Unsubmitted) return;
+        if (task.status === ProjectStatus.Unsubmitted) return;
 
         firebase
             .firestore()
             .collection('tasks')
             .doc(task.id)
             .collection('statusUpdates')
-            .where('status', '==', TaskStatus.Submitted)
+            .where('status', '==', ProjectStatus.Submitted)
             .orderBy('createdAt', 'desc')
             .get()
             .then(data => {
@@ -71,7 +72,7 @@ export default function StudentSubmissionRow(
             </TableCell>
             <TableCell align='right'>
                 {
-                    task.status !== TaskStatus.Unsubmitted ? (
+                    task.status !== ProjectStatus.Unsubmitted ? (
                         taskSubmissionTime ? (
                             moment(taskSubmissionTime.toDate()).fromNow()
                         ) : (

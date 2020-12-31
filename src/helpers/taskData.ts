@@ -1,8 +1,9 @@
-import { PrivateTask, SubmissionTask, Task, TaskDoc, TaskType } from '../types';
+import { PrivateTask, SubmissionTask, Task, TaskDoc } from '../types';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useAuth } from './auth';
+import { ProjectType } from 'palcode-types';
 
 export function useTask(taskId: string): [Task | null, boolean] {
     const [task, setTask] = useState<Task | null>(null);
@@ -44,7 +45,7 @@ export function useTasks(classroomId?: string, onlyTemplates = false): [Task[], 
             .orderBy('created', 'desc')
 
         if (onlyTemplates) {
-            baseQuery = baseQuery.where('type', '==', TaskType.Template);
+            baseQuery = baseQuery.where('type', '==', ProjectType.Template);
         }
 
         return baseQuery
@@ -102,7 +103,7 @@ export function usePrivateTasks(): [PrivateTask[], boolean] {
         setLoading(true);
         return firebase.firestore()
             .collection('tasks')
-            .where('type', '==', TaskType.Private)
+            .where('type', '==', ProjectType.Private)
             .where('createdBy', '==', user.uid)
             .orderBy('created', 'desc')
             .onSnapshot(snapshot => {
