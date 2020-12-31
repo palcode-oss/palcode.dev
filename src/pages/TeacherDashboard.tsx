@@ -113,84 +113,82 @@ export default function TeacherDashboard(): ReactElement {
                 )
             }
 
-            {
-                !classroomDataLoading ? (
-                    <>
-                        <h1 className={table.header}>
-                            My dashboard
-                        </h1>
+            <h1 className={table.header}>
+                My dashboard
+            </h1>
 
-                        <TabSwitcher
-                            tabs={['Classrooms', 'Private projects']}
-                            tab={tab}
-                            onChange={setTab}
-                        />
+            <TabSwitcher
+                tabs={['Classrooms', 'Private projects']}
+                tab={tab}
+                onChange={setTab}
+            />
 
-                        {tab === TabSelection.PrivateProjects && <>
-                            <Suspense fallback={<LazyComponentFallback />}>
-                                <PrivateTasks />
-                            </Suspense>
-                        </>}
+            <Suspense fallback={<LazyComponentFallback />}>
+                {tab === TabSelection.PrivateProjects && <>
+                    <PrivateTasks />
+                </>}
+            </Suspense>
 
-                        {tab === TabSelection.Classrooms && (
-                            <TableContainer className={table.tableContainer}>
-                                <Toolbar className={table.toolbar}>
-                                    <Typography
-                                        variant='h6'
-                                        component='div'
-                                    >
-                                        My classrooms
-                                    </Typography>
-                                    <Tooltip
-                                        title='Create new classroom'
-                                        className={table.button}
-                                    >
-                                        <IconButton onClick={openNewModal}>
+            {tab === TabSelection.Classrooms && <>
+                {
+                    !classroomDataLoading ? (
+                        <TableContainer className={table.tableContainer}>
+                            <Toolbar className={table.toolbar}>
+                                <Typography
+                                    variant='h6'
+                                    component='div'
+                                >
+                                    My classrooms
+                                </Typography>
+                                <Tooltip
+                                    title='Create new classroom'
+                                    className={table.button}
+                                >
+                                    <IconButton onClick={openNewModal}>
+                                        <FontAwesomeIcon icon={faPlus}/>
+                                    </IconButton>
+                                </Tooltip>
+                            </Toolbar>
+                            <Table>
+                                {
+                                    !classroomData.length && (
+                                        <caption>
+                                            No classrooms to show yet. Click the&nbsp;
                                             <FontAwesomeIcon icon={faPlus}/>
-                                        </IconButton>
-                                    </Tooltip>
-                                </Toolbar>
-                                <Table>
-                                    {
-                                        !classroomData.length && (
-                                            <caption>
-                                                No classrooms to show yet. Click the&nbsp;
-                                                <FontAwesomeIcon icon={faPlus}/>
-                                                &nbsp;button above to create one.
-                                            </caption>
-                                        )
-                                    }
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>Class name</TableCell>
-                                            <TableCell align='right'>Students</TableCell>
-                                            <TableCell align='right'>Tasks</TableCell>
-                                            <TableCell align='right'>Created</TableCell>
-                                            <TableCell align='center'>Actions</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        <Suspense fallback={<LazyComponentFallback />}>
-                                            {
-                                                classroomData.map(classroom => (
-                                                    <ClassroomRow
-                                                        classroom={classroom}
-                                                        handleDelete={handleDelete}
-                                                        openCloneModal={openCloneModal}
-                                                        key={classroom.id}
-                                                    />
-                                                ))
-                                            }
-                                        </Suspense>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        )}
-                    </>
-                ) : (
-                    <Spinner />
-                )
-            }
+                                            &nbsp;button above to create one.
+                                        </caption>
+                                    )
+                                }
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Class name</TableCell>
+                                        <TableCell align='right'>Students</TableCell>
+                                        <TableCell align='right'>Tasks</TableCell>
+                                        <TableCell align='right'>Created</TableCell>
+                                        <TableCell align='center'>Actions</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <Suspense fallback={<LazyComponentFallback />}>
+                                        {
+                                            classroomData.map(classroom => (
+                                                <ClassroomRow
+                                                    classroom={classroom}
+                                                    handleDelete={handleDelete}
+                                                    openCloneModal={openCloneModal}
+                                                    key={classroom.id}
+                                                />
+                                            ))
+                                        }
+                                    </Suspense>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    ) : (
+                        <Spinner />
+                    )
+                }
+            </>}
         </div>
     );
 }
