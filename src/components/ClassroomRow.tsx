@@ -9,7 +9,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import TableRow from '@material-ui/core/TableRow';
 import { Classroom, isTemplateTask } from '../types';
-import { useTasks } from '../helpers/taskData';
+import { useClassroomTasks } from '../helpers/taskData';
 import studentDashboard from '../styles/studentDashboard.module.scss';
 import { Shimmer } from 'react-shimmer';
 import { faClone } from '@fortawesome/free-solid-svg-icons';
@@ -27,7 +27,7 @@ export default function ClassroomRow(
         openCloneModal,
     }: Props
 ): ReactElement {
-    const [tasks, tasksLoading] = useTasks(classroom.id);
+    const [tasks, tasksLoading] = useClassroomTasks(classroom.id);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const onCloneClick = useCallback(() => {

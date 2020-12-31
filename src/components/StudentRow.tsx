@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { useSnackbar } from 'notistack';
 import { useClassroom } from '../helpers/classroom';
-import { useTasks } from '../helpers/taskData';
+import { useClassroomTasks } from '../helpers/taskData';
 import { useUserByUsername } from '../helpers/auth';
 import loader from '../styles/loader.module.scss';
 import { ProjectStatus } from 'palcode-types';
@@ -32,7 +32,7 @@ export default function StudentRow(
     const [student, studentLoading] = useUserByUsername(memberUsername);
     const classroom = useClassroom(classroomId);
 
-    const [tasks, tasksLoading] = useTasks(classroom?.id);
+    const [tasks, tasksLoading] = useClassroomTasks(classroom?.id);
     const userTasks = useMemo<SubmissionTask[] | null>(() => {
         if (!classroom || tasksLoading) return null;
 

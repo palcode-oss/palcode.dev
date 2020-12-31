@@ -1,4 +1,4 @@
-import { PrivateTask, SubmissionTask, Task, TaskDoc } from '../types';
+import { PrivateTask, SubmissionTask, Task, TaskDoc, TemplateTask } from '../types';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -30,8 +30,11 @@ export function useTask(taskId: string): [Task | null, boolean] {
     return [task, loading];
 }
 
-export function useTasks(classroomId?: string, onlyTemplates = false): [Task[], boolean] {
-    const [tasks, setTasks] = useState<Task[]>([]);
+export function useClassroomTasks(classroomId?: string, onlyTemplates = false): [
+    (TemplateTask | SubmissionTask)[],
+    boolean
+] {
+    const [tasks, setTasks] = useState<(TemplateTask | SubmissionTask)[]>([]);
     const [tasksLoading, setTasksLoading] = useState(false);
 
     useEffect(() => {
@@ -54,7 +57,7 @@ export function useTasks(classroomId?: string, onlyTemplates = false): [Task[], 
                 setTasks(snapshot.docs.map(e => ({
                     id: e.id,
                     ...e.data() as TaskDoc,
-                } as Task)));
+                } as TemplateTask | SubmissionTask)));
             });
     }, [classroomId, onlyTemplates]);
 

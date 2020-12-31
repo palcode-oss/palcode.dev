@@ -14,7 +14,7 @@ import { TemplateTask } from '../types';
 import { orderBy } from 'lodash';
 import { useClassroom } from '../helpers/classroom';
 import table from '../styles/table.module.scss';
-import { useTasks } from '../helpers/taskData';
+import { useClassroomTasks } from '../helpers/taskData';
 import Spinner from '../ui/Spinner';
 import { ProjectType } from 'palcode-types';
 
@@ -49,7 +49,7 @@ export default function ViewClassroom(): ReactElement {
         }
     }, [sort, sortDirection]);
 
-    const [tasksData, tasksLoading] = useTasks(classroom?.id, true);
+    const [tasksData, tasksLoading] = useClassroomTasks(classroom?.id, true);
 
     if (!classroom || tasksLoading) {
         return (

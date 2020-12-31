@@ -4,7 +4,7 @@ import { Shimmer } from 'react-shimmer';
 import { useUser } from '../helpers/auth';
 import { Link } from 'react-router-dom';
 import studentDashboard from '../styles/studentDashboard.module.scss';
-import { useTasks } from '../helpers/taskData';
+import { useClassroomTasks } from '../helpers/taskData';
 import { ProjectType } from 'palcode-types';
 
 interface Props {
@@ -17,7 +17,7 @@ export default function ClassroomCard(
     }: Props,
 ): ReactElement {
     const [owner, loading] = useUser(classroom.owner);
-    const [tasks, tasksLoading] = useTasks(classroom.id, true);
+    const [tasks, tasksLoading] = useClassroomTasks(classroom.id, true);
     const taskCount = tasks
         .filter(task => task.type === ProjectType.Template)
         .length;
