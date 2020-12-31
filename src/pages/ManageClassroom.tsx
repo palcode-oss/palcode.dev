@@ -176,8 +176,9 @@ export default function ManageClassroom(): ReactElement {
                         {
                             classroomData.members.map(username => (
                                 <StudentRow
+                                    tasks={tasks}
+                                    classroom={classroomData}
                                     memberUsername={username}
-                                    classroomId={classroomId}
                                     setClassroomUpdater={setClassroomUpdater}
                                     key={username}
                                 />

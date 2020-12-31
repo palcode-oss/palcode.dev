@@ -70,11 +70,17 @@ This action is irreversible, and will also delete any submissions.`,);
         }) as [number, number, number];
     }, [tasks, task]);
 
+    const reviewLink = useMemo(() => {
+        return `/task/${task.id}/review`;
+    }, [task]);
+
     return (
         <TableRow>
             <TableCell>
                 <TaskLanguageIcon language={task.language} />
-                {task.name}
+                <Link to={reviewLink}>
+                    {task.name}
+                </Link>
             </TableCell>
             <TableCell align='right'>
                 {moment(task.created.toDate()).fromNow()}
@@ -91,7 +97,7 @@ This action is irreversible, and will also delete any submissions.`,);
             }
             <TableCell align='center'>
                 <DropdownMenu>
-                    <Link to={`/task/${task.id}/review`}>
+                    <Link to={reviewLink}>
                         <MenuItem>
                             <FontAwesomeIcon icon={faGraduationCap}/>
                             &nbsp;Review

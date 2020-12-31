@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { TableCell } from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
-import { isSubmissionTask, SubmissionTask } from '../types';
+import { Classroom, isSubmissionTask, SubmissionTask, TemplateTask } from '../types';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
@@ -10,63 +10,53 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { useSnackbar } from 'notistack';
-import { useClassroom } from '../helpers/classroom';
-import { useClassroomTasks } from '../helpers/taskData';
 import { useUserByUsername } from '../helpers/auth';
 import loader from '../styles/loader.module.scss';
 import { ProjectStatus } from 'palcode-types';
 
 interface Props {
+    tasks: (TemplateTask | SubmissionTask)[];
+    classroom: Classroom | null;
     memberUsername: string;
-    classroomId: string;
     setClassroomUpdater: (updater: number) => void;
 }
 
 export default function StudentRow(
     {
+        classroom,
+        tasks,
         memberUsername,
-        classroomId,
         setClassroomUpdater,
     }: Props,
 ): ReactElement {
     const [student, studentLoading] = useUserByUsername(memberUsername);
-    const classroom = useClassroom(classroomId);
-
-    const [tasks, tasksLoading] = useClassroomTasks(classroom?.id);
-    const userTasks = useMemo<SubmissionTask[] | null>(() => {
-        if (!classroom || tasksLoading) return null;
-
-        if (!student) {
-            return [];
-        }
-
-        return tasks.filter((task) => {
-            return task.createdBy === student.uid && isSubmissionTask(task);
-        }) as SubmissionTask[];
-    }, [classroom, student, tasks]);
 
     const {enqueueSnackbar} = useSnackbar();
     const deleteStudent = useCallback(() => {
-        if (classroom) {
-            firebase
-                .firestore()
-                .collection('classrooms')
-                .doc(classroomId)
-                .update({
-                        members: firebase.firestore.FieldValue.arrayRemove(memberUsername),
-                })
-                .then(() => {
-                    enqueueSnackbar('Student removed successfully!', {
-                        variant: 'success',
-                    });
-                    setClassroomUpdater(Math.random());
-                })
-                .catch(() => {
-                    enqueueSnackbar('Something went wrong while attempting to delete that student. Try again.', {
-                        variant: 'error',
-                    });
+        if (!classroom) return;
+
+        const confirmed = window.confirm(`Are you sure you want to remove ${memberUsername}? 
+Their submissions will still be kept, and the student can be re-added at any time.`);
+        if (!confirmed) return;
+
+        firebase
+            .firestore()
+            .collection('classrooms')
+            .doc(classroom.id)
+            .update({
+                members: firebase.firestore.FieldValue.arrayRemove(memberUsername),
+            })
+            .then(() => {
+                enqueueSnackbar('Student removed successfully!', {
+                    variant: 'success',
                 });
-        }
+                setClassroomUpdater(Math.random());
+            })
+            .catch(() => {
+                enqueueSnackbar('Something went wrong while attempting to delete that student. Try again.', {
+                    variant: 'error',
+                });
+            });
     }, [classroom, memberUsername]);
 
     const studentName = useMemo(() => {
@@ -82,6 +72,24 @@ export default function StudentRow(
             return memberUsername + ' (not signed up)';
         }
     }, [student, studentLoading, memberUsername]);
+
+    const userTasks = useMemo<SubmissionTask[]>(() => {
+        if (!student) {
+            return [];
+        }
+
+        return tasks.filter((task) => {
+            return task.createdBy === student.uid && isSubmissionTask(task);
+        }) as SubmissionTask[];
+    }, [classroom, student, tasks]);
+
+    const groupedSubmissions = useMemo<[number, number, number]>(() => {
+        return [ProjectStatus.Unsubmitted, ProjectStatus.Submitted, ProjectStatus.HasFeedback].map(status => {
+            return userTasks
+                .filter(e => e.status === status)
+                .length;
+        }) as [number, number, number];
+    }, [student, userTasks]);
 
     return (
         <TableRow>
@@ -99,23 +107,12 @@ export default function StudentRow(
                 }
             </TableCell>
             {
-                [ProjectStatus.Unsubmitted, ProjectStatus.Submitted, ProjectStatus.HasFeedback].map(status => (
+                groupedSubmissions.map((count, index) => (
                     <TableCell
                         align='right'
-                        key={status}
+                        key={index}
                     >
-                        {
-                            userTasks
-                                ? (
-                                    userTasks.reduce((a, e) => e.status === status ? a + 1 : a, 0)
-                                ) : (
-                                    <Shimmer
-                                        height={12}
-                                        width={40}
-                                        className={loader.grayShimmer}
-                                    />
-                                )
-                        }
+                        {count}
                     </TableCell>
                 ))
             }
