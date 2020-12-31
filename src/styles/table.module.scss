@@ -8,14 +8,11 @@
     }
 
     .tableContainer {
-        $border: 1px solid lighten($bg-light, 60);
-
         margin-top: 20px;
-        border: $border;
-        border-radius: 15px;
+        border: $default-border;
 
         .toolbar {
-            border-bottom: $border;
+            border-bottom: $default-border;
             display: flex;
             justify-content: space-between;
 
@@ -34,6 +31,16 @@
 
         tbody tr:last-child td {
             border-bottom: none;
+        }
+
+        tbody tr td a {
+            text-decoration: none;
+            color: unset;
+
+            &:hover {
+                color: lighten($bg-light, 30%);
+                text-decoration: underline;
+            }
         }
 
         caption {

@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback } from 'react';
 import { Classroom, isSubmissionTask } from '../types';
 import { TableCell } from '@material-ui/core';
-import DropdownMenu from './DropdownMenu';
+import DropdownMenu from '../ui/DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
@@ -16,7 +16,7 @@ import moment from 'moment';
 import { useTask, useTasks } from '../helpers/taskData';
 import loader from '../styles/loader.module.scss';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import TaskLanguageIcon from './TaskLanguageIcon';
+import TaskLanguageIcon from '../ui/TaskLanguageIcon';
 import { ProjectStatus } from 'palcode-types';
 
 interface Props {

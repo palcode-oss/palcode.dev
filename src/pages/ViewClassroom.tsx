@@ -9,7 +9,7 @@ import { TableCell } from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TaskSubmissionRow from '../ui/TaskSubmissionRow';
+import TaskSubmissionRow from '../components/TaskSubmissionRow';
 import { TemplateTask } from '../types';
 import { orderBy } from 'lodash';
 import { useClassroom } from '../helpers/classroom';

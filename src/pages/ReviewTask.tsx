@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom';
 import loader from '../styles/loader.module.scss';
 import Loader from 'react-loader-spinner';
 import { useSubmissions, useTask } from '../helpers/taskData';
-import StudentSubmissionRow from '../ui/StudentSubmissionRow';
+import StudentSubmissionRow from '../components/StudentSubmissionRow';
 import { Shimmer } from 'react-shimmer';
 
 interface Params {

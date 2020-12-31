@@ -3,6 +3,8 @@ $navbar-height: 50px;
 $bg-light: #151e3f;
 $bg-dark: #030027;
 
+$default-border: 1px solid lighten($bg-light, 60);
+
 @mixin dark-shimmer {
   border-radius: 400px;
   filter: brightness(0.4) contrast(1.5) sepia(1) hue-rotate(-156deg) saturate(1.5);

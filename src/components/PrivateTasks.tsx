@@ -3,15 +3,14 @@ import { usePrivateTasks } from '../helpers/taskData';
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@material-ui/core';
 import moment from 'moment';
 import privateTasks from '../styles/privateTasks.module.scss';
-import IconButton from '@material-ui/core/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
-import Tooltip from '@material-ui/core/Tooltip';
 import NewTaskModal from './NewTaskModal';
 import { useHistory } from 'react-router-dom';
 import table from '../styles/table.module.scss';
-import Spinner from './Spinner';
-import TaskLanguageIcon from './TaskLanguageIcon';
+import form from '../styles/form.module.scss';
+import Spinner from '../ui/Spinner';
+import TaskLanguageIcon from '../ui/TaskLanguageIcon';
 
 export default function PrivateTasks() {
     const [tasks, loading] = usePrivateTasks();
@@ -21,18 +20,13 @@ export default function PrivateTasks() {
 
     return <>
         <div className={privateTasks.header}>
-            <h1>
-                Private projects
-            </h1>
-
-            <Tooltip
-                title='New private project'
-                className={privateTasks.button}
+            <button
+                className={form.button}
+                onClick={() => setShowModal(true)}
             >
-                <IconButton onClick={() => setShowModal(true)}>
-                    <FontAwesomeIcon icon={faPlus}/>
-                </IconButton>
-            </Tooltip>
+                <FontAwesomeIcon icon={faPlus} />
+                New project
+            </button>
         </div>
 
         {showModal && (

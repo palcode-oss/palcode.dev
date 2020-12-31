@@ -5,7 +5,7 @@ import { isSubmissionTask, SubmissionTask } from '../types';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { Shimmer } from 'react-shimmer';
-import DropdownMenu from './DropdownMenu';
+import DropdownMenu from '../ui/DropdownMenu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';

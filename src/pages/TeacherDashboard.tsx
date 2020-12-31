@@ -16,12 +16,18 @@ import { useSchoolClassrooms } from '../helpers/classroom';
 import IconButton from '@material-ui/core/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import Tooltip from '@material-ui/core/Tooltip';
-import NewClassroomModal, { NewClassroomAction } from '../ui/NewClassroomModal';
+import NewClassroomModal, { NewClassroomAction } from '../components/NewClassroomModal';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
-import PrivateTasks from '../ui/PrivateTasks';
 import Spinner from '../ui/Spinner';
+import TabSwitcher from '../ui/TabSwitcher';
 
-const ClassroomRow = lazy(() => import('../ui/ClassroomRow'));
+const PrivateTasks = lazy(() => import('../components/PrivateTasks'));
+const ClassroomRow = lazy(() => import('../components/ClassroomRow'));
+
+enum TabSelection {
+    Classrooms,
+    PrivateProjects,
+}
 
 export default function TeacherDashboard(): ReactElement {
     const [classroomDataUpdater, setClassroomDataUpdater] = useState(0);
@@ -93,78 +99,93 @@ export default function TeacherDashboard(): ReactElement {
         setCloneClassroomId(classroomId);
     }, []);
 
+    const [tab, setTab] = useState<TabSelection>(TabSelection.Classrooms);
+
     return (
         <div className={table.tablePage}>
+            {
+                showModal && (
+                    <NewClassroomModal
+                        closeModal={() => setShowModal(false)}
+                        modalAction={modalAction}
+                        classroomId={cloneClassroomId}
+                    />
+                )
+            }
+
             {
                 !classroomDataLoading ? (
                     <>
                         <h1 className={table.header}>
                             My dashboard
                         </h1>
-                        <TableContainer className={table.tableContainer}>
-                            <Toolbar className={table.toolbar}>
-                                <Typography
-                                    variant='h6'
-                                    component='div'
-                                >
-                                    My classrooms
-                                </Typography>
-                                <Tooltip
-                                    title='Create new classroom'
-                                    className={table.button}
-                                >
-                                    <IconButton onClick={openNewModal}>
-                                        <FontAwesomeIcon icon={faPlus}/>
-                                    </IconButton>
-                                </Tooltip>
-                            </Toolbar>
-                            <Table>
-                                {
-                                    !classroomData.length && (
-                                        <caption>
-                                            No classrooms to show yet. Click the&nbsp;
+
+                        <TabSwitcher
+                            tabs={['Classrooms', 'Private projects']}
+                            tab={tab}
+                            onChange={setTab}
+                        />
+
+                        {tab === TabSelection.PrivateProjects && <>
+                            <Suspense fallback={<LazyComponentFallback />}>
+                                <PrivateTasks />
+                            </Suspense>
+                        </>}
+
+                        {tab === TabSelection.Classrooms && (
+                            <TableContainer className={table.tableContainer}>
+                                <Toolbar className={table.toolbar}>
+                                    <Typography
+                                        variant='h6'
+                                        component='div'
+                                    >
+                                        My classrooms
+                                    </Typography>
+                                    <Tooltip
+                                        title='Create new classroom'
+                                        className={table.button}
+                                    >
+                                        <IconButton onClick={openNewModal}>
                                             <FontAwesomeIcon icon={faPlus}/>
-                                            &nbsp;button above to create one.
-                                        </caption>
-                                    )
-                                }
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Class name</TableCell>
-                                        <TableCell align='right'>Students</TableCell>
-                                        <TableCell align='right'>Tasks</TableCell>
-                                        <TableCell align='right'>Created</TableCell>
-                                        <TableCell align='center'>Actions</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    <Suspense fallback={<LazyComponentFallback />}>
-                                        {
-                                            classroomData.map(classroom => (
-                                                <ClassroomRow
-                                                    classroom={classroom}
-                                                    handleDelete={handleDelete}
-                                                    openCloneModal={openCloneModal}
-                                                    key={classroom.id}
-                                                />
-                                            ))
-                                        }
-                                    </Suspense>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-
-                        <PrivateTasks />
-
-                        {
-                            showModal && (
-                                <NewClassroomModal
-                                    closeModal={() => setShowModal(false)}
-                                    modalAction={modalAction}
-                                    classroomId={cloneClassroomId}
-                                />
-                            )
-                        }
+                                        </IconButton>
+                                    </Tooltip>
+                                </Toolbar>
+                                <Table>
+                                    {
+                                        !classroomData.length && (
+                                            <caption>
+                                                No classrooms to show yet. Click the&nbsp;
+                                                <FontAwesomeIcon icon={faPlus}/>
+                                                &nbsp;button above to create one.
+                                            </caption>
+                                        )
+                                    }
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Class name</TableCell>
+                                            <TableCell align='right'>Students</TableCell>
+                                            <TableCell align='right'>Tasks</TableCell>
+                                            <TableCell align='right'>Created</TableCell>
+                                            <TableCell align='center'>Actions</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        <Suspense fallback={<LazyComponentFallback />}>
+                                            {
+                                                classroomData.map(classroom => (
+                                                    <ClassroomRow
+                                                        classroom={classroom}
+                                                        handleDelete={handleDelete}
+                                                        openCloneModal={openCloneModal}
+                                                        key={classroom.id}
+                                                    />
+                                                ))
+                                            }
+                                        </Suspense>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        )}
                     </>
                 ) : (
                     <Spinner />

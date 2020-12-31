@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect, useState } from 'react';
 import { useUser } from '../helpers/auth';
-import TaskStatusIndicator from './TaskStatus';
+import TaskStatusIndicator from '../ui/TaskStatus';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import loader from '../styles/loader.module.scss';

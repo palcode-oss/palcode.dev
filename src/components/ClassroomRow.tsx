@@ -1,7 +1,7 @@
-import React, { ReactElement, useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { TableCell } from '@material-ui/core';
 import moment from 'moment';
-import DropdownMenu from './DropdownMenu';
+import DropdownMenu from '../ui/DropdownMenu';
 import { Link } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -35,9 +35,15 @@ export default function ClassroomRow(
         openCloneModal(classroom.id);
     }, [openCloneModal, classroom]);
 
+    const classroomManagementLink = useMemo(() => `/classroom/${classroom.id}/manage`, [classroom]);
+
     return <>
         <TableRow>
-            <TableCell>{classroom.name}</TableCell>
+            <TableCell>
+                <Link to={classroomManagementLink}>
+                    {classroom.name}
+                </Link>
+            </TableCell>
             <TableCell align='right'>{classroom.members.length}</TableCell>
             <TableCell align='right'>
                 {
@@ -64,7 +70,7 @@ export default function ClassroomRow(
                     open={dropdownOpen}
                     onChange={setDropdownOpen}
                 >
-                    <Link to={`/classroom/${classroom.id}/manage`}>
+                    <Link to={classroomManagementLink}>
                         <MenuItem>
                             <FontAwesomeIcon icon={faEdit}/>
                             &nbsp;Manage classroom

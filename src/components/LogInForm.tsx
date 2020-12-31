@@ -5,7 +5,6 @@ import 'firebase/auth';
 import form from '../styles/form.module.scss';
 import styles from '../styles/login.module.scss';
 import Loader from 'react-loader-spinner';
-import { Perms, UserDoc } from '../types';
 import { Link } from 'react-router-dom';
 import { getSchoolAuth } from '../helpers/school';
 import axios from 'axios';

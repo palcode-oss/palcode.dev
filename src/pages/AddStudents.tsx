@@ -71,7 +71,7 @@ export default function AddStudents(): ReactElement {
             </h1>
 
             <p>
-                Please paste a list of student usernames (excluding <em>@mgs.org</em>) in the field below,&nbsp;
+                Please paste a list of student usernames (excluding <em>@example.com</em>) in the field below,&nbsp;
                 <strong>one entry per line</strong>.
             </p>
 

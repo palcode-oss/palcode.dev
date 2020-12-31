@@ -25,7 +25,7 @@ export default function Dashboard(): ReactElement {
     }, []);
 
     if ((!loading && !userDoc) || forceShowLogin) {
-        const LogInForm = lazy(() => import('../ui/LogInForm'));
+        const LogInForm = lazy(() => import('../components/LogInForm'));
         return (
             <Suspense fallback={<LazyComponentFallback />}>
                 <LogInForm

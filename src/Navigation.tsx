@@ -1,7 +1,7 @@
 import React, { lazy, ReactElement, Suspense, useCallback, useEffect, useState } from 'react';
 import { Redirect, Route, Router, Switch, useParams } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
-import Navbar from './ui/Navbar';
+import Navbar from './components/Navbar';
 import { useAuth } from './helpers/auth';
 import { Perms } from './types';
 import firebase from 'firebase/app';
