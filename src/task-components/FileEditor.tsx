@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { Dispatch } from '@reduxjs/toolkit';
 import { RunnerActions } from '../stores/runner';
 import { UploaderActions } from '../stores/uploader';
+import { useSchoolId } from '../helpers/school';
 
 export default function FileEditor(
     {
@@ -62,19 +63,20 @@ export default function FileEditor(
         }
     }, [extension]);
 
+    const schoolId = useSchoolId();
     useEffect(() => {
-        if (themeLoading) return;
+        if (themeLoading || !schoolId) return;
 
         if (!themeIsBuiltIn && themeData) {
             editor.defineTheme(themePair.normalisedName, themeData);
             editor.setTheme(themePair.normalisedName);
         }
 
-        if (extension && ['py', 'sh'].includes(extension)) {
+        if (extension && ['py', 'sh', 'cpp'].includes(extension)) {
             const lspLanguage = getLanguageFromExtension(extension);
             if (!lspLanguage) return;
 
-            const dispose = connectToLanguageServer(lspLanguage);
+            const dispose = connectToLanguageServer(lspLanguage, taskId, schoolId);
 
             if (dispose) {
                 return () => {
@@ -82,7 +84,7 @@ export default function FileEditor(
                 }
             }
         }
-    }, [themeData, themeLoading, themeIsBuiltIn, extension]);
+    }, [themeData, themeLoading, themeIsBuiltIn, extension, schoolId]);
 
     const onEditorMount = useCallback((e: editor.IStandaloneCodeEditor) => {
         e.addAction({

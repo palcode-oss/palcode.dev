@@ -3,8 +3,8 @@ import React, { useMemo } from 'react';
 
 export default function Privacy() {
     const isCloudHosted = useMemo(() => {
-        return ['palcode.dev', 'app.palcode.dev'].includes(window.origin);
-    }, [window.origin]);
+        return ['palcode.dev', 'app.palcode.dev'].includes(window.location.host);
+    }, [window.location.host]);
 
     return <div className={styles.textContainer}>
         <h1 className={styles.header}>

@@ -4,6 +4,12 @@ export default function sendSerializedMessage(
     socket: WebSocket,
     message: ClientMessage
 ) {
+    if (socket.readyState !== WebSocket.OPEN) {
+        return;
+    }
+
     const encodedMessage = encode(message);
-    socket.send(encodedMessage);
+    try {
+        socket.send(encodedMessage);
+    } catch (e) {}
 }
