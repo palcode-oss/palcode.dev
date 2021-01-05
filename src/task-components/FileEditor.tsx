@@ -72,7 +72,7 @@ export default function FileEditor(
             editor.setTheme(themePair.normalisedName);
         }
 
-        if (extension && ['py', 'sh', 'cpp'].includes(extension)) {
+        if (extension && ['py', 'sh', 'go'].includes(extension)) {
             const lspLanguage = getLanguageFromExtension(extension);
             if (!lspLanguage) return;
 

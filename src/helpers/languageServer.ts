@@ -15,7 +15,7 @@ function createLanguageClient(connection: MessageConnection) {
     return new MonacoLanguageClient({
         name: 'lsp.palcode.dev',
         clientOptions: {
-            documentSelector: ['python', 'shell', 'cpp'],
+            documentSelector: ['python', 'shell', 'go'],
             workspaceFolder: {
                 uri: Uri.file('/usr/src/app'),
                 name: 'app',
