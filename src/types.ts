@@ -32,7 +32,7 @@ export interface User {
 
 export type UserDoc = Omit<User, 'uid'>;
 
-export type TaskLanguage = 'python' | 'nodejs' | 'bash' | 'java' | 'prolog' | 'go' | 'cpp';
+export type TaskLanguage = 'python' | 'nodejs' | 'bash' | 'java' | 'prolog' | 'go' | 'cpp' | 'php';
 
 export interface TaskProps {
     name: string;

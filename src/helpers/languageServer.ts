@@ -7,9 +7,9 @@ import {
 } from 'monaco-languageclient';
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import getEnvVariable from './getEnv';
-import { TaskLanguage } from '../types';
 import { encodeLspInit } from 'palcode-sockets';
 import { Uri } from 'monaco-editor';
+import { SupportedLanguage } from 'palcode-types';
 
 function createLanguageClient(connection: MessageConnection) {
     return new MonacoLanguageClient({
@@ -42,7 +42,7 @@ function createLanguageClient(connection: MessageConnection) {
 
 type DisposeFunction = () => void;
 export default function connectToLanguageServer(
-    language: TaskLanguage,
+    language: SupportedLanguage,
     taskId: string,
     schoolId: string,
 ): undefined | DisposeFunction {
