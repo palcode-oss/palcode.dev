@@ -15,6 +15,7 @@ module.exports = {
                     'java',
                     'go',
                     'cpp',
+                    'php',
                 ]
             }),
         ],

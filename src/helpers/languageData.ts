@@ -5,6 +5,7 @@ import bash from '../language-icons/bash.png';
 import prolog from '../language-icons/prolog.png';
 import java from '../language-icons/java.png';
 import cpp from '../language-icons/cpp.png';
+import php from '../language-icons/php.png';
 import { languageData, SupportedLanguage } from 'palcode-types';
 
 export function getLanguageDefaultFile(languageName: SupportedLanguage): string {
@@ -51,6 +52,10 @@ export function getLanguages(): LanguageIconData[] {
             code: 'cpp',
             icon: cpp,
         },
+        {
+            code: 'php',
+            icon: php,
+        }
     ];
 }
 

@@ -59,6 +59,7 @@ export default function FileEditor(
             case 'pl': return 'plaintext';
             case 'go': return 'go';
             case 'cpp': return 'cpp';
+            case 'php': return 'php';
             default: return 'plaintext';
         }
     }, [extension]);

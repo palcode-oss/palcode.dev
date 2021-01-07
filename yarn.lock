@@ -9158,10 +9158,10 @@ palcode-sockets@^1.3.0:
   resolved "https://registry.yarnpkg.com/palcode-sockets/-/palcode-sockets-1.3.0.tgz#efab16e80faec84348aceed385bc7dddda7a6b0c"
   integrity sha512-LiqD5+y82uzCTIuVxaB8HyUM8uQLSOMXoP+JIHBZbTTbRCb2ULr+GJHOMMPLfri+qf2CxmHh8wTt8rnh6n+J3w==
 
-palcode-types@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/palcode-types/-/palcode-types-1.0.4.tgz#18158aa29d35dfd185bf43ffcfef31b737934fd0"
-  integrity sha512-66AFfH6aSglaoiLEoSYHJz1BXG47w6Dac4djcgh3ZSGH3uzpxZ6aMdLCUoj2kPB0NnQLGm88Ny5hJzNwWEUueA==
+palcode-types@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/palcode-types/-/palcode-types-1.1.0.tgz#1ee813afd92327e50e4b9260abad2a24722984b6"
+  integrity sha512-rkrwQ93WflyIcYvue721oRthjxZM2uVyIiRufIRh4iEbUZ3/F0Kl2gEs+kTiDS4gGHYII6XGFrEKkMW7fZaIjQ==
 
 parallel-transform@^1.1.0:
   version "1.2.0"
