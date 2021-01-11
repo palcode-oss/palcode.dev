@@ -93,11 +93,13 @@ export default function LogInForm(
                 return;
             }
 
+            const setupToken = localStorage.getItem("setupToken");
             try {
                 await axios.post(
                     getEnvVariable('API') + '/ensure-user',
                     {
                         token,
+                        setupToken,
                     }
                 );
             } catch (e) {

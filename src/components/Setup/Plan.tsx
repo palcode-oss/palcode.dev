@@ -59,9 +59,11 @@ export default function Plan(
             return;
         }
 
-        enqueueSnackbar('That\'s it! Welcome to PalCode!', {
+        enqueueSnackbar('That\'s it! Please login now to complete your setup process.', {
             variant: 'success',
         });
+
+        localStorage.setItem("setupToken", setupToken);
         history.push('/');
     }, [school, setupToken, planId]);
 
