@@ -66,4 +66,13 @@
     @extend p;
     list-style-type: circle;
   }
+
+  .simpleRow {
+    width: 100%;
+    display: flex;
+
+    > * {
+      flex: 1;
+    }
+  }
 }

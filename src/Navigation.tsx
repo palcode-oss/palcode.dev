@@ -16,6 +16,7 @@ const ManageClassroom = lazy(() => import('./pages/ManageClassroom'));
 const ViewClassroom = lazy(() => import('./pages/ViewClassroom'));
 const ReviewTask = lazy(() => import('./pages/ReviewTask'));
 const AddStudents = lazy(() => import('./pages/AddStudents'));
+const Setup = lazy(() => import('./pages/Setup'));
 
 const history = createBrowserHistory();
 
@@ -167,6 +168,9 @@ export default function Navigation(): ReactElement {
                     </Route>
                     <Route path='/privacy'>
                         <Privacy />
+                    </Route>
+                    <Route path='/setup'>
+                        <Setup />
                     </Route>
                     <Route path='/'>
                         <Dashboard />
