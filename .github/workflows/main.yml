@@ -35,6 +35,9 @@ jobs:
           REACT_APP_F_STORAGE_BUCKET: palcode-ba70e.appspot.com
           REACT_APP_F_APP_ID: 1:1066769258920:web:472b48d2d97f99f99fa59d
 
+          # publishable live key for Stripe
+          REACT_APP_STRIPE: pk_live_51I2cPMAFoSADPMFq55uQelLJJa5yetLp0YzOFlogf338RtmSvIJxdVWbDAcz4BLfMyO73I5OF8rcj6aRgL4zryQ7003z5VjMXf
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         name: Deploy to Firebase Hosting
         with:
