@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import axios, { CancelTokenSource } from 'axios';
-import { TaskLanguage } from '../types';
+import axios from 'axios';
 import getEnvVariable from './getEnv';
 import { useSchoolId } from './school';
 import useAPIToken from './apiToken';
 import cancellableRequest from './requestCanceller';
+import { SupportedLanguage } from 'palcode-types';
 
 type Files = string[];
 type FilesLoading = boolean;
 type AddFile = (fileName: string) => void;
 type DeleteFile = (fileName: string) => void;
 
-export function useTaskFiles(taskId: string, language?: TaskLanguage): [Files, FilesLoading, AddFile, DeleteFile] {
+export function useTaskFiles(taskId: string, language?: SupportedLanguage): [Files, FilesLoading, AddFile, DeleteFile] {
     const [files, setFiles] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const schoolId = useSchoolId();

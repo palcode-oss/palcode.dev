@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import { ProjectStatus, ProjectType } from 'palcode-types';
+import { ProjectStatus, ProjectType, SupportedLanguage } from 'palcode-types';
 
 export type SchoolAuthService = 'microsoft.com' | 'google.com';
 
@@ -32,13 +32,12 @@ export interface User {
 
 export type UserDoc = Omit<User, 'uid'>;
 
-export type TaskLanguage = 'python' | 'nodejs' | 'bash' | 'java' | 'prolog' | 'go' | 'cpp' | 'php';
-
 export interface TaskProps {
     name: string;
     created: firebase.firestore.Timestamp;
     createdBy: string;
-    language: TaskLanguage;
+    language: SupportedLanguage;
+    examMode: boolean;
     id: string;
 }
 

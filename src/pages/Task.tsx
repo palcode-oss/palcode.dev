@@ -12,10 +12,11 @@ import { useAuth } from '../helpers/auth';
 import Sidebar from '../task-components/Sidebar';
 import { availableThemes, ThemeMetadata } from '../helpers/monacoThemes';
 import LazyComponentFallback from '../ui/LazyComponentFallback';
-import {getLanguageDefaultFile} from '../helpers/languageData';
+import { getLanguageDefaultFile } from '../helpers/languageData';
 import { useSchoolId } from '../helpers/school';
 import useAPIToken from '../helpers/apiToken';
 import { ProjectStatus, ProjectType } from 'palcode-types';
+import useExamMode from '../helpers/examMode';
 
 const FileEditor = lazy(() => import('../task-components/FileEditor'));
 const Console = lazy(() => import('../task-components/Console'));
@@ -36,6 +37,7 @@ export default function Task(
     const [task, taskLoading] = useTask(taskId);
     const [,, user] = useAuth();
     const {enqueueSnackbar} = useSnackbar();
+    useExamMode(teacherView, task);
 
     const [currentTab, setCurrentTab] = useState<string>();
     const [files, filesLoading, addLocalFile, deleteLocalFile] = useTaskFiles(taskId, task?.language);

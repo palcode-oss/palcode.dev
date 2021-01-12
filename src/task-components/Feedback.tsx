@@ -16,6 +16,7 @@ import { useUser } from '../helpers/auth';
 import { Shimmer } from 'react-shimmer';
 import { useSubmissions } from '../helpers/taskData';
 import { Link } from 'react-router-dom';
+import ExamModeEvents from './ExamModeEvents';
 
 export default function Feedback(
     {
@@ -23,7 +24,7 @@ export default function Feedback(
         task,
     }: {
         taskId: string,
-        task: SubmissionTask | null,
+        task?: SubmissionTask,
     }
 ): ReactElement {
     const [loading, setLoading] = useState(false);
@@ -197,6 +198,10 @@ export default function Feedback(
 
             <VoiceFeedbackUpload
                 taskId={taskId}
+            />
+
+            <ExamModeEvents
+                task={task}
             />
         </>
     )

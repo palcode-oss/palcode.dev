@@ -28,6 +28,16 @@
     margin-bottom: 5px;
   }
 
+  input[type="checkbox"] {
+    vertical-align: middle;
+
+    & + .label {
+      display: inline-block;
+      margin-left: 5px;
+      margin-top: 10px;
+    }
+  }
+
   .textInput {
     @include input-style;
     margin-bottom: 8px;

@@ -5,8 +5,8 @@ import 'firebase/firestore';
 import { useAuth } from './auth';
 import { ProjectType } from 'palcode-types';
 
-export function useTask(taskId: string): [Task | null, boolean] {
-    const [task, setTask] = useState<Task | null>(null);
+export function useTask(taskId: string): [Task | undefined, boolean] {
+    const [task, setTask] = useState<Task | undefined>();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {

@@ -292,6 +292,7 @@
     width: $feedback-width;
     padding-left: 20px;
     padding-right: 20px;
+    overflow-y: auto;
 
     .feedbackHeader {
       color: white;
@@ -358,6 +359,47 @@
 
     .feedbackPaginationButton {
       margin-right: 10px;
+    }
+
+    .breachSummaryOkay {
+      color: #62db62;
+    }
+
+    .breachSummaryIssues {
+      color: #e35a5a;
+    }
+
+    .breachEvent {
+      background-color: lighten($bg-light, 15%);
+      box-shadow: 0 5px 10px 0 adjust-color($bg-light, $lightness: 10%, $alpha: -0.3);
+      margin: 15px 0;
+      border-radius: 20px;
+
+      padding: 15px;
+
+      .breachTime {
+        color: lighten($bg-light, 60%);
+      }
+
+      .breachType {
+        color: white;
+        font-size: 1.25rem;
+      }
+
+      .breachMetadata {
+        margin: 2px 0;
+        color: lighten($bg-light, 60%);
+
+        pre {
+          margin: 0;
+          display: inline-block;
+        }
+
+        .breachMetadataValue {
+          color: white;
+          font-weight: bold;
+        }
+      }
     }
   }
 }

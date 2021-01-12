@@ -20,7 +20,7 @@
     "monaco-languageclient": "^0.13.1-next.4",
     "notistack": "^1.0.0",
     "palcode-sockets": "^1.3.0",
-    "palcode-types": "1.1.0",
+    "palcode-types": "^1.3.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.14.1",

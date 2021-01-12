@@ -21,7 +21,7 @@ export default function Briefing(
         taskLoading,
     } : {
         taskId: string,
-        task: Task | null,
+        task?: Task,
         taskLoading: boolean,
     }
 ): ReactElement {
@@ -41,7 +41,13 @@ export default function Briefing(
             }
 
             {
-                !taskLoading && (
+                !taskLoading && <>
+                    {task?.examMode && <p>
+                        <strong>Warning!</strong>
+                        &nbsp;This task is in Exam Mode. Your browser is being closely monitored for suspicious activity.
+                        Please avoid switching tabs/windows, exiting full screen, opening your browser's console, etc.
+                    </p>}
+
                     <h1
                         className={briefingRenderer.briefingTitle}
                     >
@@ -49,7 +55,7 @@ export default function Briefing(
                             task?.name
                         }
                     </h1>
-                )
+                </>
             }
 
             <Suspense fallback={<LazyComponentFallback />}>

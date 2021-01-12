@@ -5,13 +5,13 @@ import editor from '../styles/editor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faSkull } from '@fortawesome/free-solid-svg-icons';
 import { ThemeMetadata, useMonacoTheme } from '../helpers/monacoThemes';
-import { TaskLanguage } from '../types';
 import { useSchoolId } from '../helpers/school';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { RunnerActions, runnerSelector } from '../stores/runner';
 import { Dispatch } from '@reduxjs/toolkit';
 import { uploaderSelector } from '../stores/uploader';
+import { SupportedLanguage } from 'palcode-types';
 
 export default function Console(
     {
@@ -20,7 +20,7 @@ export default function Console(
         themeMetadata,
     }: {
         taskId: string,
-        taskLanguage?: TaskLanguage,
+        taskLanguage?: SupportedLanguage,
         themeMetadata?: ThemeMetadata,
     }
 ) {

@@ -89,15 +89,12 @@ export default function TaskSubmissionRow(
 
         await taskDoc
             .set({
+                ...task,
                 createdBy: user.uid,
-                name: task.name,
-                language: task.language,
                 status: ProjectStatus.Unsubmitted,
                 type: ProjectType.Submission,
-                id: taskDoc.id,
                 created: firebase.firestore.Timestamp.now(),
                 parentTask: task.id,
-                classroomId: classroom.id,
             } as SubmissionTask);
 
         await axios.post(

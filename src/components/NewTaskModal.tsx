@@ -30,6 +30,7 @@ export default function NewTaskModal(
 ): ReactElement {
     const [title, setTitle] = useState('');
     const [language, setLanguage] = useState<SupportedLanguage>('python');
+    const [examMode, setExamMode] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
@@ -57,6 +58,7 @@ export default function NewTaskModal(
             name: title,
             language,
             type,
+            examMode,
             created: firebase.firestore.Timestamp.now(),
         } as any;
 
@@ -141,6 +143,21 @@ export default function NewTaskModal(
                                 ))
                             }
                         </select>
+
+                        {!props.privateTask && <>
+                            <input
+                                type='checkbox'
+                                id='examMode'
+                                checked={examMode}
+                                onChange={(e) => setExamMode(e.target.checked)}
+                            />
+                            <label
+                                htmlFor='examMode'
+                                className={form.label}
+                            >
+                                Exam Mode
+                            </label>
+                        </>}
 
                         {!props.privateTask && (
                             <p>

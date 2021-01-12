@@ -27,7 +27,7 @@ export default function Controls(
         onThemeChange,
     }: {
         taskId: string,
-        task: Task | null,
+        task?: Task,
         onClosePress(): void,
         themeDisplayName: string,
         onThemeChange(themeDisplayName: string): void,
